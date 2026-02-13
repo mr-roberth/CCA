@@ -11,24 +11,446 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== MANTÉN TU CSS ORIGINAL (sin cambios) ===== */
-        /* ... aquí va todo el estilo que ya tenías ... */
-        :root { --primary-dark: #0f3b1a; --primary: #1b5e20; --primary-light: #4caf50; /* etc */ }
-        /* ... copia el bloque <style> completo del HTML original ... */
+        /* ===== ESTILOS MEJORADOS (MANTENIDOS DE TU CÓDIGO ORIGINAL) ===== */
+        :root {
+            --primary-dark: #0f3b1a;
+            --primary: #1b5e20;
+            --primary-light: #4caf50;
+            --primary-soft: #e8f5e9;
+            --secondary: #ff8f00;
+            --accent: #0288d1;
+            --gray-bg: #f8fafc;
+            --card-shadow: 0 12px 28px rgba(0,0,0,0.04);
+            --border-radius-lg: 28px;
+            --border-radius-md: 16px;
+            --border-radius-sm: 12px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #f5f7fb;
+            font-family: var(--font);
+            color: #0f172a;
+            line-height: 1.5;
+        }
+        .container { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+        header {
+            background: linear-gradient(145deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 16px; }
+        .logo-img { height: 48px; width: auto; }
+        .logo-text h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+        .logo-text p { font-size: 0.8rem; opacity: 0.9; }
+        .btn {
+            padding: 10px 22px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s ease;
+            cursor: pointer;
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .btn-primary { background: var(--primary-light); color: white; border: none; }
+        .btn-primary:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(27,94,32,0.2); }
+        .btn-secondary { background: #f1f5f9; color: #1e293b; border: 1px solid #e2e8f0; }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-small { padding: 6px 16px; font-size: 0.8rem; }
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
+        .auth-box {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--card-shadow);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .auth-logo { text-align: center; margin-bottom: 20px; }
+        .auth-logo img { height: 80px; }
+        .auth-title { text-align: center; margin-bottom: 30px; color: var(--primary); }
+        .auth-form { display: flex; flex-direction: column; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 600; color: #334155; font-size: 0.9rem; }
+        .form-control {
+            padding: 12px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            background: #f8fafc;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); background: white; }
+        .filters-panel {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .filter-group label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .filter-control {
+            width: 100%;
+            padding: 10px 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+        .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
+        .global-chart-controls {
+            background: white;
+            border-radius: 60px;
+            padding: 16px 28px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 28px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f6;
+        }
+        .control-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
+        .control-label i { color: var(--primary); }
+        .chip-selector { display: flex; background: #f1f5f9; border-radius: 40px; padding: 3px; }
+        .chip {
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+            margin-left: 6px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.2s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        .multi-chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 14px 20px;
+            border-radius: 48px;
+            margin-bottom: 16px;
+        }
+        .indicator-chip {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #334155;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .indicator-chip.selected {
+            background: var(--primary-soft);
+            border-color: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+        .indicator-chip i { color: var(--primary-light); opacity: 0.8; }
+        .indicator-chip.selected i { opacity: 1; color: var(--primary); }
+        .chart-card {
+            background: white;
+            border-radius: 28px;
+            padding: 22px;
+            box-shadow: var(--card-shadow);
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .chart-header h3 { font-size: 1.1rem; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        .chart-wrapper { flex: 1; position: relative; }
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.02);
+            transition: 0.2s;
+            border-left: 6px solid;
+        }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(0,0,0,0.06); }
+        .kpi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .kpi-title { font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .kpi-icon { font-size: 1.6rem; opacity: 0.8; }
+        .kpi-value { font-size: 2.2rem; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
+        .kpi-subtitle { font-size: 0.8rem; color: #475569; }
+        .comparative-section {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            margin-top: 30px;
+            box-shadow: var(--card-shadow);
+        }
+        .data-section {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        .data-table th {
+            background: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .data-table tr:hover { background: #f1f5f9; }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 28px;
+            gap: 8px;
+        }
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #64748b;
+            transition: 0.15s;
+        }
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: var(--primary-soft);
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 30px 0;
+            margin-top: 60px;
+        }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; }
+        .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
+        .footer-links a:hover { opacity: 1; }
+        @media (max-width: 1024px) { .global-chart-controls { border-radius: 30px; } }
+        @media (max-width: 768px) { .global-chart-controls { flex-direction: column; align-items: stretch; } .filters-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <header> <!-- igual que antes --> </header>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" class="logo-img">
+                    <div class="logo-text">
+                        <h1>Sistema de Calidad de Cosecha</h1>
+                        <p>Controles globales · análisis interactivo</p>
+                    </div>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <span id="userName">Invitado</span>
+                    <button class="btn btn-secondary" id="logoutBtn" style="display: none;">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <main class="container">
-        <!-- LOGIN, REGISTER (igual) -->
-        <!-- DASHBOARD: estructura igual, solo cambian los nombres internos -->
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen" class="auth-container">
+            <div class="auth-box">
+                <div class="auth-logo">
+                    <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres">
+                </div>
+                <h2 class="auth-title"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</h2>
+                <div id="loginAlert"></div>
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginUsername">Usuario</label>
+                        <input type="text" id="loginUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                </form>
+                <div class="auth-links" style="text-align: center; margin-top: 20px;">
+                    <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- REGISTER SCREEN -->
+        <div id="registerScreen" class="auth-container" style="display: none;">
+            <div class="auth-box">
+                <div class="auth-logo">
+                    <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres">
+                </div>
+                <h2 class="auth-title"><i class="fas fa-user-plus"></i> Crear cuenta</h2>
+                <div id="registerAlert"></div>
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerName">Nombre completo</label>
+                        <input type="text" id="registerName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerUsername">Usuario</label>
+                        <input type="text" id="registerUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input type="password" id="registerPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña</label>
+                        <input type="password" id="registerConfirmPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </button>
+                </form>
+                <div class="auth-links" style="text-align: center; margin-top: 20px;">
+                    <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS (igual) -->
-            <div class="tabs">...</div>
+            <!-- TABS -->
+            <div class="tabs">
+                <div class="tab active" data-tab="dashboard-tab">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </div>
+                <div class="tab" data-tab="analytics-tab">
+                    <i class="fas fa-chart-bar"></i> Análisis
+                </div>
+                <div class="tab" data-tab="data-tab">
+                    <i class="fas fa-table"></i> Datos
+                </div>
+                <div class="tab" data-tab="reports-tab">
+                    <i class="fas fa-file-pdf"></i> Reportes
+                </div>
+            </div>
 
             <!-- TAB DASHBOARD -->
             <div id="dashboard-tab" class="tab-content active">
-                <!-- KPIs - se renderizan dinámicamente -->
+                <!-- KPIs -->
                 <section class="kpi-section">
                     <h2 style="display: flex; gap: 10px; margin-bottom: 20px; color: var(--primary);">
                         <i class="fas fa-chart-line"></i> Indicadores principales
@@ -36,10 +458,22 @@
                     <div class="kpi-grid" id="kpiGrid"></div>
                 </section>
 
-                <!-- FILTROS (igual) -->
-                <section class="filters-panel">...</section>
+                <!-- FILTROS DE NEGOCIO -->
+                <section class="filters-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-weight: 600; display: flex; gap: 8px;">
+                            <i class="fas fa-filter" style="color: var(--primary);"></i> Filtros de análisis
+                        </h3>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary btn-small" id="resetFilters"><i class="fas fa-undo-alt"></i> Limpiar</button>
+                            <button class="btn btn-primary btn-small" id="applyFilters"><i class="fas fa-search"></i> Aplicar</button>
+                            <button class="btn btn-secondary btn-small" id="refreshData"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                        </div>
+                    </div>
+                    <div class="filters-grid" id="filtersGrid"></div>
+                </section>
 
-                <!-- CONTROLES GLOBALES DE GRÁFICOS (UNIFICADOS) -->
+                <!-- CONTROLES GLOBALES DE GRÁFICOS -->
                 <div class="global-chart-controls">
                     <div class="control-group">
                         <span class="control-label"><i class="fas fa-chart-bar"></i> Indicador:</span>
@@ -105,7 +539,7 @@
                 </section>
             </div>
 
-            <!-- TAB ANÁLISIS (se renderizan todas las impurezas) -->
+            <!-- TAB ANÁLISIS DETALLADO -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -117,23 +551,112 @@
                 </section>
             </div>
 
-            <!-- TAB DATOS (igual) -->
-            <div id="data-tab" class="tab-content">...</div>
-            <!-- TAB REPORTES (igual) -->
-            <div id="reports-tab" class="tab-content">...</div>
+            <!-- TAB DATOS COMPLETOS -->
+            <div id="data-tab" class="tab-content">
+                <section class="data-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-table"></i> Datos detallados</h3>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-primary" id="downloadData"><i class="fas fa-download"></i> CSV</button>
+                            <button class="btn btn-secondary" id="exportExcel"><i class="fas fa-file-excel"></i> Excel</button>
+                        </div>
+                    </div>
+                    <div id="dataAlert" style="display: none;"></div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="dataTable"></table>
+                        <div id="tableLoading" class="loading" style="display: none;"><div class="spinner"></div><p>Cargando datos...</p></div>
+                    </div>
+                    <div id="paginationControls" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="pageInfo">Página 1 de 1</span>
+                        <div>
+                            <button class="btn btn-secondary btn-small" id="prevPage" disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+                            <button class="btn btn-secondary btn-small" id="nextPage" disabled>Siguiente <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB REPORTES -->
+            <div id="reports-tab" class="tab-content">
+                <section class="data-section">
+                    <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 20px; margin-top: 20px;">
+                        <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                            <h3><i class="fas fa-file-alt"></i> Resumen ejecutivo</h3>
+                            <p style="margin: 12px 0; color: #475569;">Reporte PDF con KPIs principales.</p>
+                            <button class="btn btn-primary" id="generateSummaryReport">Generar</button>
+                        </div>
+                        <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                            <h3><i class="fas fa-chart-line"></i> Tendencias</h3>
+                            <p style="margin: 12px 0; color: #475569;">Análisis temporal detallado.</p>
+                            <button class="btn btn-primary" id="generateTrendReport">Generar</button>
+                        </div>
+                        <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                            <h3><i class="fas fa-chart-bar"></i> Comparativo</h3>
+                            <p style="margin: 12px 0; color: #475569;">Comparación entre grupos/zonas.</p>
+                            <button class="btn btn-primary" id="generateComparativeReport">Generar</button>
+                        </div>
+                        <div style="background: white; border-radius: 20px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                            <h3><i class="fas fa-file-excel"></i> Datos completos</h3>
+                            <p style="margin: 12px 0; color: #475569;">Exportar todo en Excel.</p>
+                            <button class="btn" id="exportFullData" style="background: #28a745; color: white;">Exportar</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px; padding: 24px; background: #f8fafc; border-radius: var(--border-radius-md);">
+                        <h3><i class="fas fa-cog"></i> Configuración de reporte</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 16px; margin-top: 16px;">
+                            <div class="form-group">
+                                <label for="reportTitle">Título</label>
+                                <input type="text" id="reportTitle" class="form-control" value="Reporte de Calidad">
+                            </div>
+                            <div class="form-group">
+                                <label for="reportDate">Fecha</label>
+                                <input type="date" id="reportDate" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="includeCharts">Incluir gráficos</label>
+                                <select id="includeCharts" class="form-control">
+                                    <option value="yes">Sí</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="generateCustomReport" style="margin-top: 20px;">Generar personalizado</button>
+                    </div>
+                </section>
+            </div>
         </div>
 
-        <!-- LOADING OVERLAY (igual) -->
-        <div id="loadingOverlay" class="loading" style="display: none;">...</div>
+        <!-- LOADING OVERLAY -->
+        <div id="loadingOverlay" class="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000;">
+            <div class="spinner"></div>
+            <p>Procesando solicitud...</p>
+        </div>
     </main>
-    <footer>...</footer>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 4.0</p>
+                    <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-question-circle"></i> Ayuda</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contacto</a>
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacidad</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - NUEVAS VARIABLES Y UMBRALES
+        // CONFIGURACIÓN DEL SISTEMA - NUEVAS VARIABLES Y UMBRALES (ACTUALIZADO)
         // =========================================================================
         const CONFIG = {
-            GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec',
+            GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
             DATA_SHEET: 'Datos_CCA',
             colors: {
                 good: '#4caf50',
@@ -146,8 +669,8 @@
             // UMBRALES PARA CADA INDICADOR (ajusta según criterios reales)
             // =====================================================================
             thresholds: {
-                peso_total_muestra:   { red: 500,  yellow: 400 },  // kg
-                peso_limpia:          { red: 70,   yellow: 80 },   // %
+                peso_total_muestra:   { red: 500,  yellow: 400 },  // kg (menor es mejor)
+                peso_limpia:          { red: 70,   yellow: 80 },   // %  (mayor es mejor, se invierte en getColorForIndicator)
                 mamones:             { red: 3,    yellow: 1.5 },
                 lalas:               { red: 1,    yellow: 0.5 },
                 tallos_secos:        { red: 2,    yellow: 1 },
@@ -165,7 +688,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (NUEVOS)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (NUEVA ESTRUCTURA)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -216,10 +739,8 @@
         };
 
         // =========================================================================
-        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL (ADAPTADAS)
+        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL
         // =========================================================================
-
-        // Renderiza los chips de indicador principal (solo los más relevantes)
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
             if (!container) return;
@@ -243,7 +764,6 @@
             });
         }
 
-        // Renderiza chips multiselect para comparativo (impurezas)
         function renderComparativeChips() {
             const container = document.getElementById('comparativeChipContainer');
             if (!container) return;
@@ -272,14 +792,42 @@
             });
         }
 
-        // Vincula eventos de chips de agrupación (igual)
-        function bindGroupChips() { /* ... */ }
-        function initGlobalToggle() { /* ... */ }
+        function bindGroupChips() {
+            document.querySelectorAll('#globalTimeGroup .chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('#globalTimeGroup .chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    AppState.globalChart.timeGroupBy = this.dataset.value;
+                    updateMainChart();
+                });
+            });
+            document.querySelectorAll('#globalBarGroup .chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('#globalBarGroup .chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    AppState.globalChart.barGroupBy = this.dataset.value;
+                    updateBarChart();
+                });
+            });
+        }
+
+        function initGlobalToggle() {
+            const toggle = document.getElementById('globalToggleLabels');
+            if (toggle) {
+                toggle.checked = AppState.globalChart.showLabels;
+                toggle.addEventListener('change', function() {
+                    AppState.globalChart.showLabels = this.checked;
+                    if (AppState.charts.main) AppState.charts.main.options.plugins.datalabels.display = this.checked;
+                    if (AppState.charts.bar) AppState.charts.bar.options.plugins.datalabels.display = this.checked;
+                    if (AppState.charts.comparative) AppState.charts.comparative.options.plugins.datalabels.display = this.checked;
+                    Object.values(AppState.charts).forEach(ch => ch?.update());
+                });
+            }
+        }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (usando los nuevos indicadores)
+        // FUNCIONES DE GRÁFICOS (usan AppState.globalChart)
         // =========================================================================
-
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
             if (!ctx) return;
@@ -347,8 +895,8 @@
                     plugins: [ChartDataLabels]
                 });
             } catch (e) {
-                console.error(e);
-                ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+                console.error('Error en mainChart:', e);
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             }
         }
 
@@ -416,7 +964,7 @@
                     plugins: [ChartDataLabels]
                 });
             } catch (e) {
-                console.error(e);
+                console.error('Error en barChart:', e);
                 ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
             }
         }
@@ -486,8 +1034,14 @@
                     plugins: [ChartDataLabels]
                 });
             } catch (e) {
-                console.error(e);
+                console.error('Error en comparativeChart:', e);
             }
+        }
+
+        function updateAllCharts() {
+            updateMainChart();
+            updateBarChart();
+            updateComparativeChart();
         }
 
         // =========================================================================
@@ -504,9 +1058,8 @@
         function getColorForIndicator(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return CONFIG.colors.primary;
-            // Para todos los indicadores: valores bajos son buenos (excepto peso_limpia que es % de pureza)
+            // Invertir para peso_limpia (mayor es mejor)
             if (indicator === 'peso_limpia') {
-                // Mayor porcentaje de peso limpio es mejor
                 if (value >= th.yellow) return CONFIG.colors.good;
                 if (value >= th.red) return CONFIG.colors.warning;
                 return CONFIG.colors.bad;
@@ -533,7 +1086,250 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (NUEVOS INDICADORES)
+        // FUNCIONES DE CONEXIÓN CON GAS (NO MODIFICAR)
+        // =========================================================================
+        async function fetchGAS(action, params = {}) {
+            const url = new URL(CONFIG.GAS_URL);
+            url.searchParams.append('action', action);
+            Object.keys(params).forEach(key => {
+                if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+                    url.searchParams.append(key, params[key]);
+                }
+            });
+            url.searchParams.append('_t', Date.now());
+            try {
+                const response = await fetch(url.toString(), {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('fetchGAS error:', error);
+                throw error;
+            }
+        }
+
+        // =========================================================================
+        // FUNCIONES DE AUTENTICACIÓN Y SESIÓN
+        // =========================================================================
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('userName').textContent = 'Invitado';
+            document.getElementById('logoutBtn').style.display = 'none';
+        }
+        function showRegister() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('userName').textContent = AppState.user?.name || 'Usuario';
+            document.getElementById('logoutBtn').style.display = 'block';
+        }
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            showLoading();
+            try {
+                const response = await fetchGAS('login', { username, password });
+                if (response.success) {
+                    AppState.user = response.user;
+                    localStorage.setItem('quality_user', JSON.stringify(response.user));
+                    showAlert('loginAlert', 'success', 'Login exitoso');
+                    showDashboard();
+                    initializeApp();
+                } else {
+                    showAlert('loginAlert', 'error', response.message || 'Error en login');
+                }
+            } catch (error) {
+                showAlert('loginAlert', 'error', 'Error de conexión');
+            } finally {
+                hideLoading();
+            }
+        }
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('registerConfirmPassword').value;
+            if (password !== confirm) {
+                showAlert('registerAlert', 'error', 'Las contraseñas no coinciden');
+                return;
+            }
+            showLoading();
+            try {
+                const response = await fetchGAS('register', { username, password, name, email });
+                if (response.success) {
+                    showAlert('registerAlert', 'success', response.message);
+                    setTimeout(() => showLogin(), 2000);
+                } else {
+                    showAlert('registerAlert', 'error', response.message || 'Error en registro');
+                }
+            } catch (error) {
+                showAlert('registerAlert', 'error', 'Error de conexión');
+            } finally {
+                hideLoading();
+            }
+        }
+        function handleLogout() {
+            AppState.user = null;
+            localStorage.removeItem('quality_user');
+            showLogin();
+            Object.values(AppState.charts).forEach(ch => ch?.destroy());
+            AppState.charts = {};
+        }
+
+        // =========================================================================
+        // FUNCIONES DE CARGA DE DATOS Y FILTROS
+        // =========================================================================
+        async function loadFilters() {
+            try {
+                const response = await fetchGAS('getFilters');
+                if (response.success) {
+                    AppState.filtersData = response.filters || {};
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('Error cargando filtros:', e);
+                return false;
+            }
+        }
+
+        function renderFilters() {
+            const grid = document.getElementById('filtersGrid');
+            if (!grid) return;
+            if (!AppState.filtersData.ingenios) {
+                grid.innerHTML = '<div class="alert alert-error">Error cargando filtros</div>';
+                return;
+            }
+            grid.innerHTML = `
+                <div class="filter-group">
+                    <label>Ingenio</label>
+                    <select id="filterIngenio" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.filtersData.ingenios || []).filter(i => i !== 'Todos').map(i => `<option value="${i}">${i}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Grupo</label>
+                    <select id="filterGrupo" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.filtersData.grupos || []).filter(g => g !== 'Todos').map(g => `<option value="${g}">${g}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Supervisor</label>
+                    <select id="filterSupervisor" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.filtersData.supervisores || []).filter(s => s !== 'Todos').map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Zona</label>
+                    <select id="filterZona" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.filtersData.zonas || []).filter(z => z !== 'Todos').map(z => `<option value="${z}">${z}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Semana</label>
+                    <select id="filterSemana" class="filter-control">
+                        <option value="Todas">Todas</option>
+                        ${(AppState.filtersData.semanas || []).filter(s => s !== 'Todas').map(s => `<option value="${s}">${s}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fecha inicio</label>
+                    <input type="date" id="filterFechaInicio" class="filter-control" value="${AppState.filtersData.fechaMin || ''}">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha fin</label>
+                    <input type="date" id="filterFechaFin" class="filter-control" value="${AppState.filtersData.fechaMax || ''}">
+                </div>
+            `;
+            // Establecer valores actuales
+            if (document.getElementById('filterIngenio')) document.getElementById('filterIngenio').value = AppState.filters.ingenio;
+            if (document.getElementById('filterGrupo')) document.getElementById('filterGrupo').value = AppState.filters.grupo;
+            if (document.getElementById('filterSupervisor')) document.getElementById('filterSupervisor').value = AppState.filters.supervisor;
+            if (document.getElementById('filterZona')) document.getElementById('filterZona').value = AppState.filters.zona;
+            if (document.getElementById('filterSemana')) document.getElementById('filterSemana').value = AppState.filters.semana;
+            if (document.getElementById('filterFechaInicio')) document.getElementById('filterFechaInicio').value = AppState.filters.fechaInicio || AppState.filtersData.fechaMin;
+            if (document.getElementById('filterFechaFin')) document.getElementById('filterFechaFin').value = AppState.filters.fechaFin || AppState.filtersData.fechaMax;
+        }
+
+        async function applyFilters() {
+            AppState.filters = {
+                ingenio: document.getElementById('filterIngenio')?.value || 'Todos',
+                grupo: document.getElementById('filterGrupo')?.value || 'Todos',
+                supervisor: document.getElementById('filterSupervisor')?.value || 'Todos',
+                zona: document.getElementById('filterZona')?.value || 'Todos',
+                semana: document.getElementById('filterSemana')?.value || 'Todas',
+                fechaInicio: document.getElementById('filterFechaInicio')?.value || '',
+                fechaFin: document.getElementById('filterFechaFin')?.value || ''
+            };
+            await refreshAllData();
+        }
+
+        function resetFilters() {
+            AppState.filters = {
+                ingenio: 'Todos',
+                grupo: 'Todos',
+                supervisor: 'Todos',
+                zona: 'Todos',
+                semana: 'Todas',
+                fechaInicio: AppState.filtersData.fechaMin || '',
+                fechaFin: AppState.filtersData.fechaMax || ''
+            };
+            renderFilters();
+            refreshAllData();
+        }
+
+        async function refreshAllData() {
+            showLoading();
+            try {
+                await loadAllData();
+                renderKPIs();
+                updateAllCharts();
+                if (AppState.currentTab === 'analytics-tab') loadDetailedMetrics();
+                if (AppState.currentTab === 'data-tab') loadDataTable();
+                showAlert('dataAlert', 'success', `${AppState.data.length} registros cargados`);
+            } catch (e) {
+                showAlert('dataAlert', 'error', 'Error actualizando datos');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadAllData() {
+            try {
+                const kpiRes = await fetchGAS('getKPIs', AppState.filters);
+                if (kpiRes.success) AppState.kpis = kpiRes.kpis || {};
+                else throw new Error(kpiRes.message);
+                const dataRes = await fetchGAS('getData', AppState.filters);
+                if (dataRes.success) {
+                    AppState.data = dataRes.data || [];
+                    AppState.currentPage = 1;
+                } else throw new Error(dataRes.message);
+                return true;
+            } catch (e) {
+                console.error('Error loadAllData:', e);
+                return false;
+            }
+        }
+
+        // =========================================================================
+        // RENDERIZACIÓN DE KPIs
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -543,20 +1339,20 @@
                 return;
             }
             const mainKPIs = [
-                { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging', format: 'kg' },
-                { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale', format: '%' },
-                { id: 'impurezas_totales', title: 'Impurezas totales', icon: 'fas fa-trash-alt', format: '%' },
-                { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree', format: '%' },
-                { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf', format: '%' },
-                { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire', format: '%' },
-                { id: 'basura', title: 'Basura', icon: 'fas fa-trash', format: '%' },
-                { id: 'piedra', title: 'Piedra', icon: 'fas fa-gem', format: '%' }
+                { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging' },
+                { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale' },
+                { id: 'impurezas_totales', title: 'Impurezas totales', icon: 'fas fa-trash-alt' },
+                { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree' },
+                { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf' },
+                { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire' },
+                { id: 'basura', title: 'Basura', icon: 'fas fa-trash' },
+                { id: 'piedra', title: 'Piedra', icon: 'fas fa-gem' }
             ];
             grid.innerHTML = mainKPIs.map(kpi => {
                 if (!AppState.kpis.hasOwnProperty(kpi.id)) return '';
                 const value = AppState.kpis[kpi.id];
                 const color = getColorForIndicator(kpi.id, value);
-                const formatted = kpi.format === 'kg' ? `${value.toFixed(2)} kg` : `${value.toFixed(2)}%`;
+                const formatted = formatKPIValue(value, kpi.id);
                 return `
                     <div class="kpi-card" style="border-left-color: ${color}">
                         <div class="kpi-header">
@@ -571,7 +1367,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (TODAS LAS IMPUREZAS)
+        // MÉTRICAS DETALLADAS (TAB ANÁLISIS)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -628,35 +1424,160 @@
                     `;
                 }
             } catch (e) {
-                console.error(e);
+                console.error('Error en detailedMetrics:', e);
                 grid.innerHTML = '<div class="alert alert-error">Error cargando métricas</div>';
             }
         }
 
         // =========================================================================
-        // RESTO DE FUNCIONES (fetchGAS, autenticación, filtros, tabla, exportación)
+        // FUNCIONES DE TABLA DE DATOS (sin cambios relevantes)
         // =========================================================================
-        // (Mantén las mismas que en el código original, solo asegúrate de que
-        //  fetchGAS, loadFilters, applyFilters, loadAllData, etc. usen los nuevos nombres)
-        //  Copia aquí las funciones sin cambios, excepto donde se referencien
-        //  indicadores antiguos (ajústalos a los nuevos IDs).
-        //  Por brevedad, en esta respuesta ya están integradas en el bloque completo.
-        //  He incluido las funciones necesarias arriba y abajo.
+        async function loadDataTable() {
+            const table = document.getElementById('dataTable');
+            const loading = document.getElementById('tableLoading');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            if (!table || !loading) return;
+            loading.style.display = 'flex';
+            table.innerHTML = '';
+            try {
+                if (AppState.data.length === 0) await loadAllData();
+                if (AppState.data.length === 0) {
+                    table.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">No hay datos</td></tr>';
+                    if (pageInfo) pageInfo.textContent = 'Página 1 de 1';
+                    if (prevBtn) prevBtn.disabled = true;
+                    if (nextBtn) nextBtn.disabled = true;
+                    return;
+                }
+                const totalPages = Math.ceil(AppState.data.length / AppState.pageSize);
+                const start = (AppState.currentPage - 1) * AppState.pageSize;
+                const end = Math.min(start + AppState.pageSize, AppState.data.length);
+                const pageData = AppState.data.slice(start, end);
+                const headers = AppState.data.length > 0 ? Object.keys(AppState.data[0]).slice(0, 10) : [];
+                let thead = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+                let tbody = '';
+                pageData.forEach(row => {
+                    tbody += `<tr>${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`;
+                });
+                table.innerHTML = thead + tbody;
+                if (pageInfo) pageInfo.textContent = `Página ${AppState.currentPage} de ${totalPages} (${AppState.data.length} registros)`;
+                if (prevBtn) prevBtn.disabled = AppState.currentPage <= 1;
+                if (nextBtn) nextBtn.disabled = AppState.currentPage >= totalPages;
+            } catch (e) {
+                console.error(e);
+                table.innerHTML = '<tr><td colspan="10" style="color: red; text-align: center;">Error cargando tabla</td></tr>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function formatCell(value) {
+            if (value === null || value === undefined) return '';
+            if (typeof value === 'number') return value.toFixed(2);
+            return String(value);
+        }
+
+        function previousPage() {
+            if (AppState.currentPage > 1) {
+                AppState.currentPage--;
+                loadDataTable();
+            }
+        }
+        function nextPage() {
+            const totalPages = Math.ceil(AppState.data.length / AppState.pageSize);
+            if (AppState.currentPage < totalPages) {
+                AppState.currentPage++;
+                loadDataTable();
+            }
+        }
+
         // =========================================================================
-
-        // ... (todas las funciones de autenticación, fetchGAS, filtros, tabla, etc.)
-        // Se asume que las conservas del código original, solo cambiando nombres de columnas
-        // en los parámetros que envías (los nombres de los indicadores ya están actualizados).
-
-        // Asegúrate de que en fetchGAS uses CONFIG.GAS_URL, etc.
-        async function fetchGAS(action, params = {}) { /* ... (sin cambios) ... */ }
-        function showLogin() { /* ... */ }
-        function showDashboard() { /* ... */ }
-        async function handleLogin(e) { /* ... */ }
-        // etc.
+        // FUNCIONES DE EXPORTACIÓN Y REPORTES (resumidas, funcionales)
+        // =========================================================================
+        function downloadDataAsCSV() {
+            if (!AppState.data.length) return alert('No hay datos');
+            const headers = Object.keys(AppState.data[0]);
+            const csv = [headers.join(','), ...AppState.data.map(r => headers.map(h => JSON.stringify(r[h] || '')).join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `datos_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        function exportToExcel() {
+            if (!AppState.data.length) return alert('No hay datos');
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(AppState.data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+            XLSX.writeFile(wb, `datos_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
+        function exportFullData() { exportToExcel(); }
+        function downloadChart(chartName) {
+            if (!AppState.charts[chartName]) return alert('Gráfico no disponible');
+            const link = document.createElement('a');
+            link.download = `${chartName}_${new Date().toISOString().slice(0,10)}.png`;
+            link.href = AppState.charts[chartName].toBase64Image();
+            link.click();
+        }
+        async function generateReport(type) {
+            showLoading();
+            try {
+                await generatePDFReport({ type, title: 'Reporte de Calidad', date: new Date().toISOString().split('T')[0], metrics: AppState.kpis });
+                showAlert('dataAlert', 'success', 'Reporte generado');
+            } catch (e) {
+                showAlert('dataAlert', 'error', 'Error al generar reporte');
+            } finally {
+                hideLoading();
+            }
+        }
+        async function generateCustomReport() {
+            const title = document.getElementById('reportTitle')?.value || 'Reporte';
+            const date = document.getElementById('reportDate')?.value || new Date().toISOString().split('T')[0];
+            showLoading();
+            try {
+                await generatePDFReport({ type: 'custom', title, date, metrics: AppState.kpis });
+                showAlert('dataAlert', 'success', 'Reporte personalizado generado');
+            } catch (e) {
+                showAlert('dataAlert', 'error', 'Error');
+            } finally {
+                hideLoading();
+            }
+        }
+        async function generatePDFReport(reportData) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18);
+            doc.text(reportData.title || 'Reporte de Calidad', 20, 20);
+            doc.setFontSize(11);
+            doc.text(`Fecha: ${reportData.date || new Date().toLocaleDateString()}`, 20, 35);
+            doc.text(`Generado por: ${AppState.user?.name || 'Usuario'}`, 20, 42);
+            if (reportData.metrics) {
+                doc.text(`Muestras Totales: ${reportData.metrics.muestrasTotales || 0}`, 20, 55);
+                doc.text(`Impurezas: ${reportData.metrics.impurezas_totales?.toFixed(2) || 0}%`, 20, 62);
+                doc.text(`Peso total: ${reportData.metrics.peso_total_muestra?.toFixed(2) || 0} kg`, 20, 69);
+            }
+            doc.save(`reporte_${new Date().getTime()}.pdf`);
+        }
 
         // =========================================================================
-        // INICIALIZACIÓN
+        // FUNCIONES DE UTILIDAD
+        // =========================================================================
+        function showLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'flex'; }
+        function hideLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'none'; }
+        function showAlert(containerId, type, message) {
+            const div = document.getElementById(containerId);
+            if (div) {
+                div.innerHTML = `<div class="alert alert-${type}" style="padding: 12px; border-radius: 30px; background: ${type==='success'?'#d4edda':'#f8d7da'}; color: ${type==='success'?'#155724':'#721c24'}"><i class="fas fa-${type==='success'?'check-circle':'exclamation-circle'}"></i> ${message}</div>`;
+                div.style.display = 'block';
+                setTimeout(() => div.style.display = 'none', 5000);
+            }
+        }
+
+        // =========================================================================
+        // INICIALIZACIÓN PRINCIPAL
         // =========================================================================
         async function initializeApp() {
             showLoading();
@@ -671,13 +1592,48 @@
                 initGlobalToggle();
                 updateAllCharts();
             } catch (e) {
-                console.error(e);
+                console.error('Error en initializeApp:', e);
             } finally {
                 hideLoading();
             }
         }
 
-        // Carga inicial y event listeners
+        function setupEventListeners() {
+            document.getElementById('showRegister')?.addEventListener('click', showRegister);
+            document.getElementById('showLogin')?.addEventListener('click', showLogin);
+            document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
+            document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
+            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabId = this.dataset.tab;
+                    document.getElementById(tabId)?.classList.add('active');
+                    AppState.currentTab = tabId;
+                    if (tabId === 'analytics-tab') loadDetailedMetrics();
+                    if (tabId === 'data-tab') loadDataTable();
+                });
+            });
+            document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
+            document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
+            document.getElementById('refreshData')?.addEventListener('click', refreshAllData);
+            document.getElementById('downloadMainChart')?.addEventListener('click', () => downloadChart('main'));
+            document.getElementById('downloadBarChart')?.addEventListener('click', () => downloadChart('bar'));
+            document.getElementById('downloadComparativeChart')?.addEventListener('click', () => downloadChart('comparative'));
+            document.getElementById('downloadData')?.addEventListener('click', downloadDataAsCSV);
+            document.getElementById('exportExcel')?.addEventListener('click', exportToExcel);
+            document.getElementById('prevPage')?.addEventListener('click', previousPage);
+            document.getElementById('nextPage')?.addEventListener('click', nextPage);
+            document.getElementById('generateSummaryReport')?.addEventListener('click', () => generateReport('summary'));
+            document.getElementById('generateTrendReport')?.addEventListener('click', () => generateReport('trend'));
+            document.getElementById('generateComparativeReport')?.addEventListener('click', () => generateReport('comparative'));
+            document.getElementById('exportFullData')?.addEventListener('click', exportFullData);
+            document.getElementById('generateCustomReport')?.addEventListener('click', generateCustomReport);
+        }
+
+        // Inicio
         document.addEventListener('DOMContentLoaded', function() {
             const savedUser = localStorage.getItem('quality_user');
             if (savedUser) {

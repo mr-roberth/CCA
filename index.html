@@ -148,7 +148,14 @@
         .control-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
-        .chip-selector { display: flex; flex-wrap: wrap; background: #f1f5f9; border-radius: 40px; padding: 3px; }
+        .chip-selector {
+            display: flex;
+            flex-wrap: wrap;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 3px;
+            max-width: 100%;
+        }
         .chip {
             padding: 6px 14px;
             border-radius: 40px;
@@ -162,6 +169,10 @@
             white-space: nowrap;
         }
         .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
+        @media (max-width: 768px) {
+            .chip { white-space: normal; font-size: 0.7rem; padding: 4px 8px; }
+            .chip-selector { border-radius: 20px; }
+        }
         .switch {
             position: relative;
             display: inline-block;
@@ -340,11 +351,6 @@
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
         .footer-links a:hover { opacity: 1; }
         @media (max-width: 1024px) { .global-chart-controls { border-radius: 30px; } }
-        @media (max-width: 768px) {
-            .global-chart-controls { flex-direction: column; align-items: stretch; }
-            .filters-grid { grid-template-columns: 1fr; }
-            .chip { white-space: normal; font-size: 0.7rem; padding: 4px 8px; }
-        }
     </style>
 </head>
 <body>
@@ -644,7 +650,7 @@
             <div class="footer-content">
                 <div>
                     <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 4.1</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.0</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
                 </div>
                 <div class="footer-links">
@@ -658,7 +664,7 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN MEJORADA
+        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
@@ -690,7 +696,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (NOMBRES COMPLETOS)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (TODOS LOS INDICADORES)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -708,6 +714,24 @@
             piedra:              'Piedra (%)',
             impurezas_totales:   '% Total de impurezas'
         };
+
+        // Lista completa de indicadores para el selector principal
+        const ALL_INDICATORS = [
+            'impurezas_totales',
+            'peso_total_muestra',
+            'peso_limpia',
+            'mamones',
+            'lalas',
+            'tallos_secos',
+            'tallos_daniados',
+            'raices_adheridas',
+            'raices_tierra',
+            'punta',
+            'tierra',
+            'basura',
+            'cepas',
+            'piedra'
+        ];
 
         // =========================================================================
         // ESTADO GLOBAL
@@ -734,7 +758,7 @@
                 timeGroupBy: 'semana',
                 barGroupBy: 'grupo',
                 showLabels: false,
-                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos']
+                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos', 'tallos_daniados', 'raices_adheridas', 'piedra'] // seleccionados por defecto
             },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab'
@@ -746,18 +770,13 @@
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
             if (!container) return;
-            const indicators = [
-                'impurezas_totales', 'mamones', 'lalas', 'tallos_secos',
-                'peso_total_muestra', 'peso_limpia', 'basura', 'piedra'
-            ];
             container.innerHTML = '';
-            indicators.forEach(ind => {
+            ALL_INDICATORS.forEach(ind => {
                 const chip = document.createElement('button');
                 chip.className = `chip ${AppState.globalChart.indicator === ind ? 'active' : ''}`;
                 chip.dataset.value = ind;
-                // NOMBRE COMPLETO (sin truncar)
                 chip.textContent = INDICATOR_NAMES[ind] || ind;
-                chip.title = INDICATOR_NAMES[ind] || ind; // tooltip
+                chip.title = INDICATOR_NAMES[ind] || ind;
                 chip.addEventListener('click', () => {
                     AppState.globalChart.indicator = ind;
                     document.querySelectorAll('#globalIndicatorGroup .chip').forEach(c => c.classList.remove('active'));
@@ -771,6 +790,7 @@
         function renderComparativeChips() {
             const container = document.getElementById('comparativeChipContainer');
             if (!container) return;
+            // Todos los componentes de impureza (excepto impurezas_totales)
             const candidates = [
                 'mamones', 'lalas', 'tallos_secos', 'tallos_daniados',
                 'raices_adheridas', 'raices_tierra', 'punta', 'tierra',
@@ -1329,6 +1349,9 @@
             }
         }
 
+        // =========================================================================
+        // RENDERIZACIÓN DE KPIs (8 más importantes, pero todos están en análisis)
+        // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
             if (!grid) return;
@@ -1365,7 +1388,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS
+        // MÉTRICAS DETALLADAS (TODAS LAS IMPUREZAS Y DEMÁS)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1376,37 +1399,47 @@
                 if (response.success) {
                     const metrics = response.metrics || {};
                     const estadisticas = response.estadisticas || {};
-                    const impurityMetrics = [
-                        { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree' },
-                        { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf' },
-                        { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire' },
-                        { id: 'tallos_daniados', title: 'Tallos dañados', icon: 'fas fa-bug' },
-                        { id: 'raices_adheridas', title: 'Raíces adheridas', icon: 'fas fa-root' },
-                        { id: 'raices_tierra', title: 'Raíces con tierra', icon: 'fas fa-mountain' },
-                        { id: 'punta', title: 'Punta', icon: 'fas fa-arrow-up' },
-                        { id: 'tierra', title: 'Tierra', icon: 'fas fa-mountain' },
-                        { id: 'basura', title: 'Basura', icon: 'fas fa-trash' },
-                        { id: 'cepas', title: 'Cepas', icon: 'fas fa-seedling' },
-                        { id: 'piedra', title: 'Piedra', icon: 'fas fa-gem' }
+                    // Todas las métricas de impurezas + peso_total_muestra y peso_limpia
+                    const allMetrics = [
+                        { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging', unit: 'kg' },
+                        { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale', unit: '%' },
+                        { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree', unit: '%' },
+                        { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf', unit: '%' },
+                        { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire', unit: '%' },
+                        { id: 'tallos_daniados', title: 'Tallos dañados', icon: 'fas fa-bug', unit: '%' },
+                        { id: 'raices_adheridas', title: 'Raíces adheridas', icon: 'fas fa-root', unit: '%' },
+                        { id: 'raices_tierra', title: 'Raíces con tierra', icon: 'fas fa-mountain', unit: '%' },
+                        { id: 'punta', title: 'Punta', icon: 'fas fa-arrow-up', unit: '%' },
+                        { id: 'tierra', title: 'Tierra', icon: 'fas fa-mountain', unit: '%' },
+                        { id: 'basura', title: 'Basura', icon: 'fas fa-trash', unit: '%' },
+                        { id: 'cepas', title: 'Cepas', icon: 'fas fa-seedling', unit: '%' },
+                        { id: 'piedra', title: 'Piedra', icon: 'fas fa-gem', unit: '%' },
+                        { id: 'impurezas_totales', title: 'Impurezas totales', icon: 'fas fa-calculator', unit: '%' }
                     ];
-                    grid.innerHTML = impurityMetrics.map(metric => {
+                    grid.innerHTML = allMetrics.map(metric => {
                         if (!metrics.hasOwnProperty(metric.id)) return '';
                         const value = metrics[metric.id] || 0;
                         const color = getColorForIndicator(metric.id, value);
-                        const maxValue = 5;
+                        const unit = metric.unit;
+                        const displayValue = unit === '%' ? value.toFixed(2) + '%' : value.toFixed(2) + ' kg';
+                        // Para barras de porcentaje, escala visual máxima 30%
+                        const maxValue = metric.unit === '%' ? 30 : 1000;
+                        const percentWidth = Math.min((value / maxValue) * 100, 100);
                         return `
                             <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                                     <h4 style="display: flex; gap: 8px;"><i class="${metric.icon}" style="color: var(--primary);"></i> ${metric.title}</h4>
-                                    <span style="font-weight: bold; color: ${color};">${value.toFixed(2)}%</span>
+                                    <span style="font-weight: bold; color: ${color};">${displayValue}</span>
                                 </div>
+                                ${metric.unit === '%' ? `
                                 <div style="height: 8px; background: #e2e8f0; border-radius: 20px; overflow: hidden;">
-                                    <div style="height: 100%; width: ${Math.min((value / maxValue) * 100, 100)}%; background: ${color}; border-radius: 20px;"></div>
+                                    <div style="height: 100%; width: ${percentWidth}%; background: ${color}; border-radius: 20px;"></div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.75rem; color: #64748b;">
                                     <span>0%</span>
-                                    <span>5%</span>
+                                    <span>30%</span>
                                 </div>
+                                ` : ''}
                                 <div style="margin-top: 12px; font-size: 0.8rem; color: ${color}; font-weight: 600;">
                                     ${getIndicatorStatus(metric.id, value)}
                                 </div>

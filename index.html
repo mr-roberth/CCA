@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>Sistema de Calidad de Cosecha · Controles Globales</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,9 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== ESTILOS MEJORADOS ===== */
+        /* ===== VARIABLES Y ESTILOS BASE ===== */
         :root {
-            --primary-dark: #0f3b1a;
+            --primary-dark: #0f3b1a;   /* ya no se usa en header, se mantiene por otros componentes */
             --primary: #1b5e20;
             --primary-light: #4caf50;
             --primary-soft: #e8f5e9;
@@ -26,6 +26,7 @@
             --border-radius-sm: 12px;
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #f5f7fb;
@@ -34,11 +35,13 @@
             line-height: 1.5;
         }
         .container { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- HEADER NEGRO (MEJORADO) --- */
         header {
-            background: linear-gradient(145deg, var(--primary-dark), var(--primary));
+            background: linear-gradient(145deg, #1a1a1a, #000000);
             color: white;
             padding: 12px 0;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -52,6 +55,8 @@
         .logo-img { height: 48px; width: auto; }
         .logo-text h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
         .logo-text p { font-size: 0.8rem; opacity: 0.9; }
+
+        /* --- BOTONES --- */
         .btn {
             padding: 10px 22px;
             border-radius: 40px;
@@ -72,6 +77,8 @@
         .btn-secondary { background: #f1f5f9; color: #1e293b; border: 1px solid #e2e8f0; }
         .btn-secondary:hover { background: #e2e8f0; }
         .btn-small { padding: 6px 16px; font-size: 0.8rem; }
+
+        /* --- AUTENTICACIÓN --- */
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
         .auth-box {
             background: white;
@@ -96,6 +103,8 @@
             background: #f8fafc;
         }
         .form-control:focus { outline: none; border-color: var(--primary); background: white; }
+
+        /* --- PANEL DE FILTROS --- */
         .filters-panel {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -133,6 +142,8 @@
             background-size: 16px;
         }
         .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
+
+        /* --- CONTROLES GLOBALES DE GRÁFICOS --- */
         .global-chart-controls {
             background: white;
             border-radius: 60px;
@@ -148,6 +159,8 @@
         .control-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
+
+        /* --- CHIP SELECTOR (MEJORADO PARA MÓVIL) --- */
         .chip-selector {
             display: flex;
             flex-wrap: wrap;
@@ -169,10 +182,8 @@
             white-space: nowrap;
         }
         .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
-        @media (max-width: 768px) {
-            .chip { white-space: normal; font-size: 0.7rem; padding: 4px 8px; }
-            .chip-selector { border-radius: 20px; }
-        }
+
+        /* --- TOGGLE SWITCH --- */
         .switch {
             position: relative;
             display: inline-block;
@@ -205,6 +216,8 @@
         }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
+
+        /* --- CHIPS COMPARATIVOS --- */
         .multi-chip-container {
             display: flex;
             flex-wrap: wrap;
@@ -236,6 +249,8 @@
         }
         .indicator-chip i { color: var(--primary-light); opacity: 0.8; }
         .indicator-chip.selected i { opacity: 1; color: var(--primary); }
+
+        /* --- TARJETAS DE GRÁFICO --- */
         .chart-card {
             background: white;
             border-radius: 28px;
@@ -249,6 +264,8 @@
         .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .chart-header h3 { font-size: 1.1rem; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; }
         .chart-wrapper { flex: 1; position: relative; }
+
+        /* --- KPIs --- */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -269,6 +286,8 @@
         .kpi-icon { font-size: 1.6rem; opacity: 0.8; }
         .kpi-value { font-size: 2.2rem; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
         .kpi-subtitle { font-size: 0.8rem; color: #475569; }
+
+        /* --- SECCIÓN COMPARATIVA --- */
         .comparative-section {
             background: white;
             border-radius: 28px;
@@ -276,6 +295,8 @@
             margin-top: 30px;
             box-shadow: var(--card-shadow);
         }
+
+        /* --- TABLA DE DATOS --- */
         .data-section {
             background: white;
             border-radius: 28px;
@@ -302,6 +323,8 @@
             font-size: 0.9rem;
         }
         .data-table tr:hover { background: #f1f5f9; }
+
+        /* --- TABS --- */
         .tabs {
             display: flex;
             border-bottom: 1px solid #e2e8f0;
@@ -324,6 +347,23 @@
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* --- EXPLICACIONES DINÁMICAS (ANÁLISIS) --- */
+        .metric-explanation {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #334155;
+            background: #f1f5f9;
+            padding: 8px 10px;
+            border-radius: 16px;
+            border-left: 4px solid;
+            line-height: 1.4;
+            max-height: 4.2rem; /* ~3 líneas */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --- LOADING --- */
         .loading {
             display: flex;
             flex-direction: column;
@@ -341,6 +381,8 @@
             margin-bottom: 20px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- FOOTER --- */
         footer {
             background: var(--primary-dark);
             color: white;
@@ -350,7 +392,39 @@
         .footer-content { display: flex; justify-content: space-between; align-items: center; }
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
         .footer-links a:hover { opacity: 1; }
-        @media (max-width: 1024px) { .global-chart-controls { border-radius: 30px; } }
+
+        /* =====================================================================
+           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
+           ===================================================================== */
+        @media (max-width: 1024px) {
+            .global-chart-controls { border-radius: 30px; }
+        }
+        @media (max-width: 768px) {
+            .global-chart-controls { flex-direction: column; align-items: stretch; }
+            .filters-grid { grid-template-columns: 1fr; }
+            .chip { white-space: normal; font-size: 0.7rem; padding: 4px 8px; }
+            .chip-selector { border-radius: 20px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { padding: 8px 16px; font-size: 0.9rem; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 0 16px; }
+            .global-chart-controls { padding: 12px 16px; gap: 16px; }
+            .control-group { width: 100%; justify-content: space-between; }
+            .chip-selector { width: 100%; }
+            .chip { flex: 1 1 auto; text-align: center; white-space: normal; font-size: 0.65rem; padding: 6px 4px; }
+            .kpi-grid { grid-template-columns: 1fr; }
+            .chart-card { height: auto; min-height: 300px; padding: 16px; }
+            .chart-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .multi-chip-container { padding: 10px; }
+            .indicator-chip { padding: 4px 12px; font-size: 0.7rem; }
+            .footer-content { flex-direction: column; text-align: center; gap: 16px; }
+            .footer-links a { margin: 0 8px; }
+            .auth-box { padding: 30px 20px; }
+            .logo-text h1 { font-size: 1.2rem; }
+            .logo-text p { font-size: 0.7rem; }
+            .logo-img { height: 36px; }
+        }
     </style>
 </head>
 <body>
@@ -358,7 +432,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-img">
+                    <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" class="logo-img">
                     <div class="logo-text">
                         <h1>Sistema de Calidad de Cosecha</h1>
                         <p>Controles globales · análisis interactivo</p>
@@ -650,7 +724,7 @@
             <div class="footer-content">
                 <div>
                     <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.0</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.1</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
                 </div>
                 <div class="footer-links">
@@ -674,7 +748,8 @@
                 warning: '#ff9800',
                 bad: '#f44336',
                 primary: '#1b5e20',
-                primaryLight: '#4caf50'
+                primaryLight: '#4caf50',
+                neutral: '#94a3b8' // para la tarjeta sin criticidad
             },
             thresholds: {
                 peso_total_muestra:   { red: 500,  yellow: 400 },
@@ -758,7 +833,7 @@
                 timeGroupBy: 'semana',
                 barGroupBy: 'grupo',
                 showLabels: false,
-                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos', 'tallos_daniados', 'raices_adheridas', 'piedra'] // seleccionados por defecto
+                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos', 'tallos_daniados', 'raices_adheridas', 'piedra']
             },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab'
@@ -790,7 +865,6 @@
         function renderComparativeChips() {
             const container = document.getElementById('comparativeChipContainer');
             if (!container) return;
-            // Todos los componentes de impureza (excepto impurezas_totales)
             const candidates = [
                 'mamones', 'lalas', 'tallos_secos', 'tallos_daniados',
                 'raices_adheridas', 'raices_tierra', 'punta', 'tierra',
@@ -850,7 +924,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS
+        // FUNCIONES DE GRÁFICOS (sin cambios)
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1090,6 +1164,50 @@
             if (value <= th.yellow) return CONFIG.colors.good;
             if (value <= th.red) return CONFIG.colors.warning;
             return CONFIG.colors.bad;
+        }
+
+        // Obtiene la criticidad (good, warning, bad) basada en el valor y el indicador
+        function getCriticity(indicator, value) {
+            const th = CONFIG.thresholds[indicator];
+            if (!th) return 'good';
+            if (indicator === 'peso_limpia') {
+                if (value >= th.yellow) return 'good';
+                if (value >= th.red) return 'warning';
+                return 'bad';
+            }
+            if (value <= th.yellow) return 'good';
+            if (value <= th.red) return 'warning';
+            return 'bad';
+        }
+
+        // Genera una explicación breve y dinámica para cada indicador en Análisis
+        function getExplanation(indicator, value) {
+            const criticity = getCriticity(indicator, value);
+            const baseMessages = {
+                mamones: "Mamones: caña inmadura, baja sacarosa.",
+                lalas: "Lalas: retrasan molienda y diluyen jugo.",
+                tallos_secos: "Tallos secos: azúcar degradado.",
+                tallos_daniados: "Tallos dañados: fermentación y pérdidas.",
+                raices_adheridas: "Raíces adheridas: aportan tierra y arena.",
+                raices_tierra: "Raíces con tierra: incrementan lodos.",
+                punta: "Punta: bajo contenido de azúcar.",
+                tierra: "Tierra: abrasión de equipos, pérdidas.",
+                basura: "Basura: reduce eficiencia de extracción.",
+                cepas: "Cepas: dificultan el corte y molienda.",
+                piedra: "Piedra: riesgo de rotura de molinos.",
+                peso_total_muestra: "Peso bajo: menor productividad.",
+                peso_limpia: "Pureza baja: alta presencia de impurezas.",
+                impurezas_totales: "Alta impureza: afecta rendimiento y calidad."
+            };
+            let msg = baseMessages[indicator] || "Indicador fuera de rango.";
+            if (criticity === 'good') {
+                msg = "✅ Objetivo cumplido. " + msg;
+            } else if (criticity === 'warning') {
+                msg = "⚠️ Alerta. " + msg;
+            } else {
+                msg = "❌ Crítico. " + msg;
+            }
+            return msg;
         }
 
         function formatKPIValue(value, indicator) {
@@ -1350,7 +1468,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (8 más importantes, pero todos están en análisis)
+        // RENDERIZACIÓN DE KPIs (con excepción para peso_limpia)
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -1372,23 +1490,38 @@
             grid.innerHTML = mainKPIs.map(kpi => {
                 if (!AppState.kpis.hasOwnProperty(kpi.id)) return '';
                 const value = AppState.kpis[kpi.id];
-                const color = getColorForIndicator(kpi.id, value);
-                const formatted = formatKPIValue(value, kpi.id);
-                return `
-                    <div class="kpi-card" style="border-left-color: ${color}">
-                        <div class="kpi-header">
-                            <span class="kpi-title">${kpi.title}</span>
-                            <span class="kpi-icon" style="color: ${color}"><i class="${kpi.icon}"></i></span>
+                // Para peso_limpia: NO mostrar color ni estado
+                if (kpi.id === 'peso_limpia') {
+                    const formatted = formatKPIValue(value, kpi.id);
+                    return `
+                        <div class="kpi-card" style="border-left-color: #cbd5e1;">
+                            <div class="kpi-header">
+                                <span class="kpi-title">${kpi.title}</span>
+                                <span class="kpi-icon" style="color: #64748b;"><i class="${kpi.icon}"></i></span>
+                            </div>
+                            <div class="kpi-value">${formatted}</div>
+                            <div class="kpi-subtitle">Indicador informativo</div>
                         </div>
-                        <div class="kpi-value">${formatted}</div>
-                        <div class="kpi-subtitle">${getIndicatorStatus(kpi.id, value)}</div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    const color = getColorForIndicator(kpi.id, value);
+                    const formatted = formatKPIValue(value, kpi.id);
+                    return `
+                        <div class="kpi-card" style="border-left-color: ${color}">
+                            <div class="kpi-header">
+                                <span class="kpi-title">${kpi.title}</span>
+                                <span class="kpi-icon" style="color: ${color}"><i class="${kpi.icon}"></i></span>
+                            </div>
+                            <div class="kpi-value">${formatted}</div>
+                            <div class="kpi-subtitle">${getIndicatorStatus(kpi.id, value)}</div>
+                        </div>
+                    `;
+                }
             }).join('');
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (TODAS LAS IMPUREZAS Y DEMÁS)
+        // MÉTRICAS DETALLADAS (con explicaciones dinámicas)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1399,7 +1532,6 @@
                 if (response.success) {
                     const metrics = response.metrics || {};
                     const estadisticas = response.estadisticas || {};
-                    // Todas las métricas de impurezas + peso_total_muestra y peso_limpia
                     const allMetrics = [
                         { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging', unit: 'kg' },
                         { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale', unit: '%' },
@@ -1422,11 +1554,14 @@
                         const color = getColorForIndicator(metric.id, value);
                         const unit = metric.unit;
                         const displayValue = unit === '%' ? value.toFixed(2) + '%' : value.toFixed(2) + ' kg';
-                        // Para barras de porcentaje, escala visual máxima 30%
                         const maxValue = metric.unit === '%' ? 30 : 1000;
                         const percentWidth = Math.min((value / maxValue) * 100, 100);
+                        const statusText = getIndicatorStatus(metric.id, value);
+                        const explanation = getExplanation(metric.id, value);
+                        // Color del borde de la explicación según criticidad
+                        const borderColor = metric.id === 'peso_limpia' ? '#94a3b8' : color;
                         return `
-                            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                            <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                                     <h4 style="display: flex; gap: 8px;"><i class="${metric.icon}" style="color: var(--primary);"></i> ${metric.title}</h4>
                                     <span style="font-weight: bold; color: ${color};">${displayValue}</span>
@@ -1441,7 +1576,10 @@
                                 </div>
                                 ` : ''}
                                 <div style="margin-top: 12px; font-size: 0.8rem; color: ${color}; font-weight: 600;">
-                                    ${getIndicatorStatus(metric.id, value)}
+                                    ${statusText}
+                                </div>
+                                <div class="metric-explanation" style="border-left-color: ${borderColor};">
+                                    ${explanation}
                                 </div>
                             </div>
                         `;

@@ -13,7 +13,7 @@
     <style>
         /* ===== VARIABLES Y ESTILOS BASE ===== */
         :root {
-            --primary-dark: #0f3b1a;   /* ya no se usa en header, se mantiene por otros componentes */
+            --primary-dark: #0f3b1a;
             --primary: #1b5e20;
             --primary-light: #4caf50;
             --primary-soft: #e8f5e9;
@@ -36,7 +36,7 @@
         }
         .container { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
 
-        /* --- HEADER NEGRO (MEJORADO) --- */
+        /* --- HEADER NEGRO --- */
         header {
             background: linear-gradient(145deg, #1a1a1a, #000000);
             color: white;
@@ -160,7 +160,7 @@
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
 
-        /* --- CHIP SELECTOR (MEJORADO PARA MÓVIL) --- */
+        /* --- CHIP SELECTOR --- */
         .chip-selector {
             display: flex;
             flex-wrap: wrap;
@@ -261,9 +261,95 @@
             flex-direction: column;
             border: 1px solid rgba(0,0,0,0.02);
         }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .chart-header h3 { font-size: 1.1rem; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        .chart-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 16px; 
+        }
+        .chart-header h3 { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            color: #0f172a; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .chart-actions {
+            display: flex;
+            gap: 8px;
+        }
         .chart-wrapper { flex: 1; position: relative; }
+
+        /* --- BOTÓN DE PANTALLA COMPLETA --- */
+        .btn-expand {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: 0.2s;
+        }
+        .btn-expand:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        /* --- MODAL DE PANTALLA COMPLETA --- */
+        .modal-fullscreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .modal-fullscreen.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .btn-close {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+        .btn-close:hover {
+            color: var(--primary);
+        }
+        .modal-chart-wrapper {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+        }
 
         /* --- KPIs --- */
         .kpi-grid {
@@ -348,7 +434,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- EXPLICACIONES DINÁMICAS (ANÁLISIS) --- */
+        /* --- EXPLICACIONES DINÁMICAS --- */
         .metric-explanation {
             margin-top: 12px;
             font-size: 0.75rem;
@@ -358,7 +444,7 @@
             border-radius: 16px;
             border-left: 4px solid;
             line-height: 1.4;
-            max-height: 4.2rem; /* ~3 líneas */
+            max-height: 4.2rem;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -394,7 +480,7 @@
         .footer-links a:hover { opacity: 1; }
 
         /* =====================================================================
-           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
+           MEDIA QUERIES - RESPONSIVE AVANZADO
            ===================================================================== */
         @media (max-width: 1024px) {
             .global-chart-controls { border-radius: 30px; }
@@ -594,7 +680,10 @@
                     <div class="chart-card">
                         <div class="chart-header">
                             <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Tendencia</h3>
-                            <button class="btn btn-secondary btn-small" id="downloadMainChart"><i class="fas fa-download"></i> PNG</button>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandMainChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadMainChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="mainChart"></canvas>
@@ -603,7 +692,10 @@
                     <div class="chart-card">
                         <div class="chart-header">
                             <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Comparación</h3>
-                            <button class="btn btn-secondary btn-small" id="downloadBarChart"><i class="fas fa-download"></i> PNG</button>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandBarChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadBarChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="barChart"></canvas>
@@ -615,7 +707,10 @@
                 <section class="comparative-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3 style="font-weight: 600;"><i class="fas fa-chart-area" style="color: var(--primary);"></i> Comparativa de indicadores</h3>
-                        <button class="btn btn-secondary btn-small" id="downloadComparativeChart"><i class="fas fa-download"></i> PNG</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-expand" id="expandComparativeChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                            <button class="btn btn-secondary btn-small" id="downloadComparativeChart"><i class="fas fa-download"></i> PNG</button>
+                        </div>
                     </div>
                     <div class="multi-chip-container" id="comparativeChipContainer"></div>
                     <div class="chart-wrapper" style="height: 280px;">
@@ -712,6 +807,19 @@
             </div>
         </div>
 
+        <!-- MODAL DE PANTALLA COMPLETA -->
+        <div id="fullscreenModal" class="modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Gráfico</h2>
+                    <button class="btn-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-chart-wrapper">
+                    <canvas id="modalCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- LOADING OVERLAY -->
         <div id="loadingOverlay" class="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000;">
             <div class="spinner"></div>
@@ -724,7 +832,7 @@
             <div class="footer-content">
                 <div>
                     <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.1</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.2</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
                 </div>
                 <div class="footer-links">
@@ -749,7 +857,7 @@
                 bad: '#f44336',
                 primary: '#1b5e20',
                 primaryLight: '#4caf50',
-                neutral: '#94a3b8' // para la tarjeta sin criticidad
+                neutral: '#94a3b8'
             },
             thresholds: {
                 peso_total_muestra:   { red: 500,  yellow: 400 },
@@ -771,7 +879,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (TODOS LOS INDICADORES)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -827,7 +935,11 @@
             filtersData: {},
             currentPage: 1,
             pageSize: 50,
-            charts: {},
+            charts: {
+                main: null,
+                bar: null,
+                comparative: null
+            },
             globalChart: {
                 indicator: 'impurezas_totales',
                 timeGroupBy: 'semana',
@@ -897,6 +1009,7 @@
                     this.classList.add('active');
                     AppState.globalChart.timeGroupBy = this.dataset.value;
                     updateMainChart();
+                    updateComparativeChart(); // AHORA EL COMPARATIVO RESPETA EL TIEMPO
                 });
             });
             document.querySelectorAll('#globalBarGroup .chip').forEach(chip => {
@@ -924,7 +1037,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (sin cambios)
+        // FUNCIONES DE GRÁFICOS (MODIFICADAS PARA QUE EL COMPARATIVO USE timeGroupBy)
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1081,7 +1194,7 @@
                     const resp = await fetchGAS('getTimeSeries', {
                         ...AppState.filters,
                         indicator: ind,
-                        agrupacion: 'semana'
+                        agrupacion: AppState.globalChart.timeGroupBy // ← AHORA USA EL CONTROL DE TIEMPO
                     });
                     if (resp.success) {
                         return {
@@ -1166,7 +1279,6 @@
             return CONFIG.colors.bad;
         }
 
-        // Obtiene la criticidad (good, warning, bad) basada en el valor y el indicador
         function getCriticity(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return 'good';
@@ -1180,7 +1292,6 @@
             return 'bad';
         }
 
-        // Genera una explicación breve y dinámica para cada indicador en Análisis
         function getExplanation(indicator, value) {
             const criticity = getCriticity(indicator, value);
             const baseMessages = {
@@ -1226,6 +1337,54 @@
         }
 
         // =========================================================================
+        // FUNCIONES DE PANTALLA COMPLETA (MODAL)
+        // =========================================================================
+        function showFullscreenChart(chartType, title) {
+            const modal = document.getElementById('fullscreenModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalCanvas = document.getElementById('modalCanvas');
+            
+            if (!AppState.charts[chartType]) {
+                alert('Gráfico no disponible');
+                return;
+            }
+
+            // Obtener la configuración del gráfico original
+            const originalChart = AppState.charts[chartType];
+            const config = originalChart.config;
+            
+            // Destruir cualquier gráfico previo en el modal
+            if (modalChart) modalChart.destroy();
+            
+            // Crear nuevo gráfico en el modal
+            const ctx = modalCanvas.getContext('2d');
+            modalChart = new Chart(ctx, {
+                type: config.type,
+                data: JSON.parse(JSON.stringify(config.data)), // clonar datos
+                options: {
+                    ...config.options,
+                    responsive: true,
+                    maintainAspectRatio: false
+                },
+                plugins: [ChartDataLabels]
+            });
+            
+            modalTitle.textContent = title;
+            modal.classList.add('active');
+        }
+
+        let modalChart = null; // para el gráfico del modal
+
+        function closeModal() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.classList.remove('active');
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+        }
+
+        // =========================================================================
         // FUNCIONES DE CONEXIÓN CON GAS
         // =========================================================================
         async function fetchGAS(action, params = {}) {
@@ -1252,7 +1411,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN Y SESIÓN (sin cambios)
+        // AUTENTICACIÓN Y SESIÓN
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1468,7 +1627,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (con excepción para peso_limpia)
+        // RENDERIZACIÓN DE KPIs
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -1490,7 +1649,6 @@
             grid.innerHTML = mainKPIs.map(kpi => {
                 if (!AppState.kpis.hasOwnProperty(kpi.id)) return '';
                 const value = AppState.kpis[kpi.id];
-                // Para peso_limpia: NO mostrar color ni estado
                 if (kpi.id === 'peso_limpia') {
                     const formatted = formatKPIValue(value, kpi.id);
                     return `
@@ -1521,7 +1679,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (con explicaciones dinámicas)
+        // MÉTRICAS DETALLADAS (con explicaciones)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1558,7 +1716,6 @@
                         const percentWidth = Math.min((value / maxValue) * 100, 100);
                         const statusText = getIndicatorStatus(metric.id, value);
                         const explanation = getExplanation(metric.id, value);
-                        // Color del borde de la explicación según criticidad
                         const borderColor = metric.id === 'peso_limpia' ? '#94a3b8' : color;
                         return `
                             <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); display: flex; flex-direction: column;">
@@ -1599,7 +1756,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS (sin cambios)
+        // TABLA DE DATOS
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -1773,6 +1930,18 @@
             document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
             document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+
+            // Pantalla completa
+            document.getElementById('expandMainChart')?.addEventListener('click', () => showFullscreenChart('main', 'Tendencia'));
+            document.getElementById('expandBarChart')?.addEventListener('click', () => showFullscreenChart('bar', 'Comparación por grupos'));
+            document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparative', 'Comparativa de indicadores'));
+            document.getElementById('closeModal')?.addEventListener('click', closeModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === document.getElementById('fullscreenModal')) {
+                    closeModal();
+                }
+            });
+
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

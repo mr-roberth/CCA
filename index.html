@@ -33,8 +33,15 @@
             font-family: var(--font);
             color: #0f172a;
             line-height: 1.5;
+            overflow-x: hidden; /* Elimina scroll horizontal no deseado */
         }
-        .container { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+            overflow-x: hidden; /* Previene desbordamiento */
+        }
 
         /* --- HEADER NEGRO --- */
         header {
@@ -50,6 +57,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
         .logo { display: flex; align-items: center; gap: 16px; }
         .logo-img { height: 48px; width: auto; }
@@ -373,6 +381,14 @@
         .kpi-value { font-size: 2.2rem; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
         .kpi-subtitle { font-size: 0.8rem; color: #475569; }
 
+        /* --- FILA DE GRÁFICOS (TENDENCIA + BARRAS) --- */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
         /* --- SECCIÓN COMPARATIVA --- */
         .comparative-section {
             background: white;
@@ -416,6 +432,7 @@
             border-bottom: 1px solid #e2e8f0;
             margin-bottom: 28px;
             gap: 8px;
+            flex-wrap: wrap;
         }
         .tab {
             padding: 12px 24px;
@@ -475,12 +492,11 @@
             padding: 30px 0;
             margin-top: 60px;
         }
-        .footer-content { display: flex; justify-content: space-between; align-items: center; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
-        .footer-links a:hover { opacity: 1; }
 
         /* =====================================================================
-           MEDIA QUERIES - RESPONSIVE AVANZADO
+           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
            ===================================================================== */
         @media (max-width: 1024px) {
             .global-chart-controls { border-radius: 30px; }
@@ -492,6 +508,10 @@
             .chip-selector { border-radius: 20px; }
             .tabs { flex-wrap: wrap; }
             .tab { padding: 8px 16px; font-size: 0.9rem; }
+            .charts-row {
+                grid-template-columns: 1fr !important; /* Una sola columna en móvil */
+                gap: 20px;
+            }
         }
         @media (max-width: 480px) {
             .container { padding: 0 16px; }
@@ -510,6 +530,10 @@
             .logo-text h1 { font-size: 1.2rem; }
             .logo-text p { font-size: 0.7rem; }
             .logo-img { height: 36px; }
+            .charts-row {
+                grid-template-columns: 1fr !important;
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -675,8 +699,8 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICOS: TENDENCIA Y BARRAS -->
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <!-- GRÁFICOS: TENDENCIA Y BARRAS (con clase .charts-row) -->
+                <div class="charts-row">
                     <div class="chart-card">
                         <div class="chart-header">
                             <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Tendencia</h3>
@@ -832,7 +856,7 @@
             <div class="footer-content">
                 <div>
                     <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.2</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.3</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
                 </div>
                 <div class="footer-links">
@@ -1009,7 +1033,7 @@
                     this.classList.add('active');
                     AppState.globalChart.timeGroupBy = this.dataset.value;
                     updateMainChart();
-                    updateComparativeChart(); // AHORA EL COMPARATIVO RESPETA EL TIEMPO
+                    updateComparativeChart(); // El comparativo ahora respeta el control de tiempo
                 });
             });
             document.querySelectorAll('#globalBarGroup .chip').forEach(chip => {
@@ -1037,7 +1061,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (MODIFICADAS PARA QUE EL COMPARATIVO USE timeGroupBy)
+        // FUNCIONES DE GRÁFICOS
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1349,18 +1373,15 @@
                 return;
             }
 
-            // Obtener la configuración del gráfico original
             const originalChart = AppState.charts[chartType];
             const config = originalChart.config;
             
-            // Destruir cualquier gráfico previo en el modal
             if (modalChart) modalChart.destroy();
             
-            // Crear nuevo gráfico en el modal
             const ctx = modalCanvas.getContext('2d');
             modalChart = new Chart(ctx, {
                 type: config.type,
-                data: JSON.parse(JSON.stringify(config.data)), // clonar datos
+                data: JSON.parse(JSON.stringify(config.data)),
                 options: {
                     ...config.options,
                     responsive: true,
@@ -1373,7 +1394,7 @@
             modal.classList.add('active');
         }
 
-        let modalChart = null; // para el gráfico del modal
+        let modalChart = null;
 
         function closeModal() {
             const modal = document.getElementById('fullscreenModal');

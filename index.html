@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== ESTILOS MEJORADOS (MANTENIDOS DE TU CÓDIGO ORIGINAL) ===== */
+        /* ===== ESTILOS MEJORADOS ===== */
         :root {
             --primary-dark: #0f3b1a;
             --primary: #1b5e20;
@@ -148,17 +148,18 @@
         .control-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
-        .chip-selector { display: flex; background: #f1f5f9; border-radius: 40px; padding: 3px; }
+        .chip-selector { display: flex; flex-wrap: wrap; background: #f1f5f9; border-radius: 40px; padding: 3px; }
         .chip {
-            padding: 6px 18px;
+            padding: 6px 14px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             background: transparent;
             border: none;
             color: #475569;
             cursor: pointer;
             transition: 0.15s;
+            white-space: nowrap;
         }
         .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
         .switch {
@@ -339,7 +340,11 @@
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
         .footer-links a:hover { opacity: 1; }
         @media (max-width: 1024px) { .global-chart-controls { border-radius: 30px; } }
-        @media (max-width: 768px) { .global-chart-controls { flex-direction: column; align-items: stretch; } .filters-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .global-chart-controls { flex-direction: column; align-items: stretch; }
+            .filters-grid { grid-template-columns: 1fr; }
+            .chip { white-space: normal; font-size: 0.7rem; padding: 4px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -639,7 +644,7 @@
             <div class="footer-content">
                 <div>
                     <img src="https://www.gporres.com.mx/PFER/Images/Porres400x129.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 4.0</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 4.1</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2025 Porres Group. Todos los derechos reservados.</p>
                 </div>
                 <div class="footer-links">
@@ -653,7 +658,7 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - NUEVAS VARIABLES Y UMBRALES (ACTUALIZADO)
+        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN MEJORADA
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
@@ -665,12 +670,9 @@
                 primary: '#1b5e20',
                 primaryLight: '#4caf50'
             },
-            // =====================================================================
-            // UMBRALES PARA CADA INDICADOR (ajusta según criterios reales)
-            // =====================================================================
             thresholds: {
-                peso_total_muestra:   { red: 500,  yellow: 400 },  // kg (menor es mejor)
-                peso_limpia:          { red: 70,   yellow: 80 },   // %  (mayor es mejor, se invierte en getColorForIndicator)
+                peso_total_muestra:   { red: 500,  yellow: 400 },
+                peso_limpia:          { red: 70,   yellow: 80 },
                 mamones:             { red: 3,    yellow: 1.5 },
                 lalas:               { red: 1,    yellow: 0.5 },
                 tallos_secos:        { red: 2,    yellow: 1 },
@@ -682,13 +684,13 @@
                 basura:              { red: 1,    yellow: 0.5 },
                 cepas:               { red: 1,    yellow: 0.5 },
                 piedra:              { red: 0.2,  yellow: 0.1 },
-                impurezas_totales:   { red: 10,   yellow: 5 }     // %
+                impurezas_totales:   { red: 10,   yellow: 5 }
             },
             chartColors: ['#1b5e20','#4caf50','#8bc34a','#ffb300','#f57c00','#d32f2f','#7b1fa2','#0288d1','#00796b','#5d4037']
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (NUEVA ESTRUCTURA)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (NOMBRES COMPLETOS)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -708,7 +710,7 @@
         };
 
         // =========================================================================
-        // ESTADO GLOBAL DE LA APLICACIÓN
+        // ESTADO GLOBAL
         // =========================================================================
         const AppState = {
             user: null,
@@ -728,11 +730,11 @@
             pageSize: 50,
             charts: {},
             globalChart: {
-                indicator: 'impurezas_totales',      // indicador principal por defecto
+                indicator: 'impurezas_totales',
                 timeGroupBy: 'semana',
                 barGroupBy: 'grupo',
                 showLabels: false,
-                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos']  // chips seleccionados
+                comparativeIndicators: ['mamones', 'lalas', 'tallos_secos']
             },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab'
@@ -753,7 +755,9 @@
                 const chip = document.createElement('button');
                 chip.className = `chip ${AppState.globalChart.indicator === ind ? 'active' : ''}`;
                 chip.dataset.value = ind;
-                chip.textContent = INDICATOR_NAMES[ind]?.split(' ')[0] || ind;
+                // NOMBRE COMPLETO (sin truncar)
+                chip.textContent = INDICATOR_NAMES[ind] || ind;
+                chip.title = INDICATOR_NAMES[ind] || ind; // tooltip
                 chip.addEventListener('click', () => {
                     AppState.globalChart.indicator = ind;
                     document.querySelectorAll('#globalIndicatorGroup .chip').forEach(c => c.classList.remove('active'));
@@ -826,7 +830,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (usan AppState.globalChart)
+        // FUNCIONES DE GRÁFICOS
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1045,7 +1049,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES AUXILIARES PARA UNIDADES Y COLORES
+        // FUNCIONES AUXILIARES
         // =========================================================================
         function getUnitForIndicator(indicator) {
             const name = INDICATOR_NAMES[indicator] || '';
@@ -1058,13 +1062,11 @@
         function getColorForIndicator(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return CONFIG.colors.primary;
-            // Invertir para peso_limpia (mayor es mejor)
             if (indicator === 'peso_limpia') {
                 if (value >= th.yellow) return CONFIG.colors.good;
                 if (value >= th.red) return CONFIG.colors.warning;
                 return CONFIG.colors.bad;
             }
-            // Para el resto, menor es mejor
             if (value <= th.yellow) return CONFIG.colors.good;
             if (value <= th.red) return CONFIG.colors.warning;
             return CONFIG.colors.bad;
@@ -1086,7 +1088,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE CONEXIÓN CON GAS (NO MODIFICAR)
+        // FUNCIONES DE CONEXIÓN CON GAS
         // =========================================================================
         async function fetchGAS(action, params = {}) {
             const url = new URL(CONFIG.GAS_URL);
@@ -1112,7 +1114,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE AUTENTICACIÓN Y SESIÓN
+        // AUTENTICACIÓN Y SESIÓN (sin cambios)
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1190,7 +1192,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE CARGA DE DATOS Y FILTROS
+        // FILTROS Y DATOS
         // =========================================================================
         async function loadFilters() {
             try {
@@ -1258,14 +1260,13 @@
                     <input type="date" id="filterFechaFin" class="filter-control" value="${AppState.filtersData.fechaMax || ''}">
                 </div>
             `;
-            // Establecer valores actuales
-            if (document.getElementById('filterIngenio')) document.getElementById('filterIngenio').value = AppState.filters.ingenio;
-            if (document.getElementById('filterGrupo')) document.getElementById('filterGrupo').value = AppState.filters.grupo;
-            if (document.getElementById('filterSupervisor')) document.getElementById('filterSupervisor').value = AppState.filters.supervisor;
-            if (document.getElementById('filterZona')) document.getElementById('filterZona').value = AppState.filters.zona;
-            if (document.getElementById('filterSemana')) document.getElementById('filterSemana').value = AppState.filters.semana;
-            if (document.getElementById('filterFechaInicio')) document.getElementById('filterFechaInicio').value = AppState.filters.fechaInicio || AppState.filtersData.fechaMin;
-            if (document.getElementById('filterFechaFin')) document.getElementById('filterFechaFin').value = AppState.filters.fechaFin || AppState.filtersData.fechaMax;
+            document.getElementById('filterIngenio') && (document.getElementById('filterIngenio').value = AppState.filters.ingenio);
+            document.getElementById('filterGrupo') && (document.getElementById('filterGrupo').value = AppState.filters.grupo);
+            document.getElementById('filterSupervisor') && (document.getElementById('filterSupervisor').value = AppState.filters.supervisor);
+            document.getElementById('filterZona') && (document.getElementById('filterZona').value = AppState.filters.zona);
+            document.getElementById('filterSemana') && (document.getElementById('filterSemana').value = AppState.filters.semana);
+            document.getElementById('filterFechaInicio') && (document.getElementById('filterFechaInicio').value = AppState.filters.fechaInicio || AppState.filtersData.fechaMin);
+            document.getElementById('filterFechaFin') && (document.getElementById('filterFechaFin').value = AppState.filters.fechaFin || AppState.filtersData.fechaMax);
         }
 
         async function applyFilters() {
@@ -1328,9 +1329,6 @@
             }
         }
 
-        // =========================================================================
-        // RENDERIZACIÓN DE KPIs
-        // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
             if (!grid) return;
@@ -1367,7 +1365,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (TAB ANÁLISIS)
+        // MÉTRICAS DETALLADAS
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1395,7 +1393,7 @@
                         if (!metrics.hasOwnProperty(metric.id)) return '';
                         const value = metrics[metric.id] || 0;
                         const color = getColorForIndicator(metric.id, value);
-                        const maxValue = 5; // escala visual
+                        const maxValue = 5;
                         return `
                             <div style="background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
@@ -1430,7 +1428,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE TABLA DE DATOS (sin cambios relevantes)
+        // TABLA DE DATOS (sin cambios)
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -1493,7 +1491,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE EXPORTACIÓN Y REPORTES (resumidas, funcionales)
+        // EXPORTACIÓN Y REPORTES
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -1563,7 +1561,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE UTILIDAD
+        // UTILIDADES
         // =========================================================================
         function showLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'flex'; }
         function hideLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'none'; }
@@ -1633,7 +1631,7 @@
             document.getElementById('generateCustomReport')?.addEventListener('click', generateCustomReport);
         }
 
-        // Inicio
+        // Arranque
         document.addEventListener('DOMContentLoaded', function() {
             const savedUser = localStorage.getItem('quality_user');
             if (savedUser) {

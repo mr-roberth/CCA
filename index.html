@@ -426,7 +426,7 @@
         }
         .data-table tr:hover { background: #f1f5f9; }
 
-        /* --- TABS --- */
+        /* --- TABS PRINCIPALES --- */
         .tabs {
             display: flex;
             border-bottom: 1px solid #e2e8f0;
@@ -450,6 +450,38 @@
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* --- SUBTABS PARA CLIMA --- */
+        .weather-subtabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 40px;
+            width: fit-content;
+        }
+        .weather-subtab {
+            padding: 8px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #475569;
+            transition: 0.15s;
+            background: transparent;
+            border: none;
+        }
+        .weather-subtab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+        .weather-subcontent {
+            display: none;
+        }
+        .weather-subcontent.active {
+            display: block;
+        }
 
         /* --- EXPLICACIONES DINÁMICAS --- */
         .metric-explanation {
@@ -534,9 +566,11 @@
                 grid-template-columns: 1fr !important;
                 gap: 20px;
             }
+            .weather-subtabs { width: 100%; justify-content: center; }
+            .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
 
-        /* --- Estilos adicionales para el iframe del clima --- */
+        /* --- Estilos adicionales para el iframe y reporte del clima --- */
         .weather-container {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -560,6 +594,36 @@
         .weather-attribution a {
             color: var(--primary);
             text-decoration: none;
+        }
+
+        /* Estilos para el reporte (meteograma) */
+        .report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--primary-soft);
+        }
+        .report-header .logo-mini {
+            height: 50px;
+            width: auto;
+        }
+        .report-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            text-align: center;
+            flex: 1;
+            margin: 0 20px;
+        }
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .report-content {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 20px;
         }
     </style>
 </head>
@@ -653,7 +717,7 @@
 
         <!-- DASHBOARD -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS -->
+            <!-- TABS PRINCIPALES -->
             <div class="tabs">
                 <div class="tab active" data-tab="dashboard-tab">
                     <i class="fas fa-chart-pie"></i> Dashboard
@@ -667,7 +731,7 @@
                 <div class="tab" data-tab="reports-tab">
                     <i class="fas fa-file-pdf"></i> Reportes
                 </div>
-                <!-- NUEVA PESTAÑA: Monitor del clima -->
+                <!-- PESTAÑA: Monitor del clima -->
                 <div class="tab" data-tab="weather-tab">
                     <i class="fas fa-map-marked-alt"></i> Monitor del clima
                 </div>
@@ -860,19 +924,47 @@
                 </section>
             </div>
 
-            <!-- NUEVA PESTAÑA: Monitor del clima -->
+            <!-- PESTAÑA: Monitor del clima (con subpestañas) -->
             <div id="weather-tab" class="tab-content">
-                <section class="weather-container">
-                    <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
-                        <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
-                    </h2>
-                    <!-- iframe de meteoblue -->
-                    <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
-                    <!-- Atribución requerida -->
-                    <div class="weather-attribution">
-                        <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
+                <div class="weather-container">
+                    <!-- Subtabs dentro de la pestaña clima -->
+                    <div class="weather-subtabs">
+                        <button class="weather-subtab active" data-subtab="map-sub">Mapa</button>
+                        <button class="weather-subtab" data-subtab="report-sub">Reporte 5 días</button>
                     </div>
-                </section>
+
+                    <!-- Contenido Mapa -->
+                    <div id="map-sub" class="weather-subcontent active">
+                        <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
+                            <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
+                        </h2>
+                        <!-- iframe de meteoblue mapa -->
+                        <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
+                        <!-- Atribución requerida -->
+                        <div class="weather-attribution">
+                            <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Reporte (meteograma 5 días) -->
+                    <div id="report-sub" class="weather-subcontent">
+                        <div class="report-header">
+                            <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-mini">
+                            <h2>Sistema Operativo Azúcar - Reporte de predicción climática a 5 días</h2>
+                            <div class="report-actions">
+                                <button class="btn btn-secondary btn-small" id="printReport" title="Imprimir reporte"><i class="fas fa-print"></i> Imprimir</button>
+                                <button class="btn btn-secondary btn-small" id="downloadReport" title="Descargar como imagen"><i class="fas fa-camera"></i> PNG</button>
+                            </div>
+                        </div>
+                        <div class="report-content" id="reportContent">
+                            <!-- iframe de meteoblue meteograma -->
+                            <iframe src="https://www.meteoblue.com/es/tiempo/widget/meteogram/?geoloc=detect&temperature_units=CELSIUS&windspeed_units=KILOMETER_PER_HOUR&precipitation_units=MILLIMETER&forecast_days=5&layout=bright&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=cbfa0de0bd1327c9&sig=4b472182b65cb72a21a37bc1a711875c9431074a32855a785b73c0adec789b51" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
+                            <div class="weather-attribution">
+                                <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1955,6 +2047,52 @@
         }
 
         // =========================================================================
+        // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar)
+        // =========================================================================
+        function printReport() {
+            // Abrir diálogo de impresión del contenido del reporte (sin los botones)
+            const printContents = document.getElementById('reportContent').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            // Recargar scripts o reinicializar si es necesario, pero para este caso simple puede funcionar.
+            // Una alternativa es usar iframe de impresión, pero por simplicidad usamos este método.
+            // Recomendación: usar un iframe oculto para imprimir.
+            setTimeout(() => {
+                location.reload(); // recargar para restaurar la página (simple pero efectivo)
+            }, 100);
+        }
+
+        function downloadReportAsImage() {
+            const reportElement = document.getElementById('reportContent');
+            html2canvas(reportElement, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `reporte_clima_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // =========================================================================
+        // MANEJO DE SUBTABS EN CLIMA
+        // =========================================================================
+        function initWeatherSubtabs() {
+            const subtabs = document.querySelectorAll('.weather-subtab');
+            subtabs.forEach(subtab => {
+                subtab.addEventListener('click', function() {
+                    // Quitar active de todos los subtabs y subcontents
+                    document.querySelectorAll('.weather-subtab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.weather-subcontent').forEach(c => c.classList.remove('active'));
+                    // Activar el actual
+                    this.classList.add('active');
+                    const target = this.dataset.subtab;
+                    document.getElementById(target).classList.add('active');
+                });
+            });
+        }
+
+        // =========================================================================
         // UTILIDADES
         // =========================================================================
         function showLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'flex'; }
@@ -1983,6 +2121,7 @@
                 bindGroupChips();
                 initGlobalToggle();
                 updateAllCharts();
+                initWeatherSubtabs(); // Inicializar subtabs de clima
             } catch (e) {
                 console.error('Error en initializeApp:', e);
             } finally {
@@ -2008,6 +2147,7 @@
                 }
             });
 
+            // Tabs principales
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2021,21 +2161,33 @@
                     // Nota: La pestaña weather-tab no necesita carga especial
                 });
             });
+
+            // Botones de filtros
             document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
             document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
             document.getElementById('refreshData')?.addEventListener('click', refreshAllData);
+
+            // Descargas de gráficos
             document.getElementById('downloadMainChart')?.addEventListener('click', () => downloadChart('main'));
             document.getElementById('downloadBarChart')?.addEventListener('click', () => downloadChart('bar'));
             document.getElementById('downloadComparativeChart')?.addEventListener('click', () => downloadChart('comparative'));
+
+            // Datos y paginación
             document.getElementById('downloadData')?.addEventListener('click', downloadDataAsCSV);
             document.getElementById('exportExcel')?.addEventListener('click', exportToExcel);
             document.getElementById('prevPage')?.addEventListener('click', previousPage);
             document.getElementById('nextPage')?.addEventListener('click', nextPage);
+
+            // Reportes internos
             document.getElementById('generateSummaryReport')?.addEventListener('click', () => generateReport('summary'));
             document.getElementById('generateTrendReport')?.addEventListener('click', () => generateReport('trend'));
             document.getElementById('generateComparativeReport')?.addEventListener('click', () => generateReport('comparative'));
             document.getElementById('exportFullData')?.addEventListener('click', exportFullData);
             document.getElementById('generateCustomReport')?.addEventListener('click', generateCustomReport);
+
+            // Botones de reporte climático
+            document.getElementById('printReport')?.addEventListener('click', printReport);
+            document.getElementById('downloadReport')?.addEventListener('click', downloadReportAsImage);
         }
 
         // Arranque

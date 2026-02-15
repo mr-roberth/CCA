@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE (sin cambios) ===== */
+        /* ===== VARIABLES Y ESTILOS BASE ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -64,7 +64,7 @@
         .logo-text h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
         .logo-text p { font-size: 0.8rem; opacity: 0.9; }
 
-        /* --- BOTONES (sin cambios) --- */
+        /* --- BOTONES --- */
         .btn {
             padding: 10px 22px;
             border-radius: 40px;
@@ -86,7 +86,7 @@
         .btn-secondary:hover { background: #e2e8f0; }
         .btn-small { padding: 6px 16px; font-size: 0.8rem; }
 
-        /* --- AUTENTICACIÓN (sin cambios) --- */
+        /* --- AUTENTICACIÓN --- */
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
         .auth-box {
             background: white;
@@ -112,7 +112,7 @@
         }
         .form-control:focus { outline: none; border-color: var(--primary); background: white; }
 
-        /* --- PANEL DE FILTROS (sin cambios) --- */
+        /* --- PANEL DE FILTROS --- */
         .filters-panel {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -151,7 +151,7 @@
         }
         .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
 
-        /* --- CONTROLES GLOBALES DE GRÁFICOS (sin cambios) --- */
+        /* --- CONTROLES GLOBALES DE GRÁFICOS --- */
         .global-chart-controls {
             background: white;
             border-radius: 60px;
@@ -168,7 +168,7 @@
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
 
-        /* --- CHIP SELECTOR (sin cambios) --- */
+        /* --- CHIP SELECTOR --- */
         .chip-selector {
             display: flex;
             flex-wrap: wrap;
@@ -191,7 +191,7 @@
         }
         .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
 
-        /* --- TOGGLE SWITCH (sin cambios) --- */
+        /* --- TOGGLE SWITCH --- */
         .switch {
             position: relative;
             display: inline-block;
@@ -225,7 +225,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* --- CHIPS COMPARATIVOS (sin cambios) --- */
+        /* --- CHIPS COMPARATIVOS --- */
         .multi-chip-container {
             display: flex;
             flex-wrap: wrap;
@@ -258,7 +258,7 @@
         .indicator-chip i { color: var(--primary-light); opacity: 0.8; }
         .indicator-chip.selected i { opacity: 1; color: var(--primary); }
 
-        /* --- TARJETAS DE GRÁFICO (sin cambios) --- */
+        /* --- TARJETAS DE GRÁFICO --- */
         .chart-card {
             background: white;
             border-radius: 28px;
@@ -289,7 +289,7 @@
         }
         .chart-wrapper { flex: 1; position: relative; }
 
-        /* --- BOTÓN DE PANTALLA COMPLETA (sin cambios) --- */
+        /* --- BOTÓN DE PANTALLA COMPLETA --- */
         .btn-expand {
             background: transparent;
             border: none;
@@ -305,7 +305,7 @@
             color: var(--primary);
         }
 
-        /* --- MODAL DE PANTALLA COMPLETA (sin cambios) --- */
+        /* --- MODAL DE PANTALLA COMPLETA --- */
         .modal-fullscreen {
             display: none;
             position: fixed;
@@ -359,7 +359,7 @@
             min-height: 0;
         }
 
-        /* --- KPIs (sin cambios) --- */
+        /* --- KPIs --- */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -381,7 +381,7 @@
         .kpi-value { font-size: 2.2rem; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
         .kpi-subtitle { font-size: 0.8rem; color: #475569; }
 
-        /* --- FILA DE GRÁFICOS (TENDENCIA + BARRAS) (sin cambios) --- */
+        /* --- FILA DE GRÁFICOS (TENDENCIA + BARRAS) --- */
         .charts-row {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -389,7 +389,7 @@
             margin-bottom: 30px;
         }
 
-        /* --- SECCIÓN COMPARATIVA (sin cambios) --- */
+        /* --- SECCIÓN COMPARATIVA --- */
         .comparative-section {
             background: white;
             border-radius: 28px;
@@ -398,7 +398,7 @@
             box-shadow: var(--card-shadow);
         }
 
-        /* --- TABLA DE DATOS (sin cambios) --- */
+        /* --- TABLA DE DATOS --- */
         .data-section {
             background: white;
             border-radius: 28px;
@@ -426,7 +426,7 @@
         }
         .data-table tr:hover { background: #f1f5f9; }
 
-        /* --- TABS PRINCIPALES (sin cambios, solo añadimos un nuevo tab) --- */
+        /* --- TABS PRINCIPALES --- */
         .tabs {
             display: flex;
             border-bottom: 1px solid #e2e8f0;
@@ -451,7 +451,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- SUBTABS PARA CLIMA (sin cambios) --- */
+        /* --- SUBTABS PARA CLIMA --- */
         .weather-subtabs {
             display: flex;
             gap: 10px;
@@ -483,7 +483,7 @@
             display: block;
         }
 
-        /* --- EXPLICACIONES DINÁMICAS (sin cambios) --- */
+        /* --- EXPLICACIONES DINÁMICAS --- */
         .metric-explanation {
             margin-top: 12px;
             font-size: 0.75rem;
@@ -498,7 +498,7 @@
             text-overflow: ellipsis;
         }
 
-        /* --- LOADING (sin cambios) --- */
+        /* --- LOADING --- */
         .loading {
             display: flex;
             flex-direction: column;
@@ -517,7 +517,7 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- FOOTER (sin cambios) --- */
+        /* --- FOOTER --- */
         footer {
             background: var(--primary-dark);
             color: white;
@@ -528,7 +528,7 @@
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
 
         /* =====================================================================
-           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL) (sin cambios, solo se añade estilo para presas)
+           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
            ===================================================================== */
         @media (max-width: 1024px) {
             .global-chart-controls { border-radius: 30px; }
@@ -570,7 +570,7 @@
             .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
 
-        /* --- Estilos adicionales para el iframe y reporte del clima (sin cambios) --- */
+        /* --- Estilos adicionales para el iframe y reporte del clima --- */
         .weather-container {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -596,7 +596,7 @@
             text-decoration: none;
         }
 
-        /* Estilos para el reporte (meteograma) (sin cambios) */
+        /* Estilos para el reporte (meteograma) */
         .report-header {
             display: flex;
             align-items: center;
@@ -626,7 +626,7 @@
             padding: 20px;
         }
 
-        /* ===== NUEVOS ESTILOS PARA LA PESTAÑA DE PRESAS ===== */
+        /* ===== ESTILOS PARA LA PESTAÑA DE PRESAS ===== */
         .presas-container {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -649,6 +649,40 @@
         .presas-capture-btn {
             display: flex;
             gap: 10px;
+        }
+        .presas-filters {
+            background: #f8fafc;
+            border-radius: 40px;
+            padding: 16px 24px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+        .presas-filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .presas-filter-group label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+        }
+        .presas-filter-group select, .presas-filter-group input {
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            font-size: 0.9rem;
+        }
+        .presas-filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            grid-column: span 2;
         }
         .presas-grid {
             display: grid;
@@ -710,6 +744,9 @@
         .presas-chart-card h3 {
             margin-bottom: 15px;
             color: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .presas-table-container {
             background: #f8fafc;
@@ -838,7 +875,7 @@
 
         <!-- DASHBOARD -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS PRINCIPALES (se añade nueva pestaña) -->
+            <!-- TABS PRINCIPALES -->
             <div class="tabs">
                 <div class="tab active" data-tab="dashboard-tab">
                     <i class="fas fa-chart-pie"></i> Dashboard
@@ -862,7 +899,7 @@
                 </div>
             </div>
 
-            <!-- TAB DASHBOARD (sin cambios) -->
+            <!-- TAB DASHBOARD -->
             <div id="dashboard-tab" class="tab-content active">
                 <!-- KPIs -->
                 <section class="kpi-section">
@@ -962,7 +999,7 @@
                 </section>
             </div>
 
-            <!-- TAB ANÁLISIS DETALLADO (sin cambios) -->
+            <!-- TAB ANÁLISIS DETALLADO -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -974,7 +1011,7 @@
                 </section>
             </div>
 
-            <!-- TAB DATOS COMPLETOS (sin cambios) -->
+            <!-- TAB DATOS COMPLETOS -->
             <div id="data-tab" class="tab-content">
                 <section class="data-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -999,7 +1036,7 @@
                 </section>
             </div>
 
-            <!-- TAB REPORTES (sin cambios) -->
+            <!-- TAB REPORTES -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -1049,7 +1086,7 @@
                 </section>
             </div>
 
-            <!-- PESTAÑA: Monitor del clima (sin cambios) -->
+            <!-- PESTAÑA: Monitor del clima (con subpestañas) -->
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
                     <!-- Subtabs dentro de la pestaña clima -->
@@ -1092,13 +1129,51 @@
                 </div>
             </div>
 
-            <!-- NUEVA PESTAÑA: Monitor de presas -->
+            <!-- NUEVA PESTAÑA: Monitor de presas (con filtros y pantalla completa) -->
             <div id="presas-tab" class="tab-content">
                 <div class="presas-container" id="presasCaptureArea">
                     <div class="presas-header">
                         <h2><i class="fas fa-water"></i> Monitoreo de Presas</h2>
                         <div class="presas-capture-btn">
                             <button class="btn btn-secondary btn-small" id="capturePresas"><i class="fas fa-camera"></i> Capturar pantalla</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros de presas -->
+                    <div class="presas-filters" id="presasFiltersContainer">
+                        <div class="presas-filter-group">
+                            <label>Municipio</label>
+                            <select id="filterMunicipio" class="filter-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="presas-filter-group">
+                            <label>Estado</label>
+                            <select id="filterEstado" class="filter-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="presas-filter-group">
+                            <label>Nombre oficial</label>
+                            <select id="filterNombreOficial" class="filter-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="presas-filter-group">
+                            <label>Nombre común</label>
+                            <select id="filterNombreComun" class="filter-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="presas-filter-group">
+                            <label>Región cuenca</label>
+                            <select id="filterRegionCuenca" class="filter-control">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="presas-filter-actions">
+                            <button class="btn btn-secondary btn-small" id="resetPresasFilters"><i class="fas fa-undo-alt"></i> Limpiar</button>
+                            <button class="btn btn-primary btn-small" id="applyPresasFilters"><i class="fas fa-search"></i> Aplicar</button>
                         </div>
                     </div>
 
@@ -1109,20 +1184,24 @@
                     </div>
 
                     <!-- Grid superior: último registro -->
-                    <div class="presas-grid" id="presasLastContainer" style="display: none;">
-                        <!-- Se llenará dinámicamente -->
-                    </div>
+                    <div class="presas-grid" id="presasLastContainer" style="display: none;"></div>
 
-                    <!-- Gráficos de tendencia semanal y mensual -->
+                    <!-- Gráficos de tendencia semanal y mensual con botones de expandir -->
                     <div class="presas-chart-row">
                         <div class="presas-chart-card">
-                            <h3><i class="fas fa-chart-line"></i> Tendencia semanal (% Llenado)</h3>
+                            <h3>
+                                <span><i class="fas fa-chart-line"></i> Tendencia semanal (% Llenado)</span>
+                                <button class="btn-expand" id="expandPresasWeeklyChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                            </h3>
                             <div class="chart-wrapper" style="height: 300px;">
                                 <canvas id="presasWeeklyChart"></canvas>
                             </div>
                         </div>
                         <div class="presas-chart-card">
-                            <h3><i class="fas fa-chart-line"></i> Tendencia mensual (% Llenado)</h3>
+                            <h3>
+                                <span><i class="fas fa-chart-line"></i> Tendencia mensual (% Llenado)</span>
+                                <button class="btn-expand" id="expandPresasMonthlyChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                            </h3>
                             <div class="chart-wrapper" style="height: 300px;">
                                 <canvas id="presasMonthlyChart"></canvas>
                             </div>
@@ -1138,7 +1217,7 @@
             </div>
         </div>
 
-        <!-- MODAL DE PANTALLA COMPLETA (sin cambios) -->
+        <!-- MODAL DE PANTALLA COMPLETA -->
         <div id="fullscreenModal" class="modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1151,7 +1230,7 @@
             </div>
         </div>
 
-        <!-- LOADING OVERLAY (sin cambios) -->
+        <!-- LOADING OVERLAY -->
         <div id="loadingOverlay" class="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000;">
             <div class="spinner"></div>
             <p>Procesando solicitud...</p>
@@ -1177,12 +1256,12 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA
+        // CONFIGURACIÓN DEL SISTEMA
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
             DATA_SHEET: 'Datos_CCA',
-            PRESAS_SHEET: 'Presas', // Nueva hoja
+            PRESAS_SHEET: 'Presas',
             colors: {
                 good: '#4caf50',
                 warning: '#ff9800',
@@ -1211,7 +1290,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (sin cambios)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -1230,7 +1309,6 @@
             impurezas_totales:   '% Total de impurezas'
         };
 
-        // Lista completa de indicadores para el selector principal
         const ALL_INDICATORS = [
             'impurezas_totales',
             'peso_total_muestra',
@@ -1249,7 +1327,7 @@
         ];
 
         // =========================================================================
-        // ESTADO GLOBAL (añadimos estado para presas)
+        // ESTADO GLOBAL
         // =========================================================================
         const AppState = {
             user: null,
@@ -1281,17 +1359,35 @@
             },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab',
-            // Nuevo estado para presas
+            // Estado para presas
             presas: {
-                last: null,           // último registro
+                filters: {
+                    municipio: '',
+                    estado: '',
+                    nombreOficial: '',
+                    nombreComun: '',
+                    regionCuenca: ''
+                },
+                filterOptions: {
+                    municipios: [],
+                    estados: [],
+                    nombresOficiales: [],
+                    nombresComunes: [],
+                    regionesCuenca: []
+                },
+                last: null,
                 weekly: { labels: [], data: [] },
                 monthly: { labels: [], data: [] },
-                yearMonth: []          // matriz de objetos { year, month, avg }
+                yearMonth: []
+            },
+            presasCharts: {
+                weekly: null,
+                monthly: null
             }
         };
 
         // =========================================================================
-        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL (sin cambios, solo se añade carga de presas)
+        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL (originales)
         // =========================================================================
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
@@ -1376,7 +1472,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (sin cambios, se mantienen)
+        // FUNCIONES DE GRÁFICOS (originales)
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1595,7 +1691,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES AUXILIARES (sin cambios)
+        // FUNCIONES AUXILIARES (originales)
         // =========================================================================
         function getUnitForIndicator(indicator) {
             const name = INDICATOR_NAMES[indicator] || '';
@@ -1676,40 +1772,51 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE PANTALLA COMPLETA (MODAL) (sin cambios)
+        // FUNCIONES DE PANTALLA COMPLETA (MODAL) (adaptada para cualquier canvas)
         // =========================================================================
-        function showFullscreenChart(chartType, title) {
+        let modalChart = null;
+
+        function showFullscreenChart(canvasId, title) {
             const modal = document.getElementById('fullscreenModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalCanvas = document.getElementById('modalCanvas');
+            const originalCanvas = document.getElementById(canvasId);
             
-            if (!AppState.charts[chartType]) {
+            if (!originalCanvas) {
                 alert('Gráfico no disponible');
                 return;
             }
 
-            const originalChart = AppState.charts[chartType];
-            const config = originalChart.config;
-            
+            // Obtener el chart asociado
+            let originalChart = null;
+            if (canvasId === 'presasWeeklyChart') originalChart = AppState.presasCharts.weekly;
+            else if (canvasId === 'presasMonthlyChart') originalChart = AppState.presasCharts.monthly;
+            else if (canvasId === 'mainChart') originalChart = AppState.charts.main;
+            else if (canvasId === 'barChart') originalChart = AppState.charts.bar;
+            else if (canvasId === 'comparativeChart') originalChart = AppState.charts.comparative;
+
+            if (!originalChart) {
+                alert('Gráfico no disponible');
+                return;
+            }
+
             if (modalChart) modalChart.destroy();
-            
+
             const ctx = modalCanvas.getContext('2d');
             modalChart = new Chart(ctx, {
-                type: config.type,
-                data: JSON.parse(JSON.stringify(config.data)),
+                type: originalChart.config.type,
+                data: JSON.parse(JSON.stringify(originalChart.config.data)),
                 options: {
-                    ...config.options,
+                    ...originalChart.config.options,
                     responsive: true,
                     maintainAspectRatio: false
                 },
                 plugins: [ChartDataLabels]
             });
-            
+
             modalTitle.textContent = title;
             modal.classList.add('active');
         }
-
-        let modalChart = null;
 
         function closeModal() {
             const modal = document.getElementById('fullscreenModal');
@@ -1721,7 +1828,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE CONEXIÓN CON GAS (sin cambios, solo se añaden nuevos endpoints)
+        // FUNCIONES DE CONEXIÓN CON GAS
         // =========================================================================
         async function fetchGAS(action, params = {}) {
             const url = new URL(CONFIG.GAS_URL);
@@ -1747,7 +1854,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN Y SESIÓN (sin cambios)
+        // AUTENTICACIÓN Y SESIÓN (originales)
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1825,7 +1932,7 @@
         }
 
         // =========================================================================
-        // FILTROS Y DATOS (sin cambios)
+        // FILTROS Y DATOS (originales)
         // =========================================================================
         async function loadFilters() {
             try {
@@ -1963,7 +2070,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (sin cambios)
+        // RENDERIZACIÓN DE KPIs (original)
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -2015,7 +2122,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (sin cambios)
+        // MÉTRICAS DETALLADAS (original)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -2092,7 +2199,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS (sin cambios)
+        // TABLA DE DATOS (original)
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -2155,7 +2262,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES (sin cambios)
+        // EXPORTACIÓN Y REPORTES (originales)
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -2225,7 +2332,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar) (sin cambios)
+        // FUNCIONES PARA EL REPORTE DEL CLIMA (originales)
         // =========================================================================
         function printReport() {
             const printContents = document.getElementById('reportContent').innerHTML;
@@ -2248,9 +2355,6 @@
             });
         }
 
-        // =========================================================================
-        // MANEJO DE SUBTABS EN CLIMA (sin cambios)
-        // =========================================================================
         function initWeatherSubtabs() {
             const subtabs = document.querySelectorAll('.weather-subtab');
             subtabs.forEach(subtab => {
@@ -2265,41 +2369,109 @@
         }
 
         // =========================================================================
-        // NUEVAS FUNCIONES PARA PRESAS
+        // NUEVAS FUNCIONES PARA PRESAS (con filtros y pantalla completa)
         // =========================================================================
+        async function loadPresasFilterOptions() {
+            try {
+                const resp = await fetchGAS('getPresasFilterOptions');
+                if (resp.success) {
+                    AppState.presas.filterOptions = resp.data;
+                    renderPresasFilterSelects();
+                } else {
+                    console.error('Error cargando opciones de filtros:', resp.message);
+                }
+            } catch (error) {
+                console.error('Error en loadPresasFilterOptions:', error);
+            }
+        }
+
+        function renderPresasFilterSelects() {
+            const opts = AppState.presas.filterOptions;
+            const municipioSelect = document.getElementById('filterMunicipio');
+            const estadoSelect = document.getElementById('filterEstado');
+            const nombreOficialSelect = document.getElementById('filterNombreOficial');
+            const nombreComunSelect = document.getElementById('filterNombreComun');
+            const regionCuencaSelect = document.getElementById('filterRegionCuenca');
+
+            if (municipioSelect) {
+                municipioSelect.innerHTML = '<option value="">Todos</option>' + 
+                    opts.municipios.map(v => `<option value="${v}">${v}</option>`).join('');
+                municipioSelect.value = AppState.presas.filters.municipio;
+            }
+            if (estadoSelect) {
+                estadoSelect.innerHTML = '<option value="">Todos</option>' + 
+                    opts.estados.map(v => `<option value="${v}">${v}</option>`).join('');
+                estadoSelect.value = AppState.presas.filters.estado;
+            }
+            if (nombreOficialSelect) {
+                nombreOficialSelect.innerHTML = '<option value="">Todos</option>' + 
+                    opts.nombresOficiales.map(v => `<option value="${v}">${v}</option>`).join('');
+                nombreOficialSelect.value = AppState.presas.filters.nombreOficial;
+            }
+            if (nombreComunSelect) {
+                nombreComunSelect.innerHTML = '<option value="">Todos</option>' + 
+                    opts.nombresComunes.map(v => `<option value="${v}">${v}</option>`).join('');
+                nombreComunSelect.value = AppState.presas.filters.nombreComun;
+            }
+            if (regionCuencaSelect) {
+                regionCuencaSelect.innerHTML = '<option value="">Todos</option>' + 
+                    opts.regionesCuenca.map(v => `<option value="${v}">${v}</option>`).join('');
+                regionCuencaSelect.value = AppState.presas.filters.regionCuenca;
+            }
+        }
+
+        function updatePresasFiltersFromUI() {
+            AppState.presas.filters = {
+                municipio: document.getElementById('filterMunicipio')?.value || '',
+                estado: document.getElementById('filterEstado')?.value || '',
+                nombreOficial: document.getElementById('filterNombreOficial')?.value || '',
+                nombreComun: document.getElementById('filterNombreComun')?.value || '',
+                regionCuenca: document.getElementById('filterRegionCuenca')?.value || ''
+            };
+        }
+
+        function resetPresasFilters() {
+            AppState.presas.filters = {
+                municipio: '',
+                estado: '',
+                nombreOficial: '',
+                nombreComun: '',
+                regionCuenca: ''
+            };
+            renderPresasFilterSelects();
+            loadPresasData();
+        }
+
+        function applyPresasFilters() {
+            updatePresasFiltersFromUI();
+            loadPresasData();
+        }
+
         async function loadPresasData() {
             const loadingDiv = document.getElementById('presasLoading');
             const lastContainer = document.getElementById('presasLastContainer');
             loadingDiv.style.display = 'flex';
             lastContainer.style.display = 'none';
+
             try {
-                // Obtener último registro
-                const lastResp = await fetchGAS('getPresasLast');
-                if (lastResp.success) {
-                    AppState.presas.last = lastResp.data;
-                } else {
-                    console.error('Error cargando último registro de presas');
-                }
+                const filterParams = AppState.presas.filters;
 
-                // Obtener promedios semanales
-                const weeklyResp = await fetchGAS('getPresasWeekly');
-                if (weeklyResp.success) {
-                    AppState.presas.weekly = { labels: weeklyResp.labels, data: weeklyResp.data };
-                }
+                const lastResp = await fetchGAS('getPresasLast', filterParams);
+                if (!lastResp.success) throw new Error(lastResp.message || 'Error en getPresasLast');
+                AppState.presas.last = lastResp.data;
 
-                // Obtener promedios mensuales
-                const monthlyResp = await fetchGAS('getPresasMonthly');
-                if (monthlyResp.success) {
-                    AppState.presas.monthly = { labels: monthlyResp.labels, data: monthlyResp.data };
-                }
+                const weeklyResp = await fetchGAS('getPresasWeekly', filterParams);
+                if (!weeklyResp.success) throw new Error(weeklyResp.message || 'Error en getPresasWeekly');
+                AppState.presas.weekly = { labels: weeklyResp.labels, data: weeklyResp.data };
 
-                // Obtener tabla año-mes
-                const yearMonthResp = await fetchGAS('getPresasYearMonthAvg');
-                if (yearMonthResp.success) {
-                    AppState.presas.yearMonth = yearMonthResp.data;
-                }
+                const monthlyResp = await fetchGAS('getPresasMonthly', filterParams);
+                if (!monthlyResp.success) throw new Error(monthlyResp.message || 'Error en getPresasMonthly');
+                AppState.presas.monthly = { labels: monthlyResp.labels, data: monthlyResp.data };
 
-                // Renderizar todo
+                const yearMonthResp = await fetchGAS('getPresasYearMonthAvg', filterParams);
+                if (!yearMonthResp.success) throw new Error(yearMonthResp.message || 'Error en getPresasYearMonthAvg');
+                AppState.presas.yearMonth = yearMonthResp.data;
+
                 renderPresasLast();
                 renderPresasWeeklyChart();
                 renderPresasMonthlyChart();
@@ -2309,7 +2481,7 @@
                 lastContainer.style.display = 'grid';
             } catch (error) {
                 console.error('Error en loadPresasData:', error);
-                loadingDiv.innerHTML = '<p style="color: red;">Error al cargar datos de presas</p>';
+                loadingDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             }
         }
 
@@ -2321,7 +2493,6 @@
                 container.innerHTML = '<p>No hay datos disponibles</p>';
                 return;
             }
-            // Crear dos tarjetas: una con capacidad y otra con % llenado
             container.innerHTML = `
                 <div class="presas-card">
                     <h3><i class="fas fa-database"></i> Capacidad de la presa</h3>
@@ -2348,10 +2519,9 @@
         function renderPresasWeeklyChart() {
             const ctx = document.getElementById('presasWeeklyChart')?.getContext('2d');
             if (!ctx) return;
-            // Destruir gráfico anterior si existe
-            if (window.presasWeeklyChart) window.presasWeeklyChart.destroy();
+            if (AppState.presasCharts.weekly) AppState.presasCharts.weekly.destroy();
             const data = AppState.presas.weekly;
-            window.presasWeeklyChart = new Chart(ctx, {
+            AppState.presasCharts.weekly = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.labels,
@@ -2368,12 +2538,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        datalabels: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } }
-                    }
+                    plugins: { datalabels: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
                 }
             });
         }
@@ -2381,9 +2547,9 @@
         function renderPresasMonthlyChart() {
             const ctx = document.getElementById('presasMonthlyChart')?.getContext('2d');
             if (!ctx) return;
-            if (window.presasMonthlyChart) window.presasMonthlyChart.destroy();
+            if (AppState.presasCharts.monthly) AppState.presasCharts.monthly.destroy();
             const data = AppState.presas.monthly;
-            window.presasMonthlyChart = new Chart(ctx, {
+            AppState.presasCharts.monthly = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: data.labels,
@@ -2400,12 +2566,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        datalabels: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } }
-                    }
+                    plugins: { datalabels: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
                 }
             });
         }
@@ -2418,10 +2580,9 @@
                 container.innerHTML = '<p>No hay datos disponibles</p>';
                 return;
             }
-            // Obtener años únicos y meses
             const years = [...new Set(data.map(item => item.year))].sort();
             const months = [...new Set(data.map(item => item.month))].sort((a,b) => a - b);
-            const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
             let tableHTML = '<table class="presas-table"><thead><tr><th>Año / Mes</th>';
             months.forEach(m => { tableHTML += `<th>${monthNames[m-1] || m}</th>`; });
@@ -2453,7 +2614,7 @@
         }
 
         // =========================================================================
-        // UTILIDADES (sin cambios)
+        // UTILIDADES
         // =========================================================================
         function showLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'flex'; }
         function hideLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'none'; }
@@ -2467,7 +2628,7 @@
         }
 
         // =========================================================================
-        // INICIALIZACIÓN PRINCIPAL (añadimos carga de presas cuando se active la pestaña)
+        // INICIALIZACIÓN PRINCIPAL
         // =========================================================================
         async function initializeApp() {
             showLoading();
@@ -2483,11 +2644,16 @@
                 updateAllCharts();
                 initWeatherSubtabs();
 
-                // Cargar datos de presas (se cargarán en segundo plano, pero solo se renderizan si la pestaña está activa)
-                loadPresasData();
+                // Inicializar presas
+                await loadPresasFilterOptions();
+                await loadPresasData();
 
-                // Configurar evento de captura de presas
+                // Configurar eventos de presas
                 document.getElementById('capturePresas')?.addEventListener('click', capturePresas);
+                document.getElementById('resetPresasFilters')?.addEventListener('click', resetPresasFilters);
+                document.getElementById('applyPresasFilters')?.addEventListener('click', applyPresasFilters);
+                document.getElementById('expandPresasWeeklyChart')?.addEventListener('click', () => showFullscreenChart('presasWeeklyChart', 'Tendencia semanal % Llenado'));
+                document.getElementById('expandPresasMonthlyChart')?.addEventListener('click', () => showFullscreenChart('presasMonthlyChart', 'Tendencia mensual % Llenado'));
             } catch (e) {
                 console.error('Error en initializeApp:', e);
             } finally {
@@ -2502,10 +2668,9 @@
             document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
 
-            // Pantalla completa
-            document.getElementById('expandMainChart')?.addEventListener('click', () => showFullscreenChart('main', 'Tendencia'));
-            document.getElementById('expandBarChart')?.addEventListener('click', () => showFullscreenChart('bar', 'Comparación por grupos'));
-            document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparative', 'Comparativa de indicadores'));
+            document.getElementById('expandMainChart')?.addEventListener('click', () => showFullscreenChart('mainChart', 'Tendencia'));
+            document.getElementById('expandBarChart')?.addEventListener('click', () => showFullscreenChart('barChart', 'Comparación por grupos'));
+            document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparativeChart', 'Comparativa de indicadores'));
             document.getElementById('closeModal')?.addEventListener('click', closeModal);
             window.addEventListener('click', (e) => {
                 if (e.target === document.getElementById('fullscreenModal')) {
@@ -2513,7 +2678,6 @@
                 }
             });
 
-            // Tabs principales
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2525,7 +2689,6 @@
                     if (tabId === 'analytics-tab') loadDetailedMetrics();
                     if (tabId === 'data-tab') loadDataTable();
                     if (tabId === 'presas-tab') {
-                        // Si ya hay datos cargados, renderizar; si no, cargar
                         if (AppState.presas.last) {
                             renderPresasLast();
                             renderPresasWeeklyChart();
@@ -2538,30 +2701,25 @@
                 });
             });
 
-            // Botones de filtros
             document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
             document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
             document.getElementById('refreshData')?.addEventListener('click', refreshAllData);
 
-            // Descargas de gráficos
             document.getElementById('downloadMainChart')?.addEventListener('click', () => downloadChart('main'));
             document.getElementById('downloadBarChart')?.addEventListener('click', () => downloadChart('bar'));
             document.getElementById('downloadComparativeChart')?.addEventListener('click', () => downloadChart('comparative'));
 
-            // Datos y paginación
             document.getElementById('downloadData')?.addEventListener('click', downloadDataAsCSV);
             document.getElementById('exportExcel')?.addEventListener('click', exportToExcel);
             document.getElementById('prevPage')?.addEventListener('click', previousPage);
             document.getElementById('nextPage')?.addEventListener('click', nextPage);
 
-            // Reportes internos
             document.getElementById('generateSummaryReport')?.addEventListener('click', () => generateReport('summary'));
             document.getElementById('generateTrendReport')?.addEventListener('click', () => generateReport('trend'));
             document.getElementById('generateComparativeReport')?.addEventListener('click', () => generateReport('comparative'));
             document.getElementById('exportFullData')?.addEventListener('click', exportFullData);
             document.getElementById('generateCustomReport')?.addEventListener('click', generateCustomReport);
 
-            // Botones de reporte climático
             document.getElementById('printReport')?.addEventListener('click', printReport);
             document.getElementById('downloadReport')?.addEventListener('click', downloadReportAsImage);
         }

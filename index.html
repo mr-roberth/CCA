@@ -619,11 +619,14 @@
             border-radius: 16px;
             padding: 20px;
         }
-        /* Ajuste para iframe de Power BI */
         .powerbi-iframe {
             width: 100%;
             height: 700px;
         }
+        /* Estilos para KPIs de presas con color de fondo según umbral */
+        .kpi-card.llenado-bajo { border-left-color: #f44336; background-color: #ffebee; }
+        .kpi-card.llenado-medio { border-left-color: #ff9800; background-color: #fff3e0; }
+        .kpi-card.llenado-alto { border-left-color: #4caf50; background-color: #e8f5e9; }
     </style>
 </head>
 <body>
@@ -970,7 +973,6 @@
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
                             <i class="fas fa-calendar-week"></i> Pronóstico extendido 7 días
                         </h2>
-                        <!-- El iframe se envuelve en un div centrado -->
                         <div style="display: flex; justify-content: center;">
                             <iframe src="https://www.meteoblue.com/en/weather/widget/daily/?geoloc=detect&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&days=7&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=1&winddirection=1&uv=1&humidity=1&precipitation=1&precipitationprobability=1&spot=1&pressure=1&layout=dark&user_key=4646e18c1240a1c4&embed_key=e18ffece7e4322d2&sig=643f2e3142bdcbfe0197edfb7b92428c4aff8075888c072926f69a71288ede88" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; max-width: 378px; height: 447px;"></iframe>
                         </div>
@@ -989,9 +991,9 @@
                 </div>
             </div>
 
-            <!-- ==================== NUEVO: MONITOR DE PRESAS ==================== -->
+            <!-- ==================== NUEVO: MONITOR DE PRESAS (MEJORADO) ==================== -->
             <div id="presas-tab" class="tab-content">
-                <!-- KPIs de presas -->
+                <!-- KPIs de presas rediseñados -->
                 <section class="kpi-section">
                     <h2 style="display: flex; gap: 10px; margin-bottom: 20px; color: var(--primary);">
                         <i class="fas fa-water"></i> Indicadores de presas
@@ -1014,7 +1016,7 @@
                     <div class="filters-grid" id="presasFiltersGrid"></div>
                 </section>
 
-                <!-- CONTROLES GLOBALES PARA PRESAS (similares) -->
+                <!-- CONTROLES GLOBALES PARA PRESAS -->
                 <div class="global-chart-controls">
                     <div class="control-group">
                         <span class="control-label"><i class="fas fa-chart-bar"></i> Agrupar barras por:</span>
@@ -1111,7 +1113,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 6.0</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 6.1</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1125,12 +1127,12 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA CON PRESAS
+        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA CON PRESAS MEJORADO
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
             DATA_SHEET: 'Datos_CCA',
-            PRESAS_SHEET: 'Presas', // Hoja de presas
+            PRESAS_SHEET: 'Presas',
             colors: {
                 good: '#4caf50',
                 warning: '#ff9800',
@@ -1154,6 +1156,9 @@
                 cepas:               { red: 1,    yellow: 0.5 },
                 piedra:              { red: 0.2,  yellow: 0.1 },
                 impurezas_totales:   { red: 10,   yellow: 5 }
+            },
+            presasThresholds: {
+                llenado: { rojo: 50, amarillo: 80 } // <50 rojo, 50-79 amarillo, >=80 verde
             },
             chartColors: ['#1b5e20','#4caf50','#8bc34a','#ffb300','#f57c00','#d32f2f','#7b1fa2','#0288d1','#00796b','#5d4037']
         };
@@ -1199,7 +1204,6 @@
         // CONFIGURACIÓN PARA PRESAS
         // =========================================================================
         const PRESAS_CONFIG = {
-            // Columnas exactas de la hoja "Presas"
             columns: {
                 estado: 'Estado',
                 municipio: 'Municipio',
@@ -1207,18 +1211,13 @@
                 region_cuenca: 'Region_cuenca',
                 capacidad: 'Capacidad (hm3)',
                 porcentaje_llenado: '% Llenado',
-                fecha: 'Fecha' // opcional, puede no existir
+                fecha: 'Fecha'
             },
-            // Indicador principal (el que se grafica)
-            mainIndicator: 'porcentaje_llenado',
-            // Umbrales para colores (opcional, se puede ajustar)
-            thresholds: {
-                porcentaje_llenado: { red: 30, yellow: 50 } // por ejemplo, <30% crítico, <50% alerta
-            }
+            mainIndicator: 'porcentaje_llenado'
         };
 
         // =========================================================================
-        // ESTADO GLOBAL (ampliado para presas)
+        // ESTADO GLOBAL (ampliado para presas con caché)
         // =========================================================================
         const AppState = {
             user: null,
@@ -1269,8 +1268,14 @@
                     bar: null
                 },
                 globalChart: {
-                    barGroupBy: 'Estado', // Estado, Municipio, Region_cuenca
+                    barGroupBy: 'Estado',
                     showLabels: false
+                },
+                // Caché para evitar recargas innecesarias
+                cache: {
+                    dashboard: null,
+                    timestamp: 0,
+                    filtersHash: ''
                 }
             },
             clickFilter: { type: null, value: null },
@@ -1715,7 +1720,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE CONEXIÓN CON GAS
+        // FUNCIONES DE CONEXIÓN CON GAS (con timeout)
         // =========================================================================
         async function fetchGAS(action, params = {}) {
             const url = new URL(CONFIG.GAS_URL);
@@ -1726,12 +1731,16 @@
                 }
             });
             url.searchParams.append('_t', Date.now());
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
             try {
                 const response = await fetch(url.toString(), {
                     method: 'GET',
                     mode: 'cors',
-                    headers: { 'Accept': 'application/json' }
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 return await response.json();
             } catch (error) {
@@ -1816,7 +1825,6 @@
             showLogin();
             Object.values(AppState.charts).forEach(ch => ch?.destroy());
             AppState.charts = {};
-            // También limpiar gráficos de presas
             Object.values(AppState.presas.charts).forEach(ch => ch?.destroy());
             AppState.presas.charts = {};
         }
@@ -2268,8 +2276,37 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA PRESAS
+        // FUNCIONES PARA PRESAS (MEJORADAS CON CACHÉ Y NUEVOS KPIs)
         // =========================================================================
+        function getPresasFiltersHash() {
+            const f = AppState.presas.filters;
+            return `${f.Estado}|${f.Municipio}|${f.Nombre_comun}|${f.Region_cuenca}|${f.fechaInicio}|${f.fechaFin}`;
+        }
+
+        async function loadPresasDashboardData(force = false) {
+            const hash = getPresasFiltersHash();
+            const now = Date.now();
+            const cache = AppState.presas.cache;
+            // Usar caché si es reciente (menos de 5 minutos) y mismo hash
+            if (!force && cache.dashboard && cache.filtersHash === hash && (now - cache.timestamp) < 300000) {
+                return cache.dashboard;
+            }
+            try {
+                const response = await fetchGAS('getPresasDashboardData', AppState.presas.filters);
+                if (response.success) {
+                    cache.dashboard = response;
+                    cache.filtersHash = hash;
+                    cache.timestamp = now;
+                    return response;
+                } else {
+                    throw new Error(response.message);
+                }
+            } catch (e) {
+                console.error('Error loading presas dashboard:', e);
+                return null;
+            }
+        }
+
         async function loadPresasFilters() {
             try {
                 const response = await fetchGAS('getPresasFilters');
@@ -2346,6 +2383,8 @@
                 fechaInicio: document.getElementById('presasFilterFechaInicio')?.value || '',
                 fechaFin: document.getElementById('presasFilterFechaFin')?.value || ''
             };
+            // Limpiar caché forzando recarga
+            AppState.presas.cache.timestamp = 0;
             await refreshPresasData();
         }
 
@@ -2359,40 +2398,29 @@
                 fechaFin: AppState.presas.filtersData.fechaMax || ''
             };
             renderPresasFilters();
+            AppState.presas.cache.timestamp = 0;
             refreshPresasData();
         }
 
         async function refreshPresasData() {
             showLoading();
             try {
-                await loadPresasAllData();
-                renderPresasKPIs();
-                updatePresasCharts();
-                if (document.getElementById('presas-tab').classList.contains('active')) {
-                    loadPresasDataTable();
+                const dashboard = await loadPresasDashboardData(true); // forzar recarga
+                if (dashboard) {
+                    AppState.presas.kpis = dashboard.kpis || {};
+                    AppState.presas.data = dashboard.data || [];
+                    AppState.presas.currentPage = 1;
+                    renderPresasKPIs();
+                    updatePresasCharts(dashboard);
+                    if (document.getElementById('presas-tab').classList.contains('active')) {
+                        loadPresasDataTable();
+                    }
+                    showAlert('presasDataAlert', 'success', `${AppState.presas.data.length} registros cargados`);
                 }
-                showAlert('presasDataAlert', 'success', `${AppState.presas.data.length} registros cargados`);
             } catch (e) {
                 showAlert('presasDataAlert', 'error', 'Error actualizando datos');
             } finally {
                 hideLoading();
-            }
-        }
-
-        async function loadPresasAllData() {
-            try {
-                const kpiRes = await fetchGAS('getPresasKPIs', AppState.presas.filters);
-                if (kpiRes.success) AppState.presas.kpis = kpiRes.kpis || {};
-                else throw new Error(kpiRes.message);
-                const dataRes = await fetchGAS('getPresasData', AppState.presas.filters);
-                if (dataRes.success) {
-                    AppState.presas.data = dataRes.data || [];
-                    AppState.presas.currentPage = 1;
-                } else throw new Error(dataRes.message);
-                return true;
-            } catch (e) {
-                console.error('Error loadPresasAllData:', e);
-                return false;
             }
         }
 
@@ -2404,139 +2432,141 @@
                 return;
             }
             const kpis = [
-                { id: 'total_presas', title: 'Total de presas', icon: 'fas fa-water', format: 'number' },
+                { id: 'total_estaciones', title: 'Total de Estaciones', icon: 'fas fa-water', format: 'number' },
                 { id: 'capacidad_promedio', title: 'Capacidad promedio (hm³)', icon: 'fas fa-archive', format: 'number' },
                 { id: 'llenado_promedio', title: '% Llenado promedio', icon: 'fas fa-percent', format: 'percent' }
             ];
             grid.innerHTML = kpis.map(kpi => {
                 let value = AppState.presas.kpis[kpi.id] || 0;
-                if (kpi.format === 'percent') value = value.toFixed(2) + '%';
-                else if (kpi.format === 'number') value = value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                let formatted = value;
+                let colorClass = '';
+                if (kpi.id === 'llenado_promedio') {
+                    formatted = value.toFixed(2) + '%';
+                    // Determinar clase de color según umbral
+                    if (value < 50) colorClass = 'llenado-bajo';
+                    else if (value < 80) colorClass = 'llenado-medio';
+                    else colorClass = 'llenado-alto';
+                } else {
+                    formatted = value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                }
                 return `
-                    <div class="kpi-card" style="border-left-color: var(--primary-light);">
+                    <div class="kpi-card ${colorClass}" style="border-left-color: ${colorClass ? '' : 'var(--primary-light)'};">
                         <div class="kpi-header">
                             <span class="kpi-title">${kpi.title}</span>
                             <span class="kpi-icon" style="color: var(--primary);"><i class="${kpi.icon}"></i></span>
                         </div>
-                        <div class="kpi-value">${value}</div>
+                        <div class="kpi-value">${formatted}</div>
                         <div class="kpi-subtitle">Dato global</div>
                     </div>
                 `;
             }).join('');
         }
 
-        async function updatePresasMainChart() {
+        async function updatePresasCharts(dashboard) {
+            if (!dashboard) {
+                dashboard = await loadPresasDashboardData();
+                if (!dashboard) return;
+            }
+            const { timeSeries, groupAnalysis } = dashboard;
+            updatePresasMainChart(timeSeries);
+            updatePresasBarChart(groupAnalysis);
+        }
+
+        function updatePresasMainChart(timeSeries) {
             const ctx = document.getElementById('presasMainChart')?.getContext('2d');
             if (!ctx) return;
             if (AppState.presas.charts.main) AppState.presas.charts.main.destroy();
-            try {
-                const response = await fetchGAS('getPresasTimeSeries', AppState.presas.filters);
-                if (!response.success) throw new Error(response.message);
-                const data = response.data || [];
-                const labels = response.labels || [];
-                AppState.presas.charts.main = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: '% Llenado',
-                            data: data,
-                            borderColor: CONFIG.colors.primary,
-                            backgroundColor: CONFIG.colors.primary + '20',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.3,
-                            pointBackgroundColor: CONFIG.colors.primary,
-                            pointBorderColor: '#fff',
-                            pointRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: {
-                                display: AppState.presas.globalChart.showLabels,
-                                color: '#1e293b',
-                                font: { weight: 'bold', size: 10 },
-                                formatter: (value) => value?.toFixed(1) + '%'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
-                                }
-                            }
-                        },
-                        scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
-                    },
-                    plugins: [ChartDataLabels]
-                });
-            } catch (e) {
-                console.error('Error en presasMainChart:', e);
+            if (!timeSeries || !timeSeries.labels || !timeSeries.data) {
                 ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+                return;
             }
+            AppState.presas.charts.main = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeSeries.labels,
+                    datasets: [{
+                        label: '% Llenado',
+                        data: timeSeries.data,
+                        borderColor: CONFIG.colors.primary,
+                        backgroundColor: CONFIG.colors.primary + '20',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: CONFIG.colors.primary,
+                        pointBorderColor: '#fff',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            display: AppState.presas.globalChart.showLabels,
+                            color: '#1e293b',
+                            font: { weight: 'bold', size: 10 },
+                            formatter: (value) => value?.toFixed(1) + '%'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                            }
+                        }
+                    },
+                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
+                },
+                plugins: [ChartDataLabels]
+            });
         }
 
-        async function updatePresasBarChart() {
+        function updatePresasBarChart(groupAnalysis) {
             const ctx = document.getElementById('presasBarChart')?.getContext('2d');
             if (!ctx) return;
             if (AppState.presas.charts.bar) AppState.presas.charts.bar.destroy();
-            try {
-                const agrupacion = AppState.presas.globalChart.barGroupBy;
-                const response = await fetchGAS('getPresasGroupAnalysis', {
-                    ...AppState.presas.filters,
-                    agrupacion: agrupacion
-                });
-                if (!response.success) throw new Error(response.message);
-                const analysis = response.analysis || [];
-                const labels = analysis.map(a => a.grupo).slice(0,15);
-                const data = analysis.map(a => a.valor).slice(0,15);
-                const colors = analysis.map(a => a.color).slice(0,15);
-                
-                AppState.presas.charts.bar = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: '% Llenado promedio',
-                            data: data,
-                            backgroundColor: colors,
-                            borderWidth: 0,
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: {
-                                display: AppState.presas.globalChart.showLabels,
-                                color: '#0f172a',
-                                anchor: 'end',
-                                align: 'right',
-                                formatter: (v) => v.toFixed(1) + '%'
-                            },
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
-                                }
-                            }
-                        },
-                        scales: { x: { title: { display: true, text: '% Llenado' }, max: 100 } }
-                    },
-                    plugins: [ChartDataLabels]
-                });
-            } catch (e) {
-                console.error('Error en presasBarChart:', e);
+            if (!groupAnalysis || !groupAnalysis.analysis) {
                 ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+                return;
             }
-        }
-
-        function updatePresasCharts() {
-            updatePresasMainChart();
-            updatePresasBarChart();
+            const analysis = groupAnalysis.analysis;
+            const labels = analysis.map(a => a.grupo).slice(0,15);
+            const data = analysis.map(a => a.valor).slice(0,15);
+            const colors = analysis.map(a => a.color).slice(0,15);
+            
+            AppState.presas.charts.bar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '% Llenado promedio',
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            display: AppState.presas.globalChart.showLabels,
+                            color: '#0f172a',
+                            anchor: 'end',
+                            align: 'right',
+                            formatter: (v) => v.toFixed(1) + '%'
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                            }
+                        }
+                    },
+                    scales: { x: { title: { display: true, text: '% Llenado' }, max: 100 } }
+                },
+                plugins: [ChartDataLabels]
+            });
         }
 
         function initPresasBarGroup() {
@@ -2547,7 +2577,8 @@
                     container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
                     AppState.presas.globalChart.barGroupBy = this.dataset.value;
-                    updatePresasBarChart();
+                    // Forzar recarga de análisis con nueva agrupación
+                    refreshPresasData();
                 });
             });
         }
@@ -2576,7 +2607,10 @@
             loading.style.display = 'flex';
             table.innerHTML = '';
             try {
-                if (AppState.presas.data.length === 0) await loadPresasAllData();
+                // Usar datos ya cargados en caché
+                if (AppState.presas.data.length === 0) {
+                    await refreshPresasData();
+                }
                 if (AppState.presas.data.length === 0) {
                     table.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">No hay datos</td></tr>';
                     if (pageInfo) pageInfo.textContent = 'Página 1 de 1';
@@ -2673,12 +2707,10 @@
                 
                 // Presas
                 await loadPresasFilters();
-                await loadPresasAllData();
                 renderPresasFilters();
-                renderPresasKPIs();
                 initPresasBarGroup();
                 initPresasToggle();
-                updatePresasCharts();
+                // No cargar datos de presas hasta que se active la pestaña (carga perezosa)
                 
                 // Clima subtabs
                 initWeatherSubtabs();
@@ -2715,7 +2747,7 @@
 
             // Tabs principales
             document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', async function() {
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     this.classList.add('active');
@@ -2724,7 +2756,15 @@
                     AppState.currentTab = tabId;
                     if (tabId === 'analytics-tab') loadDetailedMetrics();
                     if (tabId === 'data-tab') loadDataTable();
-                    if (tabId === 'presas-tab') loadPresasDataTable();
+                    if (tabId === 'presas-tab') {
+                        // Carga perezosa de datos de presas solo cuando se activa la pestaña
+                        if (AppState.presas.data.length === 0) {
+                            await refreshPresasData();
+                        } else {
+                            loadPresasDataTable();
+                            updatePresasCharts(); // usar caché
+                        }
+                    }
                 });
             });
 

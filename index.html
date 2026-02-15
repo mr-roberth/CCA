@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE ===== */
+        /* ===== VARIABLES Y ESTILOS BASE (sin cambios) ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -64,7 +64,7 @@
         .logo-text h1 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
         .logo-text p { font-size: 0.8rem; opacity: 0.9; }
 
-        /* --- BOTONES --- */
+        /* --- BOTONES (sin cambios) --- */
         .btn {
             padding: 10px 22px;
             border-radius: 40px;
@@ -86,7 +86,7 @@
         .btn-secondary:hover { background: #e2e8f0; }
         .btn-small { padding: 6px 16px; font-size: 0.8rem; }
 
-        /* --- AUTENTICACIÓN --- */
+        /* --- AUTENTICACIÓN (sin cambios) --- */
         .auth-container { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
         .auth-box {
             background: white;
@@ -112,7 +112,7 @@
         }
         .form-control:focus { outline: none; border-color: var(--primary); background: white; }
 
-        /* --- PANEL DE FILTROS --- */
+        /* --- PANEL DE FILTROS (sin cambios) --- */
         .filters-panel {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -151,7 +151,7 @@
         }
         .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
 
-        /* --- CONTROLES GLOBALES DE GRÁFICOS --- */
+        /* --- CONTROLES GLOBALES DE GRÁFICOS (sin cambios) --- */
         .global-chart-controls {
             background: white;
             border-radius: 60px;
@@ -168,7 +168,7 @@
         .control-label { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #334155; }
         .control-label i { color: var(--primary); }
 
-        /* --- CHIP SELECTOR --- */
+        /* --- CHIP SELECTOR (sin cambios) --- */
         .chip-selector {
             display: flex;
             flex-wrap: wrap;
@@ -191,7 +191,7 @@
         }
         .chip.active { background: white; color: var(--primary); box-shadow: 0 6px 12px rgba(0,0,0,0.04); }
 
-        /* --- TOGGLE SWITCH --- */
+        /* --- TOGGLE SWITCH (sin cambios) --- */
         .switch {
             position: relative;
             display: inline-block;
@@ -225,7 +225,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* --- CHIPS COMPARATIVOS --- */
+        /* --- CHIPS COMPARATIVOS (sin cambios) --- */
         .multi-chip-container {
             display: flex;
             flex-wrap: wrap;
@@ -258,7 +258,7 @@
         .indicator-chip i { color: var(--primary-light); opacity: 0.8; }
         .indicator-chip.selected i { opacity: 1; color: var(--primary); }
 
-        /* --- TARJETAS DE GRÁFICO --- */
+        /* --- TARJETAS DE GRÁFICO (sin cambios) --- */
         .chart-card {
             background: white;
             border-radius: 28px;
@@ -289,7 +289,7 @@
         }
         .chart-wrapper { flex: 1; position: relative; }
 
-        /* --- BOTÓN DE PANTALLA COMPLETA --- */
+        /* --- BOTÓN DE PANTALLA COMPLETA (sin cambios) --- */
         .btn-expand {
             background: transparent;
             border: none;
@@ -305,7 +305,7 @@
             color: var(--primary);
         }
 
-        /* --- MODAL DE PANTALLA COMPLETA --- */
+        /* --- MODAL DE PANTALLA COMPLETA (sin cambios) --- */
         .modal-fullscreen {
             display: none;
             position: fixed;
@@ -359,7 +359,7 @@
             min-height: 0;
         }
 
-        /* --- KPIs --- */
+        /* --- KPIs (sin cambios) --- */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -381,7 +381,7 @@
         .kpi-value { font-size: 2.2rem; font-weight: 700; margin-bottom: 6px; line-height: 1.1; }
         .kpi-subtitle { font-size: 0.8rem; color: #475569; }
 
-        /* --- FILA DE GRÁFICOS (TENDENCIA + BARRAS) --- */
+        /* --- FILA DE GRÁFICOS (TENDENCIA + BARRAS) (sin cambios) --- */
         .charts-row {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -389,7 +389,7 @@
             margin-bottom: 30px;
         }
 
-        /* --- SECCIÓN COMPARATIVA --- */
+        /* --- SECCIÓN COMPARATIVA (sin cambios) --- */
         .comparative-section {
             background: white;
             border-radius: 28px;
@@ -398,7 +398,7 @@
             box-shadow: var(--card-shadow);
         }
 
-        /* --- TABLA DE DATOS --- */
+        /* --- TABLA DE DATOS (sin cambios) --- */
         .data-section {
             background: white;
             border-radius: 28px;
@@ -426,7 +426,7 @@
         }
         .data-table tr:hover { background: #f1f5f9; }
 
-        /* --- TABS PRINCIPALES --- */
+        /* --- TABS PRINCIPALES (sin cambios, solo añadimos un nuevo tab) --- */
         .tabs {
             display: flex;
             border-bottom: 1px solid #e2e8f0;
@@ -451,7 +451,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- SUBTABS PARA CLIMA --- */
+        /* --- SUBTABS PARA CLIMA (sin cambios) --- */
         .weather-subtabs {
             display: flex;
             gap: 10px;
@@ -483,7 +483,7 @@
             display: block;
         }
 
-        /* --- EXPLICACIONES DINÁMICAS --- */
+        /* --- EXPLICACIONES DINÁMICAS (sin cambios) --- */
         .metric-explanation {
             margin-top: 12px;
             font-size: 0.75rem;
@@ -498,7 +498,7 @@
             text-overflow: ellipsis;
         }
 
-        /* --- LOADING --- */
+        /* --- LOADING (sin cambios) --- */
         .loading {
             display: flex;
             flex-direction: column;
@@ -517,7 +517,7 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- FOOTER --- */
+        /* --- FOOTER (sin cambios) --- */
         footer {
             background: var(--primary-dark);
             color: white;
@@ -528,7 +528,7 @@
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
 
         /* =====================================================================
-           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
+           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL) (sin cambios, solo se añade estilo para presas)
            ===================================================================== */
         @media (max-width: 1024px) {
             .global-chart-controls { border-radius: 30px; }
@@ -570,7 +570,7 @@
             .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
 
-        /* --- Estilos adicionales para el iframe y reporte del clima --- */
+        /* --- Estilos adicionales para el iframe y reporte del clima (sin cambios) --- */
         .weather-container {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -596,7 +596,7 @@
             text-decoration: none;
         }
 
-        /* Estilos para el reporte (meteograma) */
+        /* Estilos para el reporte (meteograma) (sin cambios) */
         .report-header {
             display: flex;
             align-items: center;
@@ -624,6 +624,127 @@
             background: #f9f9f9;
             border-radius: 16px;
             padding: 20px;
+        }
+
+        /* ===== NUEVOS ESTILOS PARA LA PESTAÑA DE PRESAS ===== */
+        .presas-container {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-top: 20px;
+        }
+        .presas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-soft);
+            padding-bottom: 10px;
+        }
+        .presas-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .presas-capture-btn {
+            display: flex;
+            gap: 10px;
+        }
+        .presas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .presas-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+        .presas-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .presas-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .gauge-bar {
+            width: 100%;
+            height: 40px;
+            background: #e2e8f0;
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 10px 0;
+            position: relative;
+        }
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+            border-radius: 30px;
+            transition: width 0.3s;
+        }
+        .gauge-label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+        .presas-chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .presas-chart-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+        .presas-chart-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .presas-table-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+            overflow-x: auto;
+        }
+        .presas-table-container h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        .presas-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .presas-table th {
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .presas-table td {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .presas-table tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+        .presas-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary);
         }
     </style>
 </head>
@@ -717,7 +838,7 @@
 
         <!-- DASHBOARD -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS PRINCIPALES -->
+            <!-- TABS PRINCIPALES (se añade nueva pestaña) -->
             <div class="tabs">
                 <div class="tab active" data-tab="dashboard-tab">
                     <i class="fas fa-chart-pie"></i> Dashboard
@@ -735,9 +856,13 @@
                 <div class="tab" data-tab="weather-tab">
                     <i class="fas fa-map-marked-alt"></i> Monitor del clima
                 </div>
+                <!-- NUEVA PESTAÑA: Monitor de presas -->
+                <div class="tab" data-tab="presas-tab">
+                    <i class="fas fa-water"></i> Monitor de presas
+                </div>
             </div>
 
-            <!-- TAB DASHBOARD -->
+            <!-- TAB DASHBOARD (sin cambios) -->
             <div id="dashboard-tab" class="tab-content active">
                 <!-- KPIs -->
                 <section class="kpi-section">
@@ -837,7 +962,7 @@
                 </section>
             </div>
 
-            <!-- TAB ANÁLISIS DETALLADO -->
+            <!-- TAB ANÁLISIS DETALLADO (sin cambios) -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -849,7 +974,7 @@
                 </section>
             </div>
 
-            <!-- TAB DATOS COMPLETOS -->
+            <!-- TAB DATOS COMPLETOS (sin cambios) -->
             <div id="data-tab" class="tab-content">
                 <section class="data-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -874,7 +999,7 @@
                 </section>
             </div>
 
-            <!-- TAB REPORTES -->
+            <!-- TAB REPORTES (sin cambios) -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -924,7 +1049,7 @@
                 </section>
             </div>
 
-            <!-- PESTAÑA: Monitor del clima (con subpestañas) -->
+            <!-- PESTAÑA: Monitor del clima (sin cambios) -->
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
                     <!-- Subtabs dentro de la pestaña clima -->
@@ -966,9 +1091,54 @@
                     </div>
                 </div>
             </div>
+
+            <!-- NUEVA PESTAÑA: Monitor de presas -->
+            <div id="presas-tab" class="tab-content">
+                <div class="presas-container" id="presasCaptureArea">
+                    <div class="presas-header">
+                        <h2><i class="fas fa-water"></i> Monitoreo de Presas</h2>
+                        <div class="presas-capture-btn">
+                            <button class="btn btn-secondary btn-small" id="capturePresas"><i class="fas fa-camera"></i> Capturar pantalla</button>
+                        </div>
+                    </div>
+
+                    <!-- Indicador de carga -->
+                    <div id="presasLoading" class="presas-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Cargando datos de presas...</p>
+                    </div>
+
+                    <!-- Grid superior: último registro -->
+                    <div class="presas-grid" id="presasLastContainer" style="display: none;">
+                        <!-- Se llenará dinámicamente -->
+                    </div>
+
+                    <!-- Gráficos de tendencia semanal y mensual -->
+                    <div class="presas-chart-row">
+                        <div class="presas-chart-card">
+                            <h3><i class="fas fa-chart-line"></i> Tendencia semanal (% Llenado)</h3>
+                            <div class="chart-wrapper" style="height: 300px;">
+                                <canvas id="presasWeeklyChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="presas-chart-card">
+                            <h3><i class="fas fa-chart-line"></i> Tendencia mensual (% Llenado)</h3>
+                            <div class="chart-wrapper" style="height: 300px;">
+                                <canvas id="presasMonthlyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de promedios por año-mes -->
+                    <div class="presas-table-container">
+                        <h3><i class="fas fa-table"></i> Promedio % Llenado por Año-Mes</h3>
+                        <div id="presasYearMonthTable"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- MODAL DE PANTALLA COMPLETA -->
+        <!-- MODAL DE PANTALLA COMPLETA (sin cambios) -->
         <div id="fullscreenModal" class="modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -981,7 +1151,7 @@
             </div>
         </div>
 
-        <!-- LOADING OVERLAY -->
+        <!-- LOADING OVERLAY (sin cambios) -->
         <div id="loadingOverlay" class="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 2000;">
             <div class="spinner"></div>
             <p>Procesando solicitud...</p>
@@ -1012,6 +1182,7 @@
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
             DATA_SHEET: 'Datos_CCA',
+            PRESAS_SHEET: 'Presas', // Nueva hoja
             colors: {
                 good: '#4caf50',
                 warning: '#ff9800',
@@ -1040,7 +1211,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (sin cambios)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -1078,7 +1249,7 @@
         ];
 
         // =========================================================================
-        // ESTADO GLOBAL
+        // ESTADO GLOBAL (añadimos estado para presas)
         // =========================================================================
         const AppState = {
             user: null,
@@ -1109,11 +1280,18 @@
                 comparativeIndicators: ['mamones', 'lalas', 'tallos_secos', 'tallos_daniados', 'raices_adheridas', 'piedra']
             },
             clickFilter: { type: null, value: null },
-            currentTab: 'dashboard-tab'
+            currentTab: 'dashboard-tab',
+            // Nuevo estado para presas
+            presas: {
+                last: null,           // último registro
+                weekly: { labels: [], data: [] },
+                monthly: { labels: [], data: [] },
+                yearMonth: []          // matriz de objetos { year, month, avg }
+            }
         };
 
         // =========================================================================
-        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL
+        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL (sin cambios, solo se añade carga de presas)
         // =========================================================================
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
@@ -1198,7 +1376,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS
+        // FUNCIONES DE GRÁFICOS (sin cambios, se mantienen)
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1417,7 +1595,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES AUXILIARES
+        // FUNCIONES AUXILIARES (sin cambios)
         // =========================================================================
         function getUnitForIndicator(indicator) {
             const name = INDICATOR_NAMES[indicator] || '';
@@ -1498,7 +1676,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE PANTALLA COMPLETA (MODAL)
+        // FUNCIONES DE PANTALLA COMPLETA (MODAL) (sin cambios)
         // =========================================================================
         function showFullscreenChart(chartType, title) {
             const modal = document.getElementById('fullscreenModal');
@@ -1543,7 +1721,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE CONEXIÓN CON GAS
+        // FUNCIONES DE CONEXIÓN CON GAS (sin cambios, solo se añaden nuevos endpoints)
         // =========================================================================
         async function fetchGAS(action, params = {}) {
             const url = new URL(CONFIG.GAS_URL);
@@ -1569,7 +1747,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN Y SESIÓN
+        // AUTENTICACIÓN Y SESIÓN (sin cambios)
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1647,7 +1825,7 @@
         }
 
         // =========================================================================
-        // FILTROS Y DATOS
+        // FILTROS Y DATOS (sin cambios)
         // =========================================================================
         async function loadFilters() {
             try {
@@ -1785,7 +1963,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs
+        // RENDERIZACIÓN DE KPIs (sin cambios)
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -1837,7 +2015,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (con explicaciones)
+        // MÉTRICAS DETALLADAS (sin cambios)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1914,7 +2092,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS
+        // TABLA DE DATOS (sin cambios)
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -1977,7 +2155,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES
+        // EXPORTACIÓN Y REPORTES (sin cambios)
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -2047,20 +2225,16 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar)
+        // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar) (sin cambios)
         // =========================================================================
         function printReport() {
-            // Abrir diálogo de impresión del contenido del reporte (sin los botones)
             const printContents = document.getElementById('reportContent').innerHTML;
             const originalContents = document.body.innerHTML;
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
-            // Recargar scripts o reinicializar si es necesario, pero para este caso simple puede funcionar.
-            // Una alternativa es usar iframe de impresión, pero por simplicidad usamos este método.
-            // Recomendación: usar un iframe oculto para imprimir.
             setTimeout(() => {
-                location.reload(); // recargar para restaurar la página (simple pero efectivo)
+                location.reload();
             }, 100);
         }
 
@@ -2075,16 +2249,14 @@
         }
 
         // =========================================================================
-        // MANEJO DE SUBTABS EN CLIMA
+        // MANEJO DE SUBTABS EN CLIMA (sin cambios)
         // =========================================================================
         function initWeatherSubtabs() {
             const subtabs = document.querySelectorAll('.weather-subtab');
             subtabs.forEach(subtab => {
                 subtab.addEventListener('click', function() {
-                    // Quitar active de todos los subtabs y subcontents
                     document.querySelectorAll('.weather-subtab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.weather-subcontent').forEach(c => c.classList.remove('active'));
-                    // Activar el actual
                     this.classList.add('active');
                     const target = this.dataset.subtab;
                     document.getElementById(target).classList.add('active');
@@ -2093,7 +2265,195 @@
         }
 
         // =========================================================================
-        // UTILIDADES
+        // NUEVAS FUNCIONES PARA PRESAS
+        // =========================================================================
+        async function loadPresasData() {
+            const loadingDiv = document.getElementById('presasLoading');
+            const lastContainer = document.getElementById('presasLastContainer');
+            loadingDiv.style.display = 'flex';
+            lastContainer.style.display = 'none';
+            try {
+                // Obtener último registro
+                const lastResp = await fetchGAS('getPresasLast');
+                if (lastResp.success) {
+                    AppState.presas.last = lastResp.data;
+                } else {
+                    console.error('Error cargando último registro de presas');
+                }
+
+                // Obtener promedios semanales
+                const weeklyResp = await fetchGAS('getPresasWeekly');
+                if (weeklyResp.success) {
+                    AppState.presas.weekly = { labels: weeklyResp.labels, data: weeklyResp.data };
+                }
+
+                // Obtener promedios mensuales
+                const monthlyResp = await fetchGAS('getPresasMonthly');
+                if (monthlyResp.success) {
+                    AppState.presas.monthly = { labels: monthlyResp.labels, data: monthlyResp.data };
+                }
+
+                // Obtener tabla año-mes
+                const yearMonthResp = await fetchGAS('getPresasYearMonthAvg');
+                if (yearMonthResp.success) {
+                    AppState.presas.yearMonth = yearMonthResp.data;
+                }
+
+                // Renderizar todo
+                renderPresasLast();
+                renderPresasWeeklyChart();
+                renderPresasMonthlyChart();
+                renderPresasYearMonthTable();
+
+                loadingDiv.style.display = 'none';
+                lastContainer.style.display = 'grid';
+            } catch (error) {
+                console.error('Error en loadPresasData:', error);
+                loadingDiv.innerHTML = '<p style="color: red;">Error al cargar datos de presas</p>';
+            }
+        }
+
+        function renderPresasLast() {
+            const container = document.getElementById('presasLastContainer');
+            if (!container) return;
+            const last = AppState.presas.last;
+            if (!last) {
+                container.innerHTML = '<p>No hay datos disponibles</p>';
+                return;
+            }
+            // Crear dos tarjetas: una con capacidad y otra con % llenado
+            container.innerHTML = `
+                <div class="presas-card">
+                    <h3><i class="fas fa-database"></i> Capacidad de la presa</h3>
+                    <div class="presas-gauge">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 100%;"></div>
+                        </div>
+                        <div class="gauge-label">${last.Capacidad || 'N/A'} Mm³</div>
+                    </div>
+                </div>
+                <div class="presas-card">
+                    <h3><i class="fas fa-tint"></i> % Llenado actual</h3>
+                    <div class="presas-gauge">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: ${last.llenado || 0}%; background: linear-gradient(90deg, #4caf50, #1b5e20);"></div>
+                        </div>
+                        <div class="gauge-label">${(last.llenado || 0).toFixed(2)}%</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #475569;"><i class="fas fa-calendar-alt"></i> Última actualización: ${last.Fecha || ''}</p>
+                </div>
+            `;
+        }
+
+        function renderPresasWeeklyChart() {
+            const ctx = document.getElementById('presasWeeklyChart')?.getContext('2d');
+            if (!ctx) return;
+            // Destruir gráfico anterior si existe
+            if (window.presasWeeklyChart) window.presasWeeklyChart.destroy();
+            const data = AppState.presas.weekly;
+            window.presasWeeklyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '% Llenado promedio por semana',
+                        data: data.data,
+                        borderColor: CONFIG.colors.primary,
+                        backgroundColor: CONFIG.colors.primary + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } }
+                    }
+                }
+            });
+        }
+
+        function renderPresasMonthlyChart() {
+            const ctx = document.getElementById('presasMonthlyChart')?.getContext('2d');
+            if (!ctx) return;
+            if (window.presasMonthlyChart) window.presasMonthlyChart.destroy();
+            const data = AppState.presas.monthly;
+            window.presasMonthlyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '% Llenado promedio por mes',
+                        data: data.data,
+                        borderColor: CONFIG.colors.accent,
+                        backgroundColor: CONFIG.colors.accent + '20',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } }
+                    }
+                }
+            });
+        }
+
+        function renderPresasYearMonthTable() {
+            const container = document.getElementById('presasYearMonthTable');
+            if (!container) return;
+            const data = AppState.presas.yearMonth;
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p>No hay datos disponibles</p>';
+                return;
+            }
+            // Obtener años únicos y meses
+            const years = [...new Set(data.map(item => item.year))].sort();
+            const months = [...new Set(data.map(item => item.month))].sort((a,b) => a - b);
+            const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+            let tableHTML = '<table class="presas-table"><thead><tr><th>Año / Mes</th>';
+            months.forEach(m => { tableHTML += `<th>${monthNames[m-1] || m}</th>`; });
+            tableHTML += '</tr></thead><tbody>';
+
+            years.forEach(year => {
+                tableHTML += `<tr><td><strong>${year}</strong></td>`;
+                months.forEach(month => {
+                    const found = data.find(item => item.year === year && item.month === month);
+                    tableHTML += `<td>${found ? found.avg.toFixed(2) + '%' : '-'}</td>`;
+                });
+                tableHTML += '</tr>';
+            });
+            tableHTML += '</tbody></table>';
+            container.innerHTML = tableHTML;
+        }
+
+        function capturePresas() {
+            const area = document.getElementById('presasCaptureArea');
+            html2canvas(area, { scale: 2, backgroundColor: '#ffffff' }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `monitor_presas_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('Error al capturar:', err);
+                alert('Error al generar la imagen');
+            });
+        }
+
+        // =========================================================================
+        // UTILIDADES (sin cambios)
         // =========================================================================
         function showLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'flex'; }
         function hideLoading() { const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.style.display = 'none'; }
@@ -2107,7 +2467,7 @@
         }
 
         // =========================================================================
-        // INICIALIZACIÓN PRINCIPAL
+        // INICIALIZACIÓN PRINCIPAL (añadimos carga de presas cuando se active la pestaña)
         // =========================================================================
         async function initializeApp() {
             showLoading();
@@ -2121,7 +2481,13 @@
                 bindGroupChips();
                 initGlobalToggle();
                 updateAllCharts();
-                initWeatherSubtabs(); // Inicializar subtabs de clima
+                initWeatherSubtabs();
+
+                // Cargar datos de presas (se cargarán en segundo plano, pero solo se renderizan si la pestaña está activa)
+                loadPresasData();
+
+                // Configurar evento de captura de presas
+                document.getElementById('capturePresas')?.addEventListener('click', capturePresas);
             } catch (e) {
                 console.error('Error en initializeApp:', e);
             } finally {
@@ -2158,7 +2524,17 @@
                     AppState.currentTab = tabId;
                     if (tabId === 'analytics-tab') loadDetailedMetrics();
                     if (tabId === 'data-tab') loadDataTable();
-                    // Nota: La pestaña weather-tab no necesita carga especial
+                    if (tabId === 'presas-tab') {
+                        // Si ya hay datos cargados, renderizar; si no, cargar
+                        if (AppState.presas.last) {
+                            renderPresasLast();
+                            renderPresasWeeklyChart();
+                            renderPresasMonthlyChart();
+                            renderPresasYearMonthTable();
+                        } else {
+                            loadPresasData();
+                        }
+                    }
                 });
             });
 

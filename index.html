@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE (sin cambios) ===== */
+        /* ===== VARIABLES Y ESTILOS BASE ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -845,11 +845,9 @@
                 <div class="tab" data-tab="reports-tab">
                     <i class="fas fa-file-pdf"></i> Reportes
                 </div>
-                <!-- PESTAÑA: Monitor del clima -->
                 <div class="tab" data-tab="weather-tab">
                     <i class="fas fa-map-marked-alt"></i> Monitor del clima
                 </div>
-                <!-- PESTAÑA: Monitor de presas -->
                 <div class="tab" data-tab="presas-tab">
                     <i class="fas fa-water"></i> Monitor de presas
                 </div>
@@ -987,13 +985,11 @@
                 </section>
             </div>
 
-            <!-- TAB REPORTES -->
+            <!-- TAB REPORTES (placeholder) -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 20px; margin-top: 20px;">
-                        <!-- Botones de reportes (se mantienen) -->
-                    </div>
+                    <p>Función en desarrollo.</p>
                 </section>
             </div>
 
@@ -1053,37 +1049,26 @@
                         </div>
                     </div>
 
-                    <!-- Filtros de presas -->
                     <div class="presas-filters" id="presasFiltersContainer">
                         <div class="presas-filter-group">
                             <label>Municipio</label>
-                            <select id="filterMunicipio" class="filter-control">
-                                <option value="">Todos</option>
-                            </select>
+                            <select id="filterMunicipio" class="filter-control"><option value="">Todos</option></select>
                         </div>
                         <div class="presas-filter-group">
                             <label>Estado</label>
-                            <select id="filterEstado" class="filter-control">
-                                <option value="">Todos</option>
-                            </select>
+                            <select id="filterEstado" class="filter-control"><option value="">Todos</option></select>
                         </div>
                         <div class="presas-filter-group">
                             <label>Nombre oficial</label>
-                            <select id="filterNombreOficial" class="filter-control">
-                                <option value="">Todos</option>
-                            </select>
+                            <select id="filterNombreOficial" class="filter-control"><option value="">Todos</option></select>
                         </div>
                         <div class="presas-filter-group">
                             <label>Nombre común</label>
-                            <select id="filterNombreComun" class="filter-control">
-                                <option value="">Todos</option>
-                            </select>
+                            <select id="filterNombreComun" class="filter-control"><option value="">Todos</option></select>
                         </div>
                         <div class="presas-filter-group">
                             <label>Región cuenca</label>
-                            <select id="filterRegionCuenca" class="filter-control">
-                                <option value="">Todos</option>
-                            </select>
+                            <select id="filterRegionCuenca" class="filter-control"><option value="">Todos</option></select>
                         </div>
                         <div class="presas-filter-actions">
                             <button class="btn btn-secondary btn-small" id="resetPresasFilters"><i class="fas fa-undo-alt"></i> Limpiar</button>
@@ -1091,16 +1076,13 @@
                         </div>
                     </div>
 
-                    <!-- Indicador de carga -->
                     <div id="presasLoading" class="presas-loading" style="display: none;">
                         <div class="spinner"></div>
                         <p>Cargando datos de presas...</p>
                     </div>
 
-                    <!-- Grid superior: último registro -->
                     <div class="presas-grid" id="presasLastContainer" style="display: none;"></div>
 
-                    <!-- Gráficos de tendencia semanal y mensual con botones de expandir -->
                     <div class="presas-chart-row">
                         <div class="presas-chart-card">
                             <h3>
@@ -1122,7 +1104,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabla de promedios por año-mes -->
                     <div class="presas-table-container">
                         <h3><i class="fas fa-table"></i> Promedio % Llenado por Año-Mes</h3>
                         <div id="presasYearMonthTable"></div>
@@ -1259,6 +1240,7 @@
             filtersData: {},
             currentPage: 1,
             pageSize: 50,
+            totalRecords: 0,
             charts: {
                 main: null,
                 bar: null,
@@ -1273,7 +1255,6 @@
             },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab',
-            // Estado para presas
             presas: {
                 filters: {
                     municipio: '',
@@ -1337,7 +1318,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN
+        // AUTENTICACIÓN Y SESIÓN
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1441,136 +1422,79 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE FILTROS
+        // FILTROS
         // =========================================================================
         async function loadFilters() {
-            try {
-                const resp = await fetchGAS('getFilters');
-                if (resp.success) {
-                    AppState.filtersData = resp.filters;
-                } else {
-                    console.error('Error loading filters:', resp.message);
-                }
-            } catch (error) {
-                console.error('Error en loadFilters:', error);
-                throw error;
+            const resp = await fetchGAS('getFilters');
+            if (resp.success) {
+                AppState.filtersData = resp.filters;
+            } else {
+                throw new Error(resp.message || 'Error al cargar filtros');
             }
         }
 
         function renderFilters() {
             const grid = document.getElementById('filtersGrid');
-            if (!grid) return;
-
+            if (!grid || !AppState.filtersData) return;
             const data = AppState.filtersData;
-            if (!data) return;
-
             grid.innerHTML = `
-                <div class="filter-group">
-                    <label>Ingenio</label>
-                    <select id="filterIngenio" class="filter-control">
-                        ${data.ingenios.map(v => `<option value="${v}" ${AppState.filters.ingenio === v ? 'selected' : ''}>${v}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Grupo</label>
-                    <select id="filterGrupo" class="filter-control">
-                        ${data.grupos.map(v => `<option value="${v}" ${AppState.filters.grupo === v ? 'selected' : ''}>${v}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Supervisor</label>
-                    <select id="filterSupervisor" class="filter-control">
-                        ${data.supervisores.map(v => `<option value="${v}" ${AppState.filters.supervisor === v ? 'selected' : ''}>${v}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Zona</label>
-                    <select id="filterZona" class="filter-control">
-                        ${data.zonas.map(v => `<option value="${v}" ${AppState.filters.zona === v ? 'selected' : ''}>${v}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Semana</label>
-                    <select id="filterSemana" class="filter-control">
-                        ${data.semanas.map(v => `<option value="${v}" ${AppState.filters.semana === v ? 'selected' : ''}>${v}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Fecha inicio</label>
-                    <input type="date" id="filterFechaInicio" class="filter-control" value="${AppState.filters.fechaInicio || ''}">
-                </div>
-                <div class="filter-group">
-                    <label>Fecha fin</label>
-                    <input type="date" id="filterFechaFin" class="filter-control" value="${AppState.filters.fechaFin || ''}">
-                </div>
+                <div class="filter-group"><label>Ingenio</label><select id="filterIngenio" class="filter-control">${data.ingenios.map(v => `<option value="${v}" ${AppState.filters.ingenio === v ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                <div class="filter-group"><label>Grupo</label><select id="filterGrupo" class="filter-control">${data.grupos.map(v => `<option value="${v}" ${AppState.filters.grupo === v ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                <div class="filter-group"><label>Supervisor</label><select id="filterSupervisor" class="filter-control">${data.supervisores.map(v => `<option value="${v}" ${AppState.filters.supervisor === v ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                <div class="filter-group"><label>Zona</label><select id="filterZona" class="filter-control">${data.zonas.map(v => `<option value="${v}" ${AppState.filters.zona === v ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                <div class="filter-group"><label>Semana</label><select id="filterSemana" class="filter-control">${data.semanas.map(v => `<option value="${v}" ${AppState.filters.semana === v ? 'selected' : ''}>${v}</option>`).join('')}</select></div>
+                <div class="filter-group"><label>Fecha inicio</label><input type="date" id="filterFechaInicio" class="filter-control" value="${AppState.filters.fechaInicio || ''}"></div>
+                <div class="filter-group"><label>Fecha fin</label><input type="date" id="filterFechaFin" class="filter-control" value="${AppState.filters.fechaFin || ''}"></div>
             `;
-
-            // Asignar eventos para actualizar el estado cuando cambien
-            document.getElementById('filterIngenio')?.addEventListener('change', (e) => { AppState.filters.ingenio = e.target.value; });
-            document.getElementById('filterGrupo')?.addEventListener('change', (e) => { AppState.filters.grupo = e.target.value; });
-            document.getElementById('filterSupervisor')?.addEventListener('change', (e) => { AppState.filters.supervisor = e.target.value; });
-            document.getElementById('filterZona')?.addEventListener('change', (e) => { AppState.filters.zona = e.target.value; });
-            document.getElementById('filterSemana')?.addEventListener('change', (e) => { AppState.filters.semana = e.target.value; });
-            document.getElementById('filterFechaInicio')?.addEventListener('change', (e) => { AppState.filters.fechaInicio = e.target.value; });
-            document.getElementById('filterFechaFin')?.addEventListener('change', (e) => { AppState.filters.fechaFin = e.target.value; });
+            document.getElementById('filterIngenio')?.addEventListener('change', e => AppState.filters.ingenio = e.target.value);
+            document.getElementById('filterGrupo')?.addEventListener('change', e => AppState.filters.grupo = e.target.value);
+            document.getElementById('filterSupervisor')?.addEventListener('change', e => AppState.filters.supervisor = e.target.value);
+            document.getElementById('filterZona')?.addEventListener('change', e => AppState.filters.zona = e.target.value);
+            document.getElementById('filterSemana')?.addEventListener('change', e => AppState.filters.semana = e.target.value);
+            document.getElementById('filterFechaInicio')?.addEventListener('change', e => AppState.filters.fechaInicio = e.target.value);
+            document.getElementById('filterFechaFin')?.addEventListener('change', e => AppState.filters.fechaFin = e.target.value);
         }
 
         // =========================================================================
-        // FUNCIONES DE DATOS GENERALES
+        // DATOS GENERALES (KPIs)
         // =========================================================================
         async function loadAllData() {
-            try {
-                const resp = await fetchGAS('getKPIs', AppState.filters);
-                if (resp.success) {
-                    AppState.kpis = resp.kpis;
-                } else {
-                    console.error('Error loading KPIs:', resp.message);
-                }
-            } catch (error) {
-                console.error('Error en loadAllData:', error);
-                throw error;
+            const resp = await fetchGAS('getKPIs', AppState.filters);
+            if (resp.success) {
+                AppState.kpis = resp.kpis;
+            } else {
+                throw new Error(resp.message || 'Error al cargar KPIs');
             }
         }
 
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
-            if (!grid) return;
+            if (!grid || !AppState.kpis) return;
             const k = AppState.kpis;
-            if (!k) return;
-
             const kpiList = [
-                { key: 'impurezas_totales', icon: 'fa-solid fa-flask', title: 'Impurezas totales' },
-                { key: 'peso_total_muestra', icon: 'fa-solid fa-weight-scale', title: 'Peso muestra' },
-                { key: 'peso_limpia', icon: 'fa-solid fa-leaf', title: 'Peso limpia' },
-                { key: 'mamones', icon: 'fa-solid fa-seedling', title: 'Mamones' },
-                { key: 'lalas', icon: 'fa-solid fa-bug', title: 'Lalas' }
+                { key: 'impurezas_totales', icon: 'fa-flask', title: 'Impurezas totales' },
+                { key: 'peso_total_muestra', icon: 'fa-weight-scale', title: 'Peso muestra' },
+                { key: 'peso_limpia', icon: 'fa-leaf', title: 'Peso limpia' },
+                { key: 'mamones', icon: 'fa-seedling', title: 'Mamones' },
+                { key: 'lalas', icon: 'fa-bug', title: 'Lalas' }
             ];
-
             grid.innerHTML = kpiList.map(item => {
                 const value = k[item.key] || 0;
                 const unit = item.key.includes('peso_total') ? 'kg' : '%';
+                const color = getColorForIndicator(item.key, value);
                 return `
-                    <div class="kpi-card" style="border-left-color: ${getColorForIndicator(item.key, value)};">
-                        <div class="kpi-header">
-                            <span class="kpi-title">${item.title}</span>
-                            <i class="fas ${item.icon} kpi-icon"></i>
-                        </div>
+                    <div class="kpi-card" style="border-left-color: ${color};">
+                        <div class="kpi-header"><span class="kpi-title">${item.title}</span><i class="fas ${item.icon} kpi-icon"></i></div>
                         <div class="kpi-value">${value.toFixed(2)} ${unit}</div>
                         <div class="kpi-subtitle">Promedio general</div>
-                        <div class="metric-explanation" style="border-left-color: ${getColorForIndicator(item.key, value)};">
-                            ${getExplanation(item.key, value)}
-                        </div>
+                        <div class="metric-explanation" style="border-left-color: ${color};">${getExplanation(item.key, value)}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        // =========================================================================
-        // FUNCIONES AUXILIARES PARA INDICADORES
-        // =========================================================================
         function getUnitForIndicator(indicator) {
-            if (indicator === 'peso_total_muestra') return 'kg';
-            return '%';
+            return indicator === 'peso_total_muestra' ? 'kg' : '%';
         }
 
         function getColorForIndicator(indicator, value) {
@@ -1590,7 +1514,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS GLOBALES
+        // GRÁFICOS GLOBALES
         // =========================================================================
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
@@ -1666,158 +1590,187 @@
 
         async function updateMainChart() {
             try {
-                const resp = await fetchGAS('getTimeSeries', {
-                    ...AppState.filters,
-                    indicator: AppState.globalChart.indicator,
-                    agrupacion: AppState.globalChart.timeGroupBy
-                });
+                const resp = await fetchGAS('getTimeSeries', { ...AppState.filters, indicator: AppState.globalChart.indicator, agrupacion: AppState.globalChart.timeGroupBy });
                 if (!resp.success) throw new Error(resp.message);
-
                 const ctx = document.getElementById('mainChart')?.getContext('2d');
                 if (!ctx) return;
                 if (AppState.charts.main) AppState.charts.main.destroy();
-
                 AppState.charts.main = new Chart(ctx, {
                     type: 'line',
-                    data: {
-                        labels: resp.labels,
-                        datasets: [{
-                            label: INDICATOR_NAMES[resp.indicator] + ' (' + getUnitForIndicator(resp.indicator) + ')',
-                            data: resp.data,
-                            borderColor: CONFIG.colors.primary,
-                            backgroundColor: CONFIG.colors.primary + '20',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: { display: AppState.globalChart.showLabels }
-                        },
-                        scales: { y: { beginAtZero: true } }
-                    },
+                    data: { labels: resp.labels, datasets: [{ label: INDICATOR_NAMES[resp.indicator] + ' (' + getUnitForIndicator(resp.indicator) + ')', data: resp.data, borderColor: CONFIG.colors.primary, backgroundColor: CONFIG.colors.primary + '20', borderWidth: 2, fill: true, tension: 0.3 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: AppState.globalChart.showLabels } }, scales: { y: { beginAtZero: true } } },
                     plugins: [ChartDataLabels]
                 });
-            } catch (error) {
-                console.error('Error en updateMainChart:', error);
-            }
+            } catch (error) { console.error('Error en updateMainChart:', error); }
         }
 
         async function updateBarChart() {
             try {
-                const resp = await fetchGAS('getGroupAnalysis', {
-                    ...AppState.filters,
-                    indicator: AppState.globalChart.indicator,
-                    agrupacion: AppState.globalChart.barGroupBy
-                });
+                const resp = await fetchGAS('getGroupAnalysis', { ...AppState.filters, indicator: AppState.globalChart.indicator, agrupacion: AppState.globalChart.barGroupBy });
                 if (!resp.success) throw new Error(resp.message);
-
                 const ctx = document.getElementById('barChart')?.getContext('2d');
                 if (!ctx) return;
                 if (AppState.charts.bar) AppState.charts.bar.destroy();
-
                 AppState.charts.bar = new Chart(ctx, {
                     type: 'bar',
-                    data: {
-                        labels: resp.analysis.map(a => a.grupo),
-                        datasets: [{
-                            label: INDICATOR_NAMES[resp.indicator] + ' (' + getUnitForIndicator(resp.indicator) + ')',
-                            data: resp.analysis.map(a => a.valor),
-                            backgroundColor: resp.analysis.map(a => a.color || CONFIG.colors.primaryLight)
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: { display: AppState.globalChart.showLabels }
-                        },
-                        scales: { y: { beginAtZero: true } }
-                    },
+                    data: { labels: resp.analysis.map(a => a.grupo), datasets: [{ label: INDICATOR_NAMES[resp.indicator] + ' (' + getUnitForIndicator(resp.indicator) + ')', data: resp.analysis.map(a => a.valor), backgroundColor: resp.analysis.map(a => a.color || CONFIG.colors.primaryLight) }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: AppState.globalChart.showLabels } }, scales: { y: { beginAtZero: true } } },
                     plugins: [ChartDataLabels]
                 });
-            } catch (error) {
-                console.error('Error en updateBarChart:', error);
-            }
+            } catch (error) { console.error('Error en updateBarChart:', error); }
         }
 
         async function updateComparativeChart() {
             try {
-                const promises = AppState.globalChart.comparativeIndicators.map(ind =>
-                    fetchGAS('getTimeSeries', {
-                        ...AppState.filters,
-                        indicator: ind,
-                        agrupacion: 'semana'
-                    })
-                );
+                const promises = AppState.globalChart.comparativeIndicators.map(ind => fetchGAS('getTimeSeries', { ...AppState.filters, indicator: ind, agrupacion: 'semana' }));
                 const results = await Promise.all(promises);
-                const validResults = results.filter(r => r.success);
-
+                const valid = results.filter(r => r.success);
+                if (!valid.length) return;
                 const ctx = document.getElementById('comparativeChart')?.getContext('2d');
                 if (!ctx) return;
                 if (AppState.charts.comparative) AppState.charts.comparative.destroy();
-
-                const datasets = validResults.map((r, i) => ({
-                    label: INDICATOR_NAMES[r.indicator] + ' (' + getUnitForIndicator(r.indicator) + ')',
-                    data: r.data,
-                    borderColor: CONFIG.chartColors[i % CONFIG.chartColors.length],
-                    backgroundColor: 'transparent',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3
-                }));
-
+                const datasets = valid.map((r, i) => ({ label: INDICATOR_NAMES[r.indicator] + ' (' + getUnitForIndicator(r.indicator) + ')', data: r.data, borderColor: CONFIG.chartColors[i % CONFIG.chartColors.length], backgroundColor: 'transparent', borderWidth: 2, fill: false, tension: 0.3 }));
                 AppState.charts.comparative = new Chart(ctx, {
                     type: 'line',
-                    data: {
-                        labels: validResults[0]?.labels || [],
-                        datasets: datasets
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: { display: false }
-                        },
-                        scales: { y: { beginAtZero: true } }
-                    }
+                    data: { labels: valid[0].labels, datasets },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: false } }, scales: { y: { beginAtZero: true } } }
                 });
+            } catch (error) { console.error('Error en updateComparativeChart:', error); }
+        }
+
+        function updateAllCharts() { updateMainChart(); updateBarChart(); updateComparativeChart(); }
+
+        // =========================================================================
+        // PESTAÑA ANÁLISIS (Métricas detalladas)
+        // =========================================================================
+        async function loadDetailedMetrics() {
+            const container = document.getElementById('detailedMetricsGrid');
+            const summaryDiv = document.getElementById('statisticsSummary');
+            if (!container) return;
+            showLoading();
+            try {
+                const resp = await fetchGAS('getAllMetrics', AppState.filters);
+                if (!resp.success) throw new Error(resp.message);
+                const metrics = resp.metrics;
+                const stats = resp.estadisticas;
+
+                container.innerHTML = ALL_INDICATORS.map(key => {
+                    if (!metrics.hasOwnProperty(key)) return '';
+                    const value = metrics[key] || 0;
+                    const unit = getUnitForIndicator(key);
+                    const color = getColorForIndicator(key, value);
+                    return `
+                        <div class="kpi-card" style="border-left-color: ${color};">
+                            <div class="kpi-header"><span class="kpi-title">${INDICATOR_NAMES[key]}</span></div>
+                            <div class="kpi-value">${value.toFixed(2)} ${unit}</div>
+                            <div class="kpi-subtitle">Promedio general</div>
+                            <div class="metric-explanation" style="border-left-color: ${color};">${getExplanation(key, value)}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                summaryDiv.innerHTML = `
+                    <div class="stat-card"><strong>Total de muestras:</strong> ${stats.totalMuestras}</div>
+                    <div class="stat-card"><strong>Fecha mínima:</strong> ${stats.fechaMin || 'N/A'}</div>
+                    <div class="stat-card"><strong>Fecha máxima:</strong> ${stats.fechaMax || 'N/A'}</div>
+                    <div class="stat-card"><strong>Ingenios únicos:</strong> ${(stats.ingeniosUnicos || []).join(', ')}</div>
+                    <div class="stat-card"><strong>Grupos únicos:</strong> ${(stats.gruposUnicos || []).join(', ')}</div>
+                `;
             } catch (error) {
-                console.error('Error en updateComparativeChart:', error);
+                console.error('Error en loadDetailedMetrics:', error);
+                container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+            } finally {
+                hideLoading();
             }
         }
 
-        function updateAllCharts() {
-            updateMainChart();
-            updateBarChart();
-            updateComparativeChart();
+        // =========================================================================
+        // PESTAÑA DATOS (Tabla con paginación)
+        // =========================================================================
+        async function loadDataTable() {
+            const tbody = document.getElementById('dataTable');
+            const loading = document.getElementById('tableLoading');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+            if (!tbody) return;
+
+            loading.style.display = 'flex';
+            tbody.innerHTML = '';
+            try {
+                const params = { ...AppState.filters, page: AppState.currentPage, pageSize: AppState.pageSize };
+                const resp = await fetchGAS('getData', params);
+                if (!resp.success) throw new Error(resp.message);
+
+                const data = resp.data || [];
+                const total = resp.total || 0;
+                AppState.totalRecords = total;
+                const totalPages = Math.ceil(total / AppState.pageSize) || 1;
+
+                let headers = resp.headers || [];
+                let thead = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`;
+                let rows = data.map(row => `<tr>${headers.map(h => `<td>${row[h] !== undefined ? row[h] : ''}</td>`).join('')}</tr>`).join('');
+                tbody.innerHTML = thead + (rows || '<tr><td colspan="100">No hay datos</td></tr>');
+
+                pageInfo.textContent = `Página ${AppState.currentPage} de ${totalPages}`;
+                prevBtn.disabled = AppState.currentPage <= 1;
+                nextBtn.disabled = AppState.currentPage >= totalPages;
+            } catch (error) {
+                console.error('Error en loadDataTable:', error);
+                tbody.innerHTML = `<tr><td colspan="100" style="color:red;">Error: ${error.message}</td></tr>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function previousPage() {
+            if (AppState.currentPage > 1) {
+                AppState.currentPage--;
+                loadDataTable();
+            }
+        }
+
+        function nextPage() {
+            AppState.currentPage++;
+            loadDataTable();
         }
 
         // =========================================================================
-        // FUNCIONES DE PRESAS
+        // EXPORTACIÓN (simplificada)
+        // =========================================================================
+        function downloadDataAsCSV() {
+            alert('Función de descarga CSV no implementada completamente.');
+        }
+
+        function exportToExcel() {
+            alert('Función de exportación a Excel no implementada completamente.');
+        }
+
+        function downloadChart(chartName) {
+            const canvas = document.getElementById(chartName + 'Chart');
+            if (!canvas) return;
+            const link = document.createElement('a');
+            link.download = `${chartName}_${new Date().toISOString().slice(0,10)}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // =========================================================================
+        // PESTAÑA PRESAS (con lazy loading y endpoint combinado)
         // =========================================================================
         async function loadPresasAllData(force = false) {
             if (!force && AppState.presas.loaded) return;
-
             const presasTab = document.getElementById('presas-tab');
             const loadingDiv = document.getElementById('presasLoading');
             const lastContainer = document.getElementById('presasLastContainer');
-
             if (!presasTab.classList.contains('active')) return;
-
             AppState.presas.loading = true;
             loadingDiv.style.display = 'flex';
             lastContainer.style.display = 'none';
-
             try {
                 const params = { ...AppState.presas.filters };
                 const resp = await fetchGAS('getPresasAllData', params, 45000);
-
                 if (!resp.success) throw new Error(resp.message || 'Error al cargar datos de presas');
-
                 AppState.presas.filterOptions = resp.filterOptions || AppState.presas.filterOptions;
                 AppState.presas.last = resp.last;
                 AppState.presas.weekly = { labels: resp.weekly?.labels || [], data: resp.weekly?.data || [] };
@@ -1825,13 +1778,11 @@
                 AppState.presas.yearMonth = resp.yearMonth || [];
                 AppState.presas.rawData = resp.rawData || [];
                 AppState.presas.loaded = true;
-
                 renderPresasFilterSelects();
                 renderPresasLast();
                 renderPresasWeeklyChart();
                 renderPresasMonthlyChart();
                 renderPresasYearMonthTable();
-
                 lastContainer.style.display = 'grid';
             } catch (error) {
                 console.error('Error en loadPresasAllData:', error);
@@ -1849,30 +1800,24 @@
             const nombreOficialSelect = document.getElementById('filterNombreOficial');
             const nombreComunSelect = document.getElementById('filterNombreComun');
             const regionCuencaSelect = document.getElementById('filterRegionCuenca');
-
             if (municipioSelect) {
-                municipioSelect.innerHTML = '<option value="">Todos</option>' + 
-                    opts.municipios.map(v => `<option value="${v}">${v}</option>`).join('');
+                municipioSelect.innerHTML = '<option value="">Todos</option>' + opts.municipios.map(v => `<option value="${v}">${v}</option>`).join('');
                 municipioSelect.value = AppState.presas.filters.municipio;
             }
             if (estadoSelect) {
-                estadoSelect.innerHTML = '<option value="">Todos</option>' + 
-                    opts.estados.map(v => `<option value="${v}">${v}</option>`).join('');
+                estadoSelect.innerHTML = '<option value="">Todos</option>' + opts.estados.map(v => `<option value="${v}">${v}</option>`).join('');
                 estadoSelect.value = AppState.presas.filters.estado;
             }
             if (nombreOficialSelect) {
-                nombreOficialSelect.innerHTML = '<option value="">Todos</option>' + 
-                    opts.nombresOficiales.map(v => `<option value="${v}">${v}</option>`).join('');
+                nombreOficialSelect.innerHTML = '<option value="">Todos</option>' + opts.nombresOficiales.map(v => `<option value="${v}">${v}</option>`).join('');
                 nombreOficialSelect.value = AppState.presas.filters.nombreOficial;
             }
             if (nombreComunSelect) {
-                nombreComunSelect.innerHTML = '<option value="">Todos</option>' + 
-                    opts.nombresComunes.map(v => `<option value="${v}">${v}</option>`).join('');
+                nombreComunSelect.innerHTML = '<option value="">Todos</option>' + opts.nombresComunes.map(v => `<option value="${v}">${v}</option>`).join('');
                 nombreComunSelect.value = AppState.presas.filters.nombreComun;
             }
             if (regionCuencaSelect) {
-                regionCuencaSelect.innerHTML = '<option value="">Todos</option>' + 
-                    opts.regionesCuenca.map(v => `<option value="${v}">${v}</option>`).join('');
+                regionCuencaSelect.innerHTML = '<option value="">Todos</option>' + opts.regionesCuenca.map(v => `<option value="${v}">${v}</option>`).join('');
                 regionCuencaSelect.value = AppState.presas.filters.regionCuenca;
             }
         }
@@ -1888,13 +1833,7 @@
         }
 
         function resetPresasFilters() {
-            AppState.presas.filters = {
-                municipio: '',
-                estado: '',
-                nombreOficial: '',
-                nombreComun: '',
-                regionCuenca: ''
-            };
+            AppState.presas.filters = { municipio: '', estado: '', nombreOficial: '', nombreComun: '', regionCuenca: '' };
             renderPresasFilterSelects();
             AppState.presas.loaded = false;
             loadPresasAllData(true);
@@ -1915,25 +1854,8 @@
                 return;
             }
             container.innerHTML = `
-                <div class="presas-card">
-                    <h3><i class="fas fa-database"></i> Capacidad de la presa</h3>
-                    <div class="presas-gauge">
-                        <div class="gauge-bar">
-                            <div class="gauge-fill" style="width: 100%;"></div>
-                        </div>
-                        <div class="gauge-label">${last.Capacidad || 'N/A'} Mm³</div>
-                    </div>
-                </div>
-                <div class="presas-card">
-                    <h3><i class="fas fa-tint"></i> % Llenado actual</h3>
-                    <div class="presas-gauge">
-                        <div class="gauge-bar">
-                            <div class="gauge-fill" style="width: ${last.llenado || 0}%; background: linear-gradient(90deg, #4caf50, #1b5e20);"></div>
-                        </div>
-                        <div class="gauge-label">${(last.llenado || 0).toFixed(2)}%</div>
-                    </div>
-                    <p style="margin-top: 10px; color: #475569;"><i class="fas fa-calendar-alt"></i> Última actualización: ${last.Fecha || ''}</p>
-                </div>
+                <div class="presas-card"><h3><i class="fas fa-database"></i> Capacidad de la presa</h3><div class="presas-gauge"><div class="gauge-bar"><div class="gauge-fill" style="width: 100%;"></div></div><div class="gauge-label">${last.Capacidad || 'N/A'} Mm³</div></div></div>
+                <div class="presas-card"><h3><i class="fas fa-tint"></i> % Llenado actual</h3><div class="presas-gauge"><div class="gauge-bar"><div class="gauge-fill" style="width: ${last.llenado || 0}%; background: linear-gradient(90deg, #4caf50, #1b5e20);"></div></div><div class="gauge-label">${(last.llenado || 0).toFixed(2)}%</div></div><p style="margin-top: 10px; color: #475569;"><i class="fas fa-calendar-alt"></i> Última actualización: ${last.Fecha || ''}</p></div>
             `;
         }
 
@@ -1944,24 +1866,8 @@
             const data = AppState.presas.weekly;
             AppState.presasCharts.weekly = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: '% Llenado promedio por semana',
-                        data: data.data,
-                        borderColor: CONFIG.colors.primary,
-                        backgroundColor: CONFIG.colors.primary + '20',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { datalabels: { display: false } },
-                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
-                }
+                data: { labels: data.labels, datasets: [{ label: '% Llenado promedio por semana', data: data.data, borderColor: CONFIG.colors.primary, backgroundColor: CONFIG.colors.primary + '20', borderWidth: 2, fill: true, tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: false } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } } }
             });
         }
 
@@ -1972,24 +1878,8 @@
             const data = AppState.presas.monthly;
             AppState.presasCharts.monthly = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: '% Llenado promedio por mes',
-                        data: data.data,
-                        borderColor: CONFIG.colors.accent || '#0288d1',
-                        backgroundColor: (CONFIG.colors.accent || '#0288d1') + '20',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { datalabels: { display: false } },
-                    scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
-                }
+                data: { labels: data.labels, datasets: [{ label: '% Llenado promedio por mes', data: data.data, borderColor: CONFIG.colors.accent || '#0288d1', backgroundColor: (CONFIG.colors.accent || '#0288d1') + '20', borderWidth: 2, fill: true, tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { display: false } }, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } } }
             });
         }
 
@@ -2004,11 +1894,9 @@
             const years = [...new Set(data.map(item => item.year))].sort();
             const months = [...new Set(data.map(item => item.month))].sort((a,b) => a - b);
             const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-
             let tableHTML = '<table class="presas-table"><thead><tr><th>Año / Mes</th>';
             months.forEach(m => { tableHTML += `<th>${monthNames[m-1] || m}</th>`; });
             tableHTML += '</tr></thead><tbody>';
-
             years.forEach(year => {
                 tableHTML += `<tr><td><strong>${year}</strong></td>`;
                 months.forEach(month => {
@@ -2046,7 +1934,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE PANTALLA COMPLETA
+        // PANTALLA COMPLETA (MODAL)
         // =========================================================================
         let modalChart = null;
 
@@ -2101,7 +1989,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA CLIMA
+        // CLIMA
         // =========================================================================
         function initWeatherSubtabs() {
             document.querySelectorAll('.weather-subtab').forEach(btn => {
@@ -2112,74 +2000,6 @@
                     document.getElementById(this.dataset.subtab).classList.add('active');
                 });
             });
-        }
-
-        // =========================================================================
-        // FUNCIONES DE EXPORTACIÓN Y REPORTES (simplificadas)
-        // =========================================================================
-        function downloadChart(chartName) {
-            const canvas = document.getElementById(chartName + 'Chart');
-            if (!canvas) return;
-            const link = document.createElement('a');
-            link.download = `${chartName}_${new Date().toISOString().slice(0,10)}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-
-        function downloadDataAsCSV() {
-            alert('Función de descarga CSV no implementada completamente.');
-        }
-
-        function exportToExcel() {
-            alert('Función de exportación a Excel no implementada completamente.');
-        }
-
-        function previousPage() {
-            if (AppState.currentPage > 1) {
-                AppState.currentPage--;
-                loadDataTable();
-            }
-        }
-
-        function nextPage() {
-            AppState.currentPage++;
-            loadDataTable();
-        }
-
-        async function loadDataTable() {
-            // Placeholder - implementar según necesidades
-        }
-
-        async function loadDetailedMetrics() {
-            // Placeholder - implementar según necesidades
-        }
-
-        async function applyFilters() {
-            await loadAllData();
-            renderKPIs();
-            updateAllCharts();
-        }
-
-        async function resetFilters() {
-            AppState.filters = {
-                ingenio: 'Todos',
-                grupo: 'Todos',
-                supervisor: 'Todos',
-                zona: 'Todos',
-                semana: 'Todas',
-                fechaInicio: '',
-                fechaFin: ''
-            };
-            renderFilters();
-            await loadAllData();
-            renderKPIs();
-            updateAllCharts();
-        }
-
-        async function refreshAllData() {
-            await loadAllData();
-            renderKPIs();
-            updateAllCharts();
         }
 
         // =========================================================================
@@ -2197,7 +2017,7 @@
         }
 
         // =========================================================================
-        // CONFIGURACIÓN DE EVENTOS
+        // EVENT LISTENERS
         // =========================================================================
         function setupEventListeners() {
             // Autenticación
@@ -2212,11 +2032,7 @@
             document.getElementById('expandBarChart')?.addEventListener('click', () => showFullscreenChart('barChart', 'Comparación por grupos'));
             document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparativeChart', 'Comparativa de indicadores'));
             document.getElementById('closeModal')?.addEventListener('click', closeModal);
-            window.addEventListener('click', (e) => {
-                if (e.target === document.getElementById('fullscreenModal')) {
-                    closeModal();
-                }
-            });
+            window.addEventListener('click', (e) => { if (e.target === document.getElementById('fullscreenModal')) closeModal(); });
 
             // Tabs principales
             document.querySelectorAll('.tab').forEach(tab => {
@@ -2228,8 +2044,8 @@
                     document.getElementById(tabId)?.classList.add('active');
                     AppState.currentTab = tabId;
 
-                    if (tabId === 'analytics-tab') loadDetailedMetrics();
-                    if (tabId === 'data-tab') loadDataTable();
+                    if (tabId === 'analytics-tab') await loadDetailedMetrics();
+                    if (tabId === 'data-tab') await loadDataTable();
                     if (tabId === 'presas-tab') {
                         if (!AppState.presas.loaded && !AppState.presas.loading) {
                             await loadPresasAllData();
@@ -2244,9 +2060,15 @@
             });
 
             // Botones de filtros generales
-            document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
-            document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
-            document.getElementById('refreshData')?.addEventListener('click', refreshAllData);
+            document.getElementById('applyFilters')?.addEventListener('click', async () => { await loadAllData(); renderKPIs(); updateAllCharts(); });
+            document.getElementById('resetFilters')?.addEventListener('click', async () => {
+                AppState.filters = { ingenio: 'Todos', grupo: 'Todos', supervisor: 'Todos', zona: 'Todos', semana: 'Todas', fechaInicio: '', fechaFin: '' };
+                renderFilters();
+                await loadAllData();
+                renderKPIs();
+                updateAllCharts();
+            });
+            document.getElementById('refreshData')?.addEventListener('click', async () => { await loadAllData(); renderKPIs(); updateAllCharts(); });
 
             // Descargas de gráficos
             document.getElementById('downloadMainChart')?.addEventListener('click', () => downloadChart('main'));
@@ -2270,7 +2092,7 @@
                 });
             });
 
-            // Eventos de presas
+            // Presas
             document.getElementById('capturePresas')?.addEventListener('click', capturePresas);
             document.getElementById('resetPresasFilters')?.addEventListener('click', resetPresasFilters);
             document.getElementById('applyPresasFilters')?.addEventListener('click', applyPresasFilters);

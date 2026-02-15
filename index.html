@@ -33,14 +33,14 @@
             font-family: var(--font);
             color: #0f172a;
             line-height: 1.5;
-            overflow-x: hidden; /* Elimina scroll horizontal no deseado */
+            overflow-x: hidden;
         }
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 0 24px;
             width: 100%;
-            overflow-x: hidden; /* Previene desbordamiento */
+            overflow-x: hidden;
         }
 
         /* --- HEADER NEGRO --- */
@@ -509,7 +509,7 @@
             .tabs { flex-wrap: wrap; }
             .tab { padding: 8px 16px; font-size: 0.9rem; }
             .charts-row {
-                grid-template-columns: 1fr !important; /* Una sola columna en móvil */
+                grid-template-columns: 1fr !important;
                 gap: 20px;
             }
         }
@@ -534,6 +534,32 @@
                 grid-template-columns: 1fr !important;
                 gap: 20px;
             }
+        }
+
+        /* --- Estilos adicionales para el iframe del clima --- */
+        .weather-container {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-top: 20px;
+        }
+        .weather-container iframe {
+            border-radius: 12px;
+            width: 100%;
+            height: 700px;
+            border: 0;
+            overflow: hidden;
+        }
+        .weather-attribution {
+            text-align: right;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+        .weather-attribution a {
+            color: var(--primary);
+            text-decoration: none;
         }
     </style>
 </head>
@@ -641,6 +667,10 @@
                 <div class="tab" data-tab="reports-tab">
                     <i class="fas fa-file-pdf"></i> Reportes
                 </div>
+                <!-- NUEVA PESTAÑA: Monitor del clima -->
+                <div class="tab" data-tab="weather-tab">
+                    <i class="fas fa-map-marked-alt"></i> Monitor del clima
+                </div>
             </div>
 
             <!-- TAB DASHBOARD -->
@@ -699,7 +729,7 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICOS: TENDENCIA Y BARRAS (con clase .charts-row) -->
+                <!-- GRÁFICOS: TENDENCIA Y BARRAS -->
                 <div class="charts-row">
                     <div class="chart-card">
                         <div class="chart-header">
@@ -826,6 +856,21 @@
                             </div>
                         </div>
                         <button class="btn btn-primary" id="generateCustomReport" style="margin-top: 20px;">Generar personalizado</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- NUEVA PESTAÑA: Monitor del clima -->
+            <div id="weather-tab" class="tab-content">
+                <section class="weather-container">
+                    <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
+                        <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
+                    </h2>
+                    <!-- iframe de meteoblue -->
+                    <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
+                    <!-- Atribución requerida -->
+                    <div class="weather-attribution">
+                        <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
                     </div>
                 </section>
             </div>
@@ -1033,7 +1078,7 @@
                     this.classList.add('active');
                     AppState.globalChart.timeGroupBy = this.dataset.value;
                     updateMainChart();
-                    updateComparativeChart(); // El comparativo ahora respeta el control de tiempo
+                    updateComparativeChart();
                 });
             });
             document.querySelectorAll('#globalBarGroup .chip').forEach(chip => {
@@ -1218,7 +1263,7 @@
                     const resp = await fetchGAS('getTimeSeries', {
                         ...AppState.filters,
                         indicator: ind,
-                        agrupacion: AppState.globalChart.timeGroupBy // ← AHORA USA EL CONTROL DE TIEMPO
+                        agrupacion: AppState.globalChart.timeGroupBy
                     });
                     if (resp.success) {
                         return {
@@ -1973,6 +2018,7 @@
                     AppState.currentTab = tabId;
                     if (tabId === 'analytics-tab') loadDetailedMetrics();
                     if (tabId === 'data-tab') loadDataTable();
+                    // Nota: La pestaña weather-tab no necesita carga especial
                 });
             });
             document.getElementById('applyFilters')?.addEventListener('click', applyFilters);

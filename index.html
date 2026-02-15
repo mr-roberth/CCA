@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>Sistema de Calidad de Cosecha · CCA</title>
+    <title>Sistema de Calidad de Cosecha · CCA + Monitor de Presas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -112,7 +112,7 @@
         }
         .form-control:focus { outline: none; border-color: var(--primary); background: white; }
 
-        /* --- PANEL DE FILTROS --- */
+        /* --- PANEL DE FILTROS (general) --- */
         .filters-panel {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -151,7 +151,7 @@
         }
         .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
 
-        /* --- CONTROLES GLOBALES DE GRÁFICOS --- */
+        /* --- CONTROLES GLOBALES DE GRÁFICOS (reutilizados) --- */
         .global-chart-controls {
             background: white;
             border-radius: 60px;
@@ -225,7 +225,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* --- CHIPS COMPARATIVOS --- */
+        /* --- CHIPS COMPARATIVOS (multi-select) --- */
         .multi-chip-container {
             display: flex;
             flex-wrap: wrap;
@@ -451,7 +451,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- SUBTABS PARA CLIMA --- */
+        /* --- SUBTABS PARA CLIMA (ahora con 4 opciones) --- */
         .weather-subtabs {
             display: flex;
             gap: 10px;
@@ -460,6 +460,7 @@
             padding: 6px;
             border-radius: 40px;
             width: fit-content;
+            flex-wrap: wrap;
         }
         .weather-subtab {
             padding: 8px 24px;
@@ -470,6 +471,7 @@
             transition: 0.15s;
             background: transparent;
             border: none;
+            white-space: nowrap;
         }
         .weather-subtab.active {
             background: white;
@@ -544,6 +546,8 @@
                 grid-template-columns: 1fr !important;
                 gap: 20px;
             }
+            .weather-subtabs { width: 100%; justify-content: center; }
+            .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
         @media (max-width: 480px) {
             .container { padding: 0 16px; }
@@ -570,18 +574,10 @@
             .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
 
-        /* --- Estilos adicionales para el iframe y reporte del clima --- */
-        .weather-container {
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 20px;
-            box-shadow: var(--card-shadow);
-            margin-top: 20px;
-        }
+        /* --- Estilos adicionales para iframes --- */
         .weather-container iframe {
             border-radius: 12px;
             width: 100%;
-            height: 700px;
             border: 0;
             overflow: hidden;
         }
@@ -595,8 +591,6 @@
             color: var(--primary);
             text-decoration: none;
         }
-
-        /* Estilos para el reporte (meteograma) */
         .report-header {
             display: flex;
             align-items: center;
@@ -625,6 +619,11 @@
             border-radius: 16px;
             padding: 20px;
         }
+        /* Ajuste para iframe de Power BI */
+        .powerbi-iframe {
+            width: 100%;
+            height: 700px;
+        }
     </style>
 </head>
 <body>
@@ -634,8 +633,8 @@
                 <div class="logo">
                     <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-img">
                     <div class="logo-text">
-                        <h1>Sistema de Calidad de Cosecha · CCA</h1>
-                        <p>Controles globales · análisis interactivo</p>
+                        <h1>Sistema de Calidad de Cosecha · CCA + Presas</h1>
+                        <p>Análisis integrado</p>
                     </div>
                 </div>
                 <div class="user-info" id="userInfo">
@@ -715,29 +714,31 @@
             </div>
         </div>
 
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD PRINCIPAL -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS PRINCIPALES -->
+            <!-- TABS PRINCIPALES (se agregó "Monitor de presas") -->
             <div class="tabs">
                 <div class="tab active" data-tab="dashboard-tab">
-                    <i class="fas fa-chart-pie"></i> Dashboard
+                    <i class="fas fa-chart-pie"></i> Dashboard Calidad
                 </div>
                 <div class="tab" data-tab="analytics-tab">
-                    <i class="fas fa-chart-bar"></i> Análisis
+                    <i class="fas fa-chart-bar"></i> Análisis Calidad
                 </div>
                 <div class="tab" data-tab="data-tab">
-                    <i class="fas fa-table"></i> Datos
+                    <i class="fas fa-table"></i> Datos Calidad
                 </div>
                 <div class="tab" data-tab="reports-tab">
-                    <i class="fas fa-file-pdf"></i> Reportes
+                    <i class="fas fa-file-pdf"></i> Reportes Calidad
                 </div>
-                <!-- PESTAÑA: Monitor del clima -->
                 <div class="tab" data-tab="weather-tab">
                     <i class="fas fa-map-marked-alt"></i> Monitor del clima
                 </div>
+                <div class="tab" data-tab="presas-tab">
+                    <i class="fas fa-water"></i> Monitor de presas
+                </div>
             </div>
 
-            <!-- TAB DASHBOARD -->
+            <!-- ==================== DASHBOARD CALIDAD (existente) ==================== -->
             <div id="dashboard-tab" class="tab-content active">
                 <!-- KPIs -->
                 <section class="kpi-section">
@@ -837,7 +838,7 @@
                 </section>
             </div>
 
-            <!-- TAB ANÁLISIS DETALLADO -->
+            <!-- ==================== ANÁLISIS CALIDAD (existente) ==================== -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -849,7 +850,7 @@
                 </section>
             </div>
 
-            <!-- TAB DATOS COMPLETOS -->
+            <!-- ==================== DATOS CALIDAD (existente) ==================== -->
             <div id="data-tab" class="tab-content">
                 <section class="data-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -874,7 +875,7 @@
                 </section>
             </div>
 
-            <!-- TAB REPORTES -->
+            <!-- ==================== REPORTES CALIDAD (existente) ==================== -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -924,51 +925,168 @@
                 </section>
             </div>
 
-            <!-- PESTAÑA: Monitor del clima (con subpestañas) -->
+            <!-- ==================== MONITOR DEL CLIMA (ampliado con 4 subpestañas) ==================== -->
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
-                    <!-- Subtabs dentro de la pestaña clima -->
+                    <!-- Subtabs ahora con 4 opciones -->
                     <div class="weather-subtabs">
                         <button class="weather-subtab active" data-subtab="map-sub">Mapa</button>
                         <button class="weather-subtab" data-subtab="report-sub">Reporte 5 días</button>
+                        <button class="weather-subtab" data-subtab="forecast7-sub">Pronóstico 7 días</button>
+                        <button class="weather-subtab" data-subtab="powerbi-sub">Dashboard Power BI</button>
                     </div>
 
-                    <!-- Contenido Mapa -->
+                    <!-- Contenido Mapa (existente) -->
                     <div id="map-sub" class="weather-subcontent active">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
                             <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
                         </h2>
-                        <!-- iframe de meteoblue mapa -->
-                        <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
-                        <!-- Atribución requerida -->
+                        <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 700px;"></iframe>
                         <div class="weather-attribution">
                             <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
                         </div>
                     </div>
 
-                    <!-- Contenido Reporte (meteograma 5 días) -->
+                    <!-- Contenido Reporte 5 días (existente) -->
                     <div id="report-sub" class="weather-subcontent">
                         <div class="report-header">
                             <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-mini">
-                            <h2>Sistema Operativo Azúcar - Reporte de predicción climática a 5 días</h2>
+                            <h2>Reporte de predicción climática a 5 días</h2>
                             <div class="report-actions">
                                 <button class="btn btn-secondary btn-small" id="printReport" title="Imprimir reporte"><i class="fas fa-print"></i> Imprimir</button>
                                 <button class="btn btn-secondary btn-small" id="downloadReport" title="Descargar como imagen"><i class="fas fa-camera"></i> PNG</button>
                             </div>
                         </div>
                         <div class="report-content" id="reportContent">
-                            <!-- iframe de meteoblue meteograma -->
-                            <iframe src="https://www.meteoblue.com/es/tiempo/widget/meteogram/?geoloc=detect&temperature_units=CELSIUS&windspeed_units=KILOMETER_PER_HOUR&precipitation_units=MILLIMETER&forecast_days=5&layout=bright&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=cbfa0de0bd1327c9&sig=4b472182b65cb72a21a37bc1a711875c9431074a32855a785b73c0adec789b51" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%;height: 700px;border: 0;overflow: hidden;"></iframe>
+                            <iframe src="https://www.meteoblue.com/es/tiempo/widget/meteogram/?geoloc=detect&temperature_units=CELSIUS&windspeed_units=KILOMETER_PER_HOUR&precipitation_units=MILLIMETER&forecast_days=5&layout=bright&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=cbfa0de0bd1327c9&sig=4b472182b65cb72a21a37bc1a711875c9431074a32855a785b73c0adec789b51" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 700px;"></iframe>
                             <div class="weather-attribution">
                                 <a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a>
                             </div>
                         </div>
                     </div>
+
+                    <!-- NUEVO: Pronóstico 7 días (widget oscuro) -->
+                    <div id="forecast7-sub" class="weather-subcontent">
+                        <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
+                            <i class="fas fa-calendar-week"></i> Pronóstico extendido 7 días
+                        </h2>
+                        <!-- El iframe se envuelve en un div centrado -->
+                        <div style="display: flex; justify-content: center;">
+                            <iframe src="https://www.meteoblue.com/en/weather/widget/daily/?geoloc=detect&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&days=7&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=1&winddirection=1&uv=1&humidity=1&precipitation=1&precipitationprobability=1&spot=1&pressure=1&layout=dark&user_key=4646e18c1240a1c4&embed_key=e18ffece7e4322d2&sig=643f2e3142bdcbfe0197edfb7b92428c4aff8075888c072926f69a71288ede88" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; max-width: 378px; height: 447px;"></iframe>
+                        </div>
+                        <div class="weather-attribution">
+                            <a href="https://www.meteoblue.com/en/weather/week/index" target="_blank" rel="noopener">meteoblue</a>
+                        </div>
+                    </div>
+
+                    <!-- NUEVO: Dashboard Power BI -->
+                    <div id="powerbi-sub" class="weather-subcontent">
+                        <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
+                            <i class="fas fa-chart-pie"></i> Dashboard climático (Power BI)
+                        </h2>
+                        <iframe title="Dashboard - Climático" class="powerbi-iframe" src="https://app.powerbi.com/view?r=eyJrIjoiZDQ5OGYwM2MtNDcxNC00ZTQwLWE1OWItZjJhMzI3ZWJlY2VlIiwidCI6IjU5ODY5YzBkLWQ0ZDktNGRlZC1hNDg0LTI1YzFhMmU0YTU0MCJ9" frameborder="0" allowFullScreen="true"></iframe>
+                    </div>
                 </div>
+            </div>
+
+            <!-- ==================== NUEVO: MONITOR DE PRESAS ==================== -->
+            <div id="presas-tab" class="tab-content">
+                <!-- KPIs de presas -->
+                <section class="kpi-section">
+                    <h2 style="display: flex; gap: 10px; margin-bottom: 20px; color: var(--primary);">
+                        <i class="fas fa-water"></i> Indicadores de presas
+                    </h2>
+                    <div class="kpi-grid" id="presasKpiGrid"></div>
+                </section>
+
+                <!-- FILTROS DE PRESAS -->
+                <section class="filters-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-weight: 600; display: flex; gap: 8px;">
+                            <i class="fas fa-filter" style="color: var(--primary);"></i> Filtros de presas
+                        </h3>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary btn-small" id="presasResetFilters"><i class="fas fa-undo-alt"></i> Limpiar</button>
+                            <button class="btn btn-primary btn-small" id="presasApplyFilters"><i class="fas fa-search"></i> Aplicar</button>
+                            <button class="btn btn-secondary btn-small" id="presasRefreshData"><i class="fas fa-sync-alt"></i> Actualizar</button>
+                        </div>
+                    </div>
+                    <div class="filters-grid" id="presasFiltersGrid"></div>
+                </section>
+
+                <!-- CONTROLES GLOBALES PARA PRESAS (similares) -->
+                <div class="global-chart-controls">
+                    <div class="control-group">
+                        <span class="control-label"><i class="fas fa-chart-bar"></i> Agrupar barras por:</span>
+                        <div class="chip-selector" id="presasBarGroup">
+                            <button data-value="Estado" class="chip active">Estado</button>
+                            <button data-value="Municipio" class="chip">Municipio</button>
+                            <button data-value="Region_cuenca" class="chip">Región</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <span class="control-label"><i class="fas fa-tag"></i> Etiquetas</span>
+                        <label class="switch">
+                            <input type="checkbox" id="presasToggleLabels">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- GRÁFICOS DE PRESAS: TENDENCIA Y BARRAS -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Tendencia % Llenado</h3>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandPresasMainChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadPresasMainChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="presasMainChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Comparación</h3>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandPresasBarChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadPresasBarChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="presasBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE TABLA DE DATOS DE PRESAS -->
+                <section class="data-section" style="margin-top: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-table"></i> Datos detallados de presas</h3>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-primary" id="presasDownloadData"><i class="fas fa-download"></i> CSV</button>
+                            <button class="btn btn-secondary" id="presasExportExcel"><i class="fas fa-file-excel"></i> Excel</button>
+                        </div>
+                    </div>
+                    <div id="presasDataAlert" style="display: none;"></div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="presasDataTable"></table>
+                        <div id="presasTableLoading" class="loading" style="display: none;"><div class="spinner"></div><p>Cargando datos...</p></div>
+                    </div>
+                    <div id="presasPaginationControls" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="presasPageInfo">Página 1 de 1</span>
+                        <div>
+                            <button class="btn btn-secondary btn-small" id="presasPrevPage" disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+                            <button class="btn btn-secondary btn-small" id="presasNextPage" disabled>Siguiente <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
 
-        <!-- MODAL DE PANTALLA COMPLETA -->
+        <!-- MODAL DE PANTALLA COMPLETA (reutilizable) -->
         <div id="fullscreenModal" class="modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -993,7 +1111,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha · Versión 5.3</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 6.0</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1007,11 +1125,12 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA
+        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA CON PRESAS
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
             DATA_SHEET: 'Datos_CCA',
+            PRESAS_SHEET: 'Presas', // Hoja de presas
             colors: {
                 good: '#4caf50',
                 warning: '#ff9800',
@@ -1040,7 +1159,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (CALIDAD)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -1059,7 +1178,6 @@
             impurezas_totales:   '% Total de impurezas'
         };
 
-        // Lista completa de indicadores para el selector principal
         const ALL_INDICATORS = [
             'impurezas_totales',
             'peso_total_muestra',
@@ -1078,10 +1196,33 @@
         ];
 
         // =========================================================================
-        // ESTADO GLOBAL
+        // CONFIGURACIÓN PARA PRESAS
+        // =========================================================================
+        const PRESAS_CONFIG = {
+            // Columnas exactas de la hoja "Presas"
+            columns: {
+                estado: 'Estado',
+                municipio: 'Municipio',
+                nombre_comun: 'Nombre comun',
+                region_cuenca: 'Region_cuenca',
+                capacidad: 'Capacidad (hm3)',
+                porcentaje_llenado: '% Llenado',
+                fecha: 'Fecha' // opcional, puede no existir
+            },
+            // Indicador principal (el que se grafica)
+            mainIndicator: 'porcentaje_llenado',
+            // Umbrales para colores (opcional, se puede ajustar)
+            thresholds: {
+                porcentaje_llenado: { red: 30, yellow: 50 } // por ejemplo, <30% crítico, <50% alerta
+            }
+        };
+
+        // =========================================================================
+        // ESTADO GLOBAL (ampliado para presas)
         // =========================================================================
         const AppState = {
             user: null,
+            // Calidad
             filters: {
                 ingenio: 'Todos',
                 grupo: 'Todos',
@@ -1108,12 +1249,36 @@
                 showLabels: false,
                 comparativeIndicators: ['mamones', 'lalas', 'tallos_secos', 'tallos_daniados', 'raices_adheridas', 'piedra']
             },
+            // Presas
+            presas: {
+                filters: {
+                    Estado: 'Todos',
+                    Municipio: 'Todos',
+                    Nombre_comun: 'Todos',
+                    Region_cuenca: 'Todos',
+                    fechaInicio: '',
+                    fechaFin: ''
+                },
+                data: [],
+                kpis: {},
+                filtersData: {},
+                currentPage: 1,
+                pageSize: 50,
+                charts: {
+                    main: null,
+                    bar: null
+                },
+                globalChart: {
+                    barGroupBy: 'Estado', // Estado, Municipio, Region_cuenca
+                    showLabels: false
+                }
+            },
             clickFilter: { type: null, value: null },
             currentTab: 'dashboard-tab'
         };
 
         // =========================================================================
-        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL
+        // FUNCIONES DE INICIALIZACIÓN Y CONTROL GLOBAL (CALIDAD)
         // =========================================================================
         function renderGlobalIndicatorChips() {
             const container = document.getElementById('globalIndicatorGroup');
@@ -1198,7 +1363,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS
+        // FUNCIONES DE GRÁFICOS (CALIDAD)
         // =========================================================================
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
@@ -1417,7 +1582,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES AUXILIARES
+        // FUNCIONES AUXILIARES (CALIDAD)
         // =========================================================================
         function getUnitForIndicator(indicator) {
             const name = INDICATOR_NAMES[indicator] || '';
@@ -1498,19 +1663,26 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE PANTALLA COMPLETA (MODAL)
+        // FUNCIONES DE PANTALLA COMPLETA (MODAL) - reutilizable
         // =========================================================================
-        function showFullscreenChart(chartType, title) {
+        function showFullscreenChart(chartType, title, isPresas = false) {
             const modal = document.getElementById('fullscreenModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalCanvas = document.getElementById('modalCanvas');
             
-            if (!AppState.charts[chartType]) {
+            let chart;
+            if (isPresas) {
+                chart = AppState.presas.charts[chartType];
+            } else {
+                chart = AppState.charts[chartType];
+            }
+            
+            if (!chart) {
                 alert('Gráfico no disponible');
                 return;
             }
 
-            const originalChart = AppState.charts[chartType];
+            const originalChart = chart;
             const config = originalChart.config;
             
             if (modalChart) modalChart.destroy();
@@ -1569,7 +1741,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN Y SESIÓN
+        // AUTENTICACIÓN Y SESIÓN (sin cambios)
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1644,10 +1816,13 @@
             showLogin();
             Object.values(AppState.charts).forEach(ch => ch?.destroy());
             AppState.charts = {};
+            // También limpiar gráficos de presas
+            Object.values(AppState.presas.charts).forEach(ch => ch?.destroy());
+            AppState.presas.charts = {};
         }
 
         // =========================================================================
-        // FILTROS Y DATOS
+        // FILTROS Y DATOS (CALIDAD)
         // =========================================================================
         async function loadFilters() {
             try {
@@ -1785,7 +1960,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs
+        // RENDERIZACIÓN DE KPIs (CALIDAD)
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -1837,7 +2012,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (con explicaciones)
+        // MÉTRICAS DETALLADAS (CALIDAD)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -1914,7 +2089,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS
+        // TABLA DE DATOS (CALIDAD)
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -1977,7 +2152,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES
+        // EXPORTACIÓN Y REPORTES (CALIDAD)
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -1999,11 +2174,17 @@
             XLSX.writeFile(wb, `datos_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
         function exportFullData() { exportToExcel(); }
-        function downloadChart(chartName) {
-            if (!AppState.charts[chartName]) return alert('Gráfico no disponible');
+        function downloadChart(chartName, isPresas = false) {
+            let chart;
+            if (isPresas) {
+                chart = AppState.presas.charts[chartName];
+            } else {
+                chart = AppState.charts[chartName];
+            }
+            if (!chart) return alert('Gráfico no disponible');
             const link = document.createElement('a');
             link.download = `${chartName}_${new Date().toISOString().slice(0,10)}.png`;
-            link.href = AppState.charts[chartName].toBase64Image();
+            link.href = chart.toBase64Image();
             link.click();
         }
         async function generateReport(type) {
@@ -2050,17 +2231,13 @@
         // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar)
         // =========================================================================
         function printReport() {
-            // Abrir diálogo de impresión del contenido del reporte (sin los botones)
             const printContents = document.getElementById('reportContent').innerHTML;
             const originalContents = document.body.innerHTML;
             document.body.innerHTML = printContents;
             window.print();
             document.body.innerHTML = originalContents;
-            // Recargar scripts o reinicializar si es necesario, pero para este caso simple puede funcionar.
-            // Una alternativa es usar iframe de impresión, pero por simplicidad usamos este método.
-            // Recomendación: usar un iframe oculto para imprimir.
             setTimeout(() => {
-                location.reload(); // recargar para restaurar la página (simple pero efectivo)
+                location.reload();
             }, 100);
         }
 
@@ -2075,21 +2252,392 @@
         }
 
         // =========================================================================
-        // MANEJO DE SUBTABS EN CLIMA
+        // MANEJO DE SUBTABS EN CLIMA (ahora con 4)
         // =========================================================================
         function initWeatherSubtabs() {
             const subtabs = document.querySelectorAll('.weather-subtab');
             subtabs.forEach(subtab => {
                 subtab.addEventListener('click', function() {
-                    // Quitar active de todos los subtabs y subcontents
                     document.querySelectorAll('.weather-subtab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.weather-subcontent').forEach(c => c.classList.remove('active'));
-                    // Activar el actual
                     this.classList.add('active');
                     const target = this.dataset.subtab;
                     document.getElementById(target).classList.add('active');
                 });
             });
+        }
+
+        // =========================================================================
+        // FUNCIONES PARA PRESAS
+        // =========================================================================
+        async function loadPresasFilters() {
+            try {
+                const response = await fetchGAS('getPresasFilters');
+                if (response.success) {
+                    AppState.presas.filtersData = response.filters || {};
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('Error cargando filtros de presas:', e);
+                return false;
+            }
+        }
+
+        function renderPresasFilters() {
+            const grid = document.getElementById('presasFiltersGrid');
+            if (!grid) return;
+            if (!AppState.presas.filtersData.estados) {
+                grid.innerHTML = '<div class="alert alert-error">Error cargando filtros de presas</div>';
+                return;
+            }
+            grid.innerHTML = `
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select id="presasFilterEstado" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.presas.filtersData.estados || []).filter(e => e !== 'Todos').map(e => `<option value="${e}">${e}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Municipio</label>
+                    <select id="presasFilterMunicipio" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.presas.filtersData.municipios || []).filter(m => m !== 'Todos').map(m => `<option value="${m}">${m}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Nombre común</label>
+                    <select id="presasFilterNombre_comun" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.presas.filtersData.nombres_comunes || []).filter(n => n !== 'Todos').map(n => `<option value="${n}">${n}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Región cuenca</label>
+                    <select id="presasFilterRegion_cuenca" class="filter-control">
+                        <option value="Todos">Todos</option>
+                        ${(AppState.presas.filtersData.regiones || []).filter(r => r !== 'Todos').map(r => `<option value="${r}">${r}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fecha inicio</label>
+                    <input type="date" id="presasFilterFechaInicio" class="filter-control" value="${AppState.presas.filtersData.fechaMin || ''}">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha fin</label>
+                    <input type="date" id="presasFilterFechaFin" class="filter-control" value="${AppState.presas.filtersData.fechaMax || ''}">
+                </div>
+            `;
+            document.getElementById('presasFilterEstado') && (document.getElementById('presasFilterEstado').value = AppState.presas.filters.Estado);
+            document.getElementById('presasFilterMunicipio') && (document.getElementById('presasFilterMunicipio').value = AppState.presas.filters.Municipio);
+            document.getElementById('presasFilterNombre_comun') && (document.getElementById('presasFilterNombre_comun').value = AppState.presas.filters.Nombre_comun);
+            document.getElementById('presasFilterRegion_cuenca') && (document.getElementById('presasFilterRegion_cuenca').value = AppState.presas.filters.Region_cuenca);
+            document.getElementById('presasFilterFechaInicio') && (document.getElementById('presasFilterFechaInicio').value = AppState.presas.filters.fechaInicio || AppState.presas.filtersData.fechaMin);
+            document.getElementById('presasFilterFechaFin') && (document.getElementById('presasFilterFechaFin').value = AppState.presas.filters.fechaFin || AppState.presas.filtersData.fechaMax);
+        }
+
+        async function applyPresasFilters() {
+            AppState.presas.filters = {
+                Estado: document.getElementById('presasFilterEstado')?.value || 'Todos',
+                Municipio: document.getElementById('presasFilterMunicipio')?.value || 'Todos',
+                Nombre_comun: document.getElementById('presasFilterNombre_comun')?.value || 'Todos',
+                Region_cuenca: document.getElementById('presasFilterRegion_cuenca')?.value || 'Todos',
+                fechaInicio: document.getElementById('presasFilterFechaInicio')?.value || '',
+                fechaFin: document.getElementById('presasFilterFechaFin')?.value || ''
+            };
+            await refreshPresasData();
+        }
+
+        function resetPresasFilters() {
+            AppState.presas.filters = {
+                Estado: 'Todos',
+                Municipio: 'Todos',
+                Nombre_comun: 'Todos',
+                Region_cuenca: 'Todos',
+                fechaInicio: AppState.presas.filtersData.fechaMin || '',
+                fechaFin: AppState.presas.filtersData.fechaMax || ''
+            };
+            renderPresasFilters();
+            refreshPresasData();
+        }
+
+        async function refreshPresasData() {
+            showLoading();
+            try {
+                await loadPresasAllData();
+                renderPresasKPIs();
+                updatePresasCharts();
+                if (document.getElementById('presas-tab').classList.contains('active')) {
+                    loadPresasDataTable();
+                }
+                showAlert('presasDataAlert', 'success', `${AppState.presas.data.length} registros cargados`);
+            } catch (e) {
+                showAlert('presasDataAlert', 'error', 'Error actualizando datos');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadPresasAllData() {
+            try {
+                const kpiRes = await fetchGAS('getPresasKPIs', AppState.presas.filters);
+                if (kpiRes.success) AppState.presas.kpis = kpiRes.kpis || {};
+                else throw new Error(kpiRes.message);
+                const dataRes = await fetchGAS('getPresasData', AppState.presas.filters);
+                if (dataRes.success) {
+                    AppState.presas.data = dataRes.data || [];
+                    AppState.presas.currentPage = 1;
+                } else throw new Error(dataRes.message);
+                return true;
+            } catch (e) {
+                console.error('Error loadPresasAllData:', e);
+                return false;
+            }
+        }
+
+        function renderPresasKPIs() {
+            const grid = document.getElementById('presasKpiGrid');
+            if (!grid) return;
+            if (!AppState.presas.kpis || Object.keys(AppState.presas.kpis).length === 0) {
+                grid.innerHTML = '<div class="alert alert-error">Sin datos disponibles</div>';
+                return;
+            }
+            const kpis = [
+                { id: 'total_presas', title: 'Total de presas', icon: 'fas fa-water', format: 'number' },
+                { id: 'capacidad_promedio', title: 'Capacidad promedio (hm³)', icon: 'fas fa-archive', format: 'number' },
+                { id: 'llenado_promedio', title: '% Llenado promedio', icon: 'fas fa-percent', format: 'percent' }
+            ];
+            grid.innerHTML = kpis.map(kpi => {
+                let value = AppState.presas.kpis[kpi.id] || 0;
+                if (kpi.format === 'percent') value = value.toFixed(2) + '%';
+                else if (kpi.format === 'number') value = value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                return `
+                    <div class="kpi-card" style="border-left-color: var(--primary-light);">
+                        <div class="kpi-header">
+                            <span class="kpi-title">${kpi.title}</span>
+                            <span class="kpi-icon" style="color: var(--primary);"><i class="${kpi.icon}"></i></span>
+                        </div>
+                        <div class="kpi-value">${value}</div>
+                        <div class="kpi-subtitle">Dato global</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function updatePresasMainChart() {
+            const ctx = document.getElementById('presasMainChart')?.getContext('2d');
+            if (!ctx) return;
+            if (AppState.presas.charts.main) AppState.presas.charts.main.destroy();
+            try {
+                const response = await fetchGAS('getPresasTimeSeries', AppState.presas.filters);
+                if (!response.success) throw new Error(response.message);
+                const data = response.data || [];
+                const labels = response.labels || [];
+                AppState.presas.charts.main = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '% Llenado',
+                            data: data,
+                            borderColor: CONFIG.colors.primary,
+                            backgroundColor: CONFIG.colors.primary + '20',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: CONFIG.colors.primary,
+                            pointBorderColor: '#fff',
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                display: AppState.presas.globalChart.showLabels,
+                                color: '#1e293b',
+                                font: { weight: 'bold', size: 10 },
+                                formatter: (value) => value?.toFixed(1) + '%'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                                }
+                            }
+                        },
+                        scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: '% Llenado' } } }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            } catch (e) {
+                console.error('Error en presasMainChart:', e);
+                ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            }
+        }
+
+        async function updatePresasBarChart() {
+            const ctx = document.getElementById('presasBarChart')?.getContext('2d');
+            if (!ctx) return;
+            if (AppState.presas.charts.bar) AppState.presas.charts.bar.destroy();
+            try {
+                const agrupacion = AppState.presas.globalChart.barGroupBy;
+                const response = await fetchGAS('getPresasGroupAnalysis', {
+                    ...AppState.presas.filters,
+                    agrupacion: agrupacion
+                });
+                if (!response.success) throw new Error(response.message);
+                const analysis = response.analysis || [];
+                const labels = analysis.map(a => a.grupo).slice(0,15);
+                const data = analysis.map(a => a.valor).slice(0,15);
+                const colors = analysis.map(a => a.color).slice(0,15);
+                
+                AppState.presas.charts.bar = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '% Llenado promedio',
+                            data: data,
+                            backgroundColor: colors,
+                            borderWidth: 0,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                display: AppState.presas.globalChart.showLabels,
+                                color: '#0f172a',
+                                anchor: 'end',
+                                align: 'right',
+                                formatter: (v) => v.toFixed(1) + '%'
+                            },
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                                }
+                            }
+                        },
+                        scales: { x: { title: { display: true, text: '% Llenado' }, max: 100 } }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            } catch (e) {
+                console.error('Error en presasBarChart:', e);
+                ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            }
+        }
+
+        function updatePresasCharts() {
+            updatePresasMainChart();
+            updatePresasBarChart();
+        }
+
+        function initPresasBarGroup() {
+            const container = document.getElementById('presasBarGroup');
+            if (!container) return;
+            container.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    AppState.presas.globalChart.barGroupBy = this.dataset.value;
+                    updatePresasBarChart();
+                });
+            });
+        }
+
+        function initPresasToggle() {
+            const toggle = document.getElementById('presasToggleLabels');
+            if (toggle) {
+                toggle.checked = AppState.presas.globalChart.showLabels;
+                toggle.addEventListener('change', function() {
+                    AppState.presas.globalChart.showLabels = this.checked;
+                    if (AppState.presas.charts.main) AppState.presas.charts.main.options.plugins.datalabels.display = this.checked;
+                    if (AppState.presas.charts.bar) AppState.presas.charts.bar.options.plugins.datalabels.display = this.checked;
+                    AppState.presas.charts.main?.update();
+                    AppState.presas.charts.bar?.update();
+                });
+            }
+        }
+
+        async function loadPresasDataTable() {
+            const table = document.getElementById('presasDataTable');
+            const loading = document.getElementById('presasTableLoading');
+            const pageInfo = document.getElementById('presasPageInfo');
+            const prevBtn = document.getElementById('presasPrevPage');
+            const nextBtn = document.getElementById('presasNextPage');
+            if (!table || !loading) return;
+            loading.style.display = 'flex';
+            table.innerHTML = '';
+            try {
+                if (AppState.presas.data.length === 0) await loadPresasAllData();
+                if (AppState.presas.data.length === 0) {
+                    table.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;">No hay datos</td></tr>';
+                    if (pageInfo) pageInfo.textContent = 'Página 1 de 1';
+                    if (prevBtn) prevBtn.disabled = true;
+                    if (nextBtn) nextBtn.disabled = true;
+                    return;
+                }
+                const totalPages = Math.ceil(AppState.presas.data.length / AppState.presas.pageSize);
+                const start = (AppState.presas.currentPage - 1) * AppState.presas.pageSize;
+                const end = Math.min(start + AppState.presas.pageSize, AppState.presas.data.length);
+                const pageData = AppState.presas.data.slice(start, end);
+                const headers = AppState.presas.data.length > 0 ? Object.keys(AppState.presas.data[0]) : [];
+                let thead = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+                let tbody = '';
+                pageData.forEach(row => {
+                    tbody += `<tr>${headers.map(h => `<td>${formatCell(row[h])}</td>`).join('')}</tr>`;
+                });
+                table.innerHTML = thead + tbody;
+                if (pageInfo) pageInfo.textContent = `Página ${AppState.presas.currentPage} de ${totalPages} (${AppState.presas.data.length} registros)`;
+                if (prevBtn) prevBtn.disabled = AppState.presas.currentPage <= 1;
+                if (nextBtn) nextBtn.disabled = AppState.presas.currentPage >= totalPages;
+            } catch (e) {
+                console.error(e);
+                table.innerHTML = '<tr><td colspan="10" style="color: red; text-align: center;">Error cargando tabla</td></tr>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function presasPreviousPage() {
+            if (AppState.presas.currentPage > 1) {
+                AppState.presas.currentPage--;
+                loadPresasDataTable();
+            }
+        }
+        function presasNextPage() {
+            const totalPages = Math.ceil(AppState.presas.data.length / AppState.presas.pageSize);
+            if (AppState.presas.currentPage < totalPages) {
+                AppState.presas.currentPage++;
+                loadPresasDataTable();
+            }
+        }
+
+        function downloadPresasDataAsCSV() {
+            if (!AppState.presas.data.length) return alert('No hay datos');
+            const headers = Object.keys(AppState.presas.data[0]);
+            const csv = [headers.join(','), ...AppState.presas.data.map(r => headers.map(h => JSON.stringify(r[h] || '')).join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `presas_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        function exportPresasToExcel() {
+            if (!AppState.presas.data.length) return alert('No hay datos');
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(AppState.presas.data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Presas');
+            XLSX.writeFile(wb, `presas_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 
         // =========================================================================
@@ -2112,6 +2660,7 @@
         async function initializeApp() {
             showLoading();
             try {
+                // Calidad
                 await loadFilters();
                 await loadAllData();
                 renderFilters();
@@ -2121,7 +2670,18 @@
                 bindGroupChips();
                 initGlobalToggle();
                 updateAllCharts();
-                initWeatherSubtabs(); // Inicializar subtabs de clima
+                
+                // Presas
+                await loadPresasFilters();
+                await loadPresasAllData();
+                renderPresasFilters();
+                renderPresasKPIs();
+                initPresasBarGroup();
+                initPresasToggle();
+                updatePresasCharts();
+                
+                // Clima subtabs
+                initWeatherSubtabs();
             } catch (e) {
                 console.error('Error en initializeApp:', e);
             } finally {
@@ -2130,16 +2690,22 @@
         }
 
         function setupEventListeners() {
+            // Autenticación
             document.getElementById('showRegister')?.addEventListener('click', showRegister);
             document.getElementById('showLogin')?.addEventListener('click', showLogin);
             document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
             document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
             document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
 
-            // Pantalla completa
+            // Pantalla completa (calidad)
             document.getElementById('expandMainChart')?.addEventListener('click', () => showFullscreenChart('main', 'Tendencia'));
             document.getElementById('expandBarChart')?.addEventListener('click', () => showFullscreenChart('bar', 'Comparación por grupos'));
             document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparative', 'Comparativa de indicadores'));
+            
+            // Pantalla completa (presas)
+            document.getElementById('expandPresasMainChart')?.addEventListener('click', () => showFullscreenChart('main', 'Tendencia % Llenado', true));
+            document.getElementById('expandPresasBarChart')?.addEventListener('click', () => showFullscreenChart('bar', 'Comparación por ' + AppState.presas.globalChart.barGroupBy, true));
+            
             document.getElementById('closeModal')?.addEventListener('click', closeModal);
             window.addEventListener('click', (e) => {
                 if (e.target === document.getElementById('fullscreenModal')) {
@@ -2158,27 +2724,27 @@
                     AppState.currentTab = tabId;
                     if (tabId === 'analytics-tab') loadDetailedMetrics();
                     if (tabId === 'data-tab') loadDataTable();
-                    // Nota: La pestaña weather-tab no necesita carga especial
+                    if (tabId === 'presas-tab') loadPresasDataTable();
                 });
             });
 
-            // Botones de filtros
+            // Botones de filtros (calidad)
             document.getElementById('applyFilters')?.addEventListener('click', applyFilters);
             document.getElementById('resetFilters')?.addEventListener('click', resetFilters);
             document.getElementById('refreshData')?.addEventListener('click', refreshAllData);
 
-            // Descargas de gráficos
+            // Descargas de gráficos (calidad)
             document.getElementById('downloadMainChart')?.addEventListener('click', () => downloadChart('main'));
             document.getElementById('downloadBarChart')?.addEventListener('click', () => downloadChart('bar'));
             document.getElementById('downloadComparativeChart')?.addEventListener('click', () => downloadChart('comparative'));
 
-            // Datos y paginación
+            // Datos y paginación (calidad)
             document.getElementById('downloadData')?.addEventListener('click', downloadDataAsCSV);
             document.getElementById('exportExcel')?.addEventListener('click', exportToExcel);
             document.getElementById('prevPage')?.addEventListener('click', previousPage);
             document.getElementById('nextPage')?.addEventListener('click', nextPage);
 
-            // Reportes internos
+            // Reportes internos (calidad)
             document.getElementById('generateSummaryReport')?.addEventListener('click', () => generateReport('summary'));
             document.getElementById('generateTrendReport')?.addEventListener('click', () => generateReport('trend'));
             document.getElementById('generateComparativeReport')?.addEventListener('click', () => generateReport('comparative'));
@@ -2188,6 +2754,17 @@
             // Botones de reporte climático
             document.getElementById('printReport')?.addEventListener('click', printReport);
             document.getElementById('downloadReport')?.addEventListener('click', downloadReportAsImage);
+
+            // Botones de presas
+            document.getElementById('presasApplyFilters')?.addEventListener('click', applyPresasFilters);
+            document.getElementById('presasResetFilters')?.addEventListener('click', resetPresasFilters);
+            document.getElementById('presasRefreshData')?.addEventListener('click', refreshPresasData);
+            document.getElementById('downloadPresasMainChart')?.addEventListener('click', () => downloadChart('main', true));
+            document.getElementById('downloadPresasBarChart')?.addEventListener('click', () => downloadChart('bar', true));
+            document.getElementById('presasDownloadData')?.addEventListener('click', downloadPresasDataAsCSV);
+            document.getElementById('presasExportExcel')?.addEventListener('click', exportPresasToExcel);
+            document.getElementById('presasPrevPage')?.addEventListener('click', presasPreviousPage);
+            document.getElementById('presasNextPage')?.addEventListener('click', presasNextPage);
         }
 
         // Arranque

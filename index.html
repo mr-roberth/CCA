@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE ===== */
+        /* ===== VARIABLES Y ESTILOS BASE (sin cambios en estilos) ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -151,7 +151,7 @@
         }
         .filter-control:focus { border-color: var(--primary); outline: none; background: white; }
 
-        /* --- CONTROLES GLOBALES DE GRÁFICOS (reutilizados) --- */
+        /* --- CONTROLES GLOBALES DE GRÁFICOS --- */
         .global-chart-controls {
             background: white;
             border-radius: 60px;
@@ -451,7 +451,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* --- SUBTABS PARA CLIMA (ahora con 4 opciones) --- */
+        /* --- SUBTABS PARA CLIMA --- */
         .weather-subtabs {
             display: flex;
             gap: 10px;
@@ -530,7 +530,7 @@
         .footer-links a { color: white; margin-left: 24px; text-decoration: none; opacity: 0.8; font-size: 0.9rem; }
 
         /* =====================================================================
-           MEDIA QUERIES - RESPONSIVE AVANZADO (MÓVIL)
+           MEDIA QUERIES (sin cambios)
            ===================================================================== */
         @media (max-width: 1024px) {
             .global-chart-controls { border-radius: 30px; }
@@ -566,10 +566,6 @@
             .logo-text h1 { font-size: 1.2rem; }
             .logo-text p { font-size: 0.7rem; }
             .logo-img { height: 36px; }
-            .charts-row {
-                grid-template-columns: 1fr !important;
-                gap: 20px;
-            }
             .weather-subtabs { width: 100%; justify-content: center; }
             .weather-subtab { flex: 1; text-align: center; padding: 8px 12px; }
         }
@@ -719,7 +715,7 @@
 
         <!-- DASHBOARD PRINCIPAL -->
         <div id="dashboard" class="dashboard-container" style="display: none;">
-            <!-- TABS PRINCIPALES (se agregó "Monitor de presas") -->
+            <!-- TABS PRINCIPALES -->
             <div class="tabs">
                 <div class="tab active" data-tab="dashboard-tab">
                     <i class="fas fa-chart-pie"></i> Dashboard Calidad
@@ -741,7 +737,7 @@
                 </div>
             </div>
 
-            <!-- ==================== DASHBOARD CALIDAD (existente) ==================== -->
+            <!-- DASHBOARD CALIDAD -->
             <div id="dashboard-tab" class="tab-content active">
                 <!-- KPIs -->
                 <section class="kpi-section">
@@ -841,7 +837,7 @@
                 </section>
             </div>
 
-            <!-- ==================== ANÁLISIS CALIDAD (existente) ==================== -->
+            <!-- ANÁLISIS CALIDAD -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -853,7 +849,7 @@
                 </section>
             </div>
 
-            <!-- ==================== DATOS CALIDAD (existente) ==================== -->
+            <!-- DATOS CALIDAD -->
             <div id="data-tab" class="tab-content">
                 <section class="data-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -878,7 +874,7 @@
                 </section>
             </div>
 
-            <!-- ==================== REPORTES CALIDAD (existente) ==================== -->
+            <!-- REPORTES CALIDAD -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -928,10 +924,9 @@
                 </section>
             </div>
 
-            <!-- ==================== MONITOR DEL CLIMA (ampliado con 4 subpestañas) ==================== -->
+            <!-- MONITOR DEL CLIMA -->
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
-                    <!-- Subtabs ahora con 4 opciones -->
                     <div class="weather-subtabs">
                         <button class="weather-subtab active" data-subtab="map-sub">Mapa</button>
                         <button class="weather-subtab" data-subtab="report-sub">Reporte 5 días</button>
@@ -939,7 +934,6 @@
                         <button class="weather-subtab" data-subtab="powerbi-sub">Dashboard Power BI</button>
                     </div>
 
-                    <!-- Contenido Mapa (existente) -->
                     <div id="map-sub" class="weather-subcontent active">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
                             <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
@@ -950,7 +944,6 @@
                         </div>
                     </div>
 
-                    <!-- Contenido Reporte 5 días (existente) -->
                     <div id="report-sub" class="weather-subcontent">
                         <div class="report-header">
                             <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-mini">
@@ -968,7 +961,6 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO: Pronóstico 7 días (widget oscuro) -->
                     <div id="forecast7-sub" class="weather-subcontent">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
                             <i class="fas fa-calendar-week"></i> Pronóstico extendido 7 días
@@ -981,7 +973,6 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO: Dashboard Power BI -->
                     <div id="powerbi-sub" class="weather-subcontent">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
                             <i class="fas fa-chart-pie"></i> Dashboard climático (Power BI)
@@ -991,9 +982,9 @@
                 </div>
             </div>
 
-            <!-- ==================== NUEVO: MONITOR DE PRESAS (MEJORADO) ==================== -->
+            <!-- MONITOR DE PRESAS (MEJORADO) -->
             <div id="presas-tab" class="tab-content">
-                <!-- KPIs de presas rediseñados -->
+                <!-- KPIs de presas -->
                 <section class="kpi-section">
                     <h2 style="display: flex; gap: 10px; margin-bottom: 20px; color: var(--primary);">
                         <i class="fas fa-water"></i> Indicadores de presas
@@ -1035,7 +1026,7 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICOS DE PRESAS: TENDENCIA Y BARRAS (con dos métricas) -->
+                <!-- GRÁFICOS DE PRESAS: TENDENCIA Y BARRAS -->
                 <div class="charts-row">
                     <div class="chart-card">
                         <div class="chart-header">
@@ -1063,7 +1054,7 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN DE TABLA DE DATOS DE PRESAS -->
+                <!-- TABLA DE DATOS DE PRESAS -->
                 <section class="data-section" style="margin-top: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3><i class="fas fa-table"></i> Datos detallados de presas</h3>
@@ -1088,7 +1079,7 @@
             </div>
         </div>
 
-        <!-- MODAL DE PANTALLA COMPLETA (reutilizable) -->
+        <!-- MODAL DE PANTALLA COMPLETA -->
         <div id="fullscreenModal" class="modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1113,7 +1104,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 6.3</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.0</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1127,7 +1118,7 @@
 
     <script>
         // =========================================================================
-        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA CON PRESAS CORREGIDO
+        // CONFIGURACIÓN DEL SISTEMA - VERSIÓN DEFINITIVA CON NUEVAS MÉTRICAS
         // =========================================================================
         const CONFIG = {
             GAS_URL: 'https://script.google.com/macros/s/AKfycbwCC87l5cdWR_gzjjLYFxcGnDlfRXVU7j03jCVEt7cAJ9E6o1-DGr3zUeCbVHZbrpH4/exec', // ← TU URL
@@ -1142,51 +1133,58 @@
                 neutral: '#94a3b8'
             },
             thresholds: {
+                // Parámetros máximos permitidos (rojo) y amarillo al 70%
                 peso_total_muestra:   { red: 500,  yellow: 400 },
-                peso_limpia:          { red: 70,   yellow: 80 },
-                mamones:             { red: 3,    yellow: 1.5 },
-                lalas:               { red: 1,    yellow: 0.5 },
-                tallos_secos:        { red: 2,    yellow: 1 },
-                tallos_daniados:     { red: 1,    yellow: 0.5 },
-                raices_adheridas:    { red: 0.5,  yellow: 0.2 },
-                raices_tierra:       { red: 1,    yellow: 0.5 },
-                punta:               { red: 5,    yellow: 2.5 },
-                tierra:              { red: 1,    yellow: 0.5 },
-                basura:              { red: 1,    yellow: 0.5 },
-                cepas:               { red: 1,    yellow: 0.5 },
-                piedra:              { red: 0.2,  yellow: 0.1 },
-                impurezas_totales:   { red: 10,   yellow: 5 }
+                peso_limpia:          { red: 70,   yellow: 80 },  // invertido en getColorForIndicator
+                apertura_paja:        { red: 30,   yellow: 21 },  // nuevo
+                altura_corte:         { red: 5,    yellow: 3.5 }, // nuevo
+                mamones:              { red: 2,    yellow: 1.4 },
+                lalas:                { red: 0.3,  yellow: 0.21 },
+                tallos_secos:         { red: 0.8,  yellow: 0.56 },
+                tallos_daniados:      { red: 0.2,  yellow: 0.14 },
+                raices_adheridas:     { red: 0.1,  yellow: 0.07 },
+                raices_tierra:        { red: 0.5,  yellow: 0.35 },
+                punta:                { red: 1,    yellow: 0.7 },
+                tierra:               { red: 0.6,  yellow: 0.42 },
+                basura:               { red: 1.3,  yellow: 0.91 },
+                cepas:                { red: 0.7,  yellow: 0.49 },
+                piedra:               { red: 0,    yellow: 0 },
+                impurezas_totales:    { red: 7.5,  yellow: 5.25 }
             },
             presasThresholds: {
-                llenado: { rojo: 50, amarillo: 80 } // <50 rojo, 50-79 amarillo, >=80 verde
+                llenado: { rojo: 50, amarillo: 80 }
             },
             chartColors: ['#1b5e20','#4caf50','#8bc34a','#ffb300','#f57c00','#d32f2f','#7b1fa2','#0288d1','#00796b','#5d4037']
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (CALIDAD)
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (CALIDAD) – actualizado
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
             peso_limpia:          'Peso muestra limpia (%)',
-            mamones:             'Mamones (%)',
-            lalas:               'Lalas (%)',
-            tallos_secos:        'Tallos secos (%)',
-            tallos_daniados:     'Tallos dañados (%)',
-            raices_adheridas:    'Raíces adheridas (%)',
-            raices_tierra:       'Raíces con tierra (%)',
-            punta:               'Punta (%)',
-            tierra:              'Tierra (%)',
-            basura:              'Basura (%)',
-            cepas:               'Cepas (%)',
-            piedra:              'Piedra (%)',
-            impurezas_totales:   '% Total de impurezas'
+            apertura_paja:        'Apertura de paja (cm)',
+            altura_corte:         'Altura del corte (cm)',
+            mamones:              'Mamones (%)',
+            lalas:                'Lalas (%)',
+            tallos_secos:         'Tallos secos (%)',
+            tallos_daniados:      'Tallos dañados (%)',
+            raices_adheridas:     'Raíces adheridas (%)',
+            raices_tierra:        'Raíces con tierra (%)',
+            punta:                'Punta (%)',
+            tierra:               'Tierra (%)',
+            basura:               'Basura (%)',
+            cepas:                'Cepas (%)',
+            piedra:               'Piedra (%)',
+            impurezas_totales:    '% Total de impurezas'
         };
 
         const ALL_INDICATORS = [
             'impurezas_totales',
             'peso_total_muestra',
             'peso_limpia',
+            'apertura_paja',
+            'altura_corte',
             'mamones',
             'lalas',
             'tallos_secos',
@@ -1201,7 +1199,7 @@
         ];
 
         // =========================================================================
-        // CONFIGURACIÓN PARA PRESAS (CORREGIDA CON NOMBRES REALES)
+        // CONFIGURACIÓN PARA PRESAS (sin cambios)
         // =========================================================================
         const PRESAS_CONFIG = {
             columns: {
@@ -1375,8 +1373,23 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (CALIDAD)
+        // FUNCIONES DE GRÁFICOS (CALIDAD) - actualizado getColorForIndicator
         // =========================================================================
+        function getColorForIndicator(indicator, value) {
+            const th = CONFIG.thresholds[indicator];
+            if (!th) return CONFIG.colors.primary;
+            // Para peso_limpia, mayor es mejor (invertir lógica)
+            if (indicator === 'peso_limpia') {
+                if (value >= th.yellow) return CONFIG.colors.good;
+                if (value >= th.red) return CONFIG.colors.warning;
+                return CONFIG.colors.bad;
+            }
+            // Para el resto, menor es mejor
+            if (value <= th.yellow) return CONFIG.colors.good;
+            if (value <= th.red) return CONFIG.colors.warning;
+            return CONFIG.colors.bad;
+        }
+
         async function updateMainChart() {
             const ctx = document.getElementById('mainChart')?.getContext('2d');
             if (!ctx) return;
@@ -1604,19 +1617,6 @@
             return '';
         }
 
-        function getColorForIndicator(indicator, value) {
-            const th = CONFIG.thresholds[indicator];
-            if (!th) return CONFIG.colors.primary;
-            if (indicator === 'peso_limpia') {
-                if (value >= th.yellow) return CONFIG.colors.good;
-                if (value >= th.red) return CONFIG.colors.warning;
-                return CONFIG.colors.bad;
-            }
-            if (value <= th.yellow) return CONFIG.colors.good;
-            if (value <= th.red) return CONFIG.colors.warning;
-            return CONFIG.colors.bad;
-        }
-
         function getCriticity(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return 'good';
@@ -1633,6 +1633,8 @@
         function getExplanation(indicator, value) {
             const criticity = getCriticity(indicator, value);
             const baseMessages = {
+                apertura_paja: "Apertura de paja: influye en la eficiencia de corte.",
+                altura_corte: "Altura de corte: afecta la cantidad de caña cosechada.",
                 mamones: "Mamones: caña inmadura, baja sacarosa.",
                 lalas: "Lalas: retrasan molienda y diluyen jugo.",
                 tallos_secos: "Tallos secos: azúcar degradado.",
@@ -1664,6 +1666,7 @@
             const unit = getUnitForIndicator(indicator);
             if (unit === '%') return `${value.toFixed(2)}%`;
             if (unit === 'kg') return `${value.toFixed(2)} kg`;
+            if (unit === 'cm') return `${value.toFixed(2)} cm`;
             return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
         }
 
@@ -1975,7 +1978,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (CALIDAD)
+        // RENDERIZACIÓN DE KPIs (CALIDAD) - actualizado para incluir nuevas métricas
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -1988,6 +1991,8 @@
                 { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging' },
                 { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale' },
                 { id: 'impurezas_totales', title: 'Impurezas totales', icon: 'fas fa-trash-alt' },
+                { id: 'apertura_paja', title: 'Apertura de paja', icon: 'fas fa-ruler' },
+                { id: 'altura_corte', title: 'Altura de corte', icon: 'fas fa-cut' },
                 { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree' },
                 { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf' },
                 { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire' },
@@ -2027,7 +2032,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (CALIDAD)
+        // MÉTRICAS DETALLADAS (CALIDAD) - actualizado
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -2041,6 +2046,8 @@
                     const allMetrics = [
                         { id: 'peso_total_muestra', title: 'Peso total muestra', icon: 'fas fa-weight-hanging', unit: 'kg' },
                         { id: 'peso_limpia', title: 'Peso muestra limpia', icon: 'fas fa-balance-scale', unit: '%' },
+                        { id: 'apertura_paja', title: 'Apertura de paja', icon: 'fas fa-ruler', unit: 'cm' },
+                        { id: 'altura_corte', title: 'Altura de corte', icon: 'fas fa-cut', unit: 'cm' },
                         { id: 'mamones', title: 'Mamones', icon: 'fas fa-tree', unit: '%' },
                         { id: 'lalas', title: 'Lalas', icon: 'fas fa-leaf', unit: '%' },
                         { id: 'tallos_secos', title: 'Tallos secos', icon: 'fas fa-fire', unit: '%' },
@@ -2059,8 +2066,8 @@
                         const value = metrics[metric.id] || 0;
                         const color = getColorForIndicator(metric.id, value);
                         const unit = metric.unit;
-                        const displayValue = unit === '%' ? value.toFixed(2) + '%' : value.toFixed(2) + ' kg';
-                        const maxValue = metric.unit === '%' ? 30 : 1000;
+                        const displayValue = unit === '%' ? value.toFixed(2) + '%' : value.toFixed(2) + ' ' + unit;
+                        const maxValue = metric.unit === '%' ? 30 : (metric.id === 'peso_total_muestra' ? 1000 : 50);
                         const percentWidth = Math.min((value / maxValue) * 100, 100);
                         const statusText = getIndicatorStatus(metric.id, value);
                         const explanation = getExplanation(metric.id, value);
@@ -2104,7 +2111,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS (CALIDAD)
+        // TABLA DE DATOS (CALIDAD) - SIN CAMBIOS
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -2167,7 +2174,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES (CALIDAD)
+        // EXPORTACIÓN Y REPORTES (CALIDAD) - SIN CAMBIOS
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -2480,8 +2487,11 @@
             const ctx = document.getElementById('presasMainChart')?.getContext('2d');
             if (!ctx) return;
             if (AppState.presas.charts.main) AppState.presas.charts.main.destroy();
-            if (!timeSeries || !timeSeries.labels || !timeSeries.data) {
-                ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            if (!timeSeries || !timeSeries.labels || timeSeries.labels.length === 0) {
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#64748b';
+                ctx.textAlign = 'center';
+                ctx.fillText('No hay datos para mostrar', ctx.canvas.width/2, ctx.canvas.height/2);
                 return;
             }
             // Dual-axis: % Llenado (left) and Capacidad (right)
@@ -2492,7 +2502,7 @@
                     datasets: [
                         {
                             label: '% Llenado',
-                            data: timeSeries.data, // % llenado
+                            data: timeSeries.data,
                             borderColor: CONFIG.colors.primary,
                             backgroundColor: CONFIG.colors.primary + '20',
                             borderWidth: 3,
@@ -2501,16 +2511,16 @@
                             pointBackgroundColor: CONFIG.colors.primary,
                             pointBorderColor: '#fff',
                             pointRadius: 4,
-                            yAxisID: 'y' // left axis
+                            yAxisID: 'y'
                         },
                         {
                             label: 'Capacidad (hm³)',
-                            data: timeSeries.capacidadData || [], // capacidad promedio
+                            data: timeSeries.capacidadData || [],
                             type: 'bar',
                             backgroundColor: CONFIG.colors.accent + '80',
                             borderColor: CONFIG.colors.accent,
                             borderWidth: 1,
-                            yAxisID: 'y1' // right axis
+                            yAxisID: 'y1'
                         }
                     ]
                 },
@@ -2562,8 +2572,11 @@
             const ctx = document.getElementById('presasBarChart')?.getContext('2d');
             if (!ctx) return;
             if (AppState.presas.charts.bar) AppState.presas.charts.bar.destroy();
-            if (!groupAnalysis || !groupAnalysis.analysis) {
-                ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            if (!groupAnalysis || !groupAnalysis.analysis || groupAnalysis.analysis.length === 0) {
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#64748b';
+                ctx.textAlign = 'center';
+                ctx.fillText('No hay datos para mostrar', ctx.canvas.width/2, ctx.canvas.height/2);
                 return;
             }
             const analysis = groupAnalysis.analysis;

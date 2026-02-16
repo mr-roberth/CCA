@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE (sin cambios en estilos) ===== */
+        /* ===== VARIABLES Y ESTILOS BASE ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -1026,31 +1026,31 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICOS DE PRESAS: TENDENCIA Y BARRAS -->
-                <div class="charts-row">
+                <!-- GRÁFICOS DE PRESAS: dos gráficos en columna -->
+                <div class="charts-row" style="grid-template-columns: 1fr;"> <!-- una sola columna -->
                     <div class="chart-card">
                         <div class="chart-header">
-                            <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Tendencia % Llenado vs Capacidad</h3>
+                            <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Capacidad vs % Llenado por <span id="presasGroupedTitle">Estado</span></h3>
                             <div class="chart-actions">
-                                <button class="btn-expand" id="expandPresasMainChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
-                                <button class="btn btn-secondary btn-small" id="downloadPresasMainChart"><i class="fas fa-download"></i> PNG</button>
+                                <button class="btn-expand" id="expandPresasGroupedChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadPresasGroupedChart"><i class="fas fa-download"></i> PNG</button>
                             </div>
                         </div>
                         <div class="chart-wrapper">
-                            <canvas id="presasMainChart"></canvas>
+                            <canvas id="presasGroupedChart"></canvas>
                         </div>
                     </div>
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Comparación % Llenado vs Capacidad</h3>
-                            <div class="chart-actions">
-                                <button class="btn-expand" id="expandPresasBarChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
-                                <button class="btn btn-secondary btn-small" id="downloadPresasBarChart"><i class="fas fa-download"></i> PNG</button>
-                            </div>
+                </div>
+                <div class="chart-card" style="margin-top: 20px;">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> % Llenado por Estación</h3>
+                        <div class="chart-actions">
+                            <button class="btn-expand" id="expandPresasStationChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                            <button class="btn btn-secondary btn-small" id="downloadPresasStationChart"><i class="fas fa-download"></i> PNG</button>
                         </div>
-                        <div class="chart-wrapper">
-                            <canvas id="presasBarChart"></canvas>
-                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="presasStationChart"></canvas>
                     </div>
                 </div>
 
@@ -1104,7 +1104,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.0</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.1</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1270,8 +1270,8 @@
                 currentPage: 1,
                 pageSize: 50,
                 charts: {
-                    main: null,
-                    bar: null
+                    grouped: null,
+                    station: null
                 },
                 globalChart: {
                     barGroupBy: 'Estado',
@@ -1378,11 +1378,16 @@
         function getColorForIndicator(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return CONFIG.colors.primary;
-            // Para peso_limpia, mayor es mejor (invertir lógica)
+            // Para peso_limpia, mayor es mejor
             if (indicator === 'peso_limpia') {
                 if (value >= th.yellow) return CONFIG.colors.good;
                 if (value >= th.red) return CONFIG.colors.warning;
                 return CONFIG.colors.bad;
+            }
+            // Para apertura_paja: mayor es mejor (>=30 bueno, <30 malo)
+            if (indicator === 'apertura_paja') {
+                if (value >= th.red) return CONFIG.colors.good; // >=30 cm
+                return CONFIG.colors.bad; // <30 cm
             }
             // Para el resto, menor es mejor
             if (value <= th.yellow) return CONFIG.colors.good;
@@ -1623,6 +1628,10 @@
             if (indicator === 'peso_limpia') {
                 if (value >= th.yellow) return 'good';
                 if (value >= th.red) return 'warning';
+                return 'bad';
+            }
+            if (indicator === 'apertura_paja') {
+                if (value >= th.red) return 'good';
                 return 'bad';
             }
             if (value <= th.yellow) return 'good';
@@ -2473,119 +2482,68 @@
             }).join('');
         }
 
-        async function updatePresasCharts(dashboard) {
-            if (!dashboard) {
-                dashboard = await loadPresasDashboardData();
-                if (!dashboard) return;
-            }
-            const { timeSeries, groupAnalysis } = dashboard;
-            updatePresasMainChart(timeSeries);
-            updatePresasBarChart(groupAnalysis);
-        }
+        // NUEVA FUNCIÓN: Obtener datos por estación
+        function getPresasStationData() {
+            const data = AppState.presas.data;
+            if (!data || data.length === 0) return { labels: [], values: [] };
 
-        function updatePresasMainChart(timeSeries) {
-            const ctx = document.getElementById('presasMainChart')?.getContext('2d');
-            if (!ctx) return;
-            if (AppState.presas.charts.main) AppState.presas.charts.main.destroy();
-            if (!timeSeries || !timeSeries.labels || timeSeries.labels.length === 0) {
-                ctx.font = '14px Arial';
-                ctx.fillStyle = '#64748b';
-                ctx.textAlign = 'center';
-                ctx.fillText('No hay datos para mostrar', ctx.canvas.width/2, ctx.canvas.height/2);
-                return;
-            }
-            // Dual-axis: % Llenado (left) and Capacidad (right)
-            AppState.presas.charts.main = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: timeSeries.labels,
-                    datasets: [
-                        {
-                            label: '% Llenado',
-                            data: timeSeries.data,
-                            borderColor: CONFIG.colors.primary,
-                            backgroundColor: CONFIG.colors.primary + '20',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.3,
-                            pointBackgroundColor: CONFIG.colors.primary,
-                            pointBorderColor: '#fff',
-                            pointRadius: 4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Capacidad (hm³)',
-                            data: timeSeries.capacidadData || [],
-                            type: 'bar',
-                            backgroundColor: CONFIG.colors.accent + '80',
-                            borderColor: CONFIG.colors.accent,
-                            borderWidth: 1,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        datalabels: {
-                            display: AppState.presas.globalChart.showLabels,
-                            color: '#1e293b',
-                            font: { weight: 'bold', size: 10 },
-                            formatter: (value, context) => {
-                                if (context.dataset.label.includes('%')) return value?.toFixed(1) + '%';
-                                return value?.toFixed(1) + ' hm³';
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => {
-                                    if (ctx.dataset.label.includes('%')) return `% Llenado: ${ctx.raw.toFixed(2)}%`;
-                                    return `Capacidad: ${ctx.raw.toFixed(2)} hm³`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: '% Llenado' },
-                            min: 0,
-                            max: 100
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: { display: true, text: 'Capacidad (hm³)' },
-                            grid: { drawOnChartArea: false }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
+            const estacionMap = new Map(); // estacion -> { sumLlenado, count }
+
+            data.forEach(row => {
+                const estacion = row['Estacion'] || 'Sin estación';
+                let llenado = parseFloat(row['% Llenado']);
+                if (isNaN(llenado)) return;
+
+                if (!estacionMap.has(estacion)) {
+                    estacionMap.set(estacion, { sum: 0, count: 0 });
+                }
+                const entry = estacionMap.get(estacion);
+                entry.sum += llenado;
+                entry.count++;
             });
+
+            const labels = [];
+            const values = [];
+            for (let [estacion, { sum, count }] of estacionMap.entries()) {
+                labels.push(estacion);
+                values.push(count > 0 ? sum / count : 0);
+            }
+
+            // Ordenar alfabéticamente por nombre de estación
+            const combined = labels.map((l, i) => ({ label: l, value: values[i] }));
+            combined.sort((a, b) => a.label.localeCompare(b.label));
+            return {
+                labels: combined.map(c => c.label),
+                values: combined.map(c => c.value)
+            };
         }
 
-        function updatePresasBarChart(groupAnalysis) {
-            const ctx = document.getElementById('presasBarChart')?.getContext('2d');
+        // NUEVO: Gráfico agrupado (Capacidad vs %Llenado)
+        function updatePresasGroupedChart() {
+            const ctx = document.getElementById('presasGroupedChart')?.getContext('2d');
             if (!ctx) return;
-            if (AppState.presas.charts.bar) AppState.presas.charts.bar.destroy();
-            if (!groupAnalysis || !groupAnalysis.analysis || groupAnalysis.analysis.length === 0) {
+            if (AppState.presas.charts.grouped) AppState.presas.charts.grouped.destroy();
+
+            const dashboard = AppState.presas.cache.dashboard;
+            if (!dashboard || !dashboard.groupAnalysis || !dashboard.groupAnalysis.analysis) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.font = '14px Arial';
                 ctx.fillStyle = '#64748b';
                 ctx.textAlign = 'center';
                 ctx.fillText('No hay datos para mostrar', ctx.canvas.width/2, ctx.canvas.height/2);
                 return;
             }
-            const analysis = groupAnalysis.analysis;
-            const labels = analysis.map(a => a.grupo).slice(0,15);
-            const llenadoData = analysis.map(a => a.llenado_promedio).slice(0,15);
-            const capacidadData = analysis.map(a => a.capacidad_promedio).slice(0,15);
-            const colorsLlenado = analysis.map(a => getPresasColorForValue(a.llenado_promedio)).slice(0,15);
-            
-            AppState.presas.charts.bar = new Chart(ctx, {
+
+            const analysis = dashboard.groupAnalysis.analysis;
+            const agrupacion = AppState.presas.globalChart.barGroupBy; // 'Estado', 'Municipio', 'Region_cuenca'
+            document.getElementById('presasGroupedTitle').textContent = 
+                agrupacion === 'Region_cuenca' ? 'Región' : agrupacion;
+
+            const labels = analysis.map(a => a.grupo).slice(0, 15);
+            const llenadoData = analysis.map(a => a.llenado_promedio).slice(0, 15);
+            const capacidadData = analysis.map(a => a.capacidad_promedio).slice(0, 15);
+
+            AppState.presas.charts.grouped = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -2593,24 +2551,20 @@
                         {
                             label: '% Llenado promedio',
                             data: llenadoData,
-                            backgroundColor: colorsLlenado,
-                            borderWidth: 0,
+                            backgroundColor: CONFIG.colors.primary + 'CC',
                             borderRadius: 6,
                             yAxisID: 'y'
                         },
                         {
                             label: 'Capacidad promedio (hm³)',
                             data: capacidadData,
-                            type: 'bar',
-                            backgroundColor: CONFIG.colors.accent + '80',
-                            borderColor: CONFIG.colors.accent,
-                            borderWidth: 1,
+                            backgroundColor: CONFIG.colors.accent + 'CC',
+                            borderRadius: 6,
                             yAxisID: 'y1'
                         }
                     ]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
@@ -2618,7 +2572,7 @@
                             display: AppState.presas.globalChart.showLabels,
                             color: '#0f172a',
                             anchor: 'end',
-                            align: 'right',
+                            align: 'top',
                             formatter: (value, context) => {
                                 if (context.dataset.label.includes('%')) return value.toFixed(1) + '%';
                                 return value.toFixed(1) + ' hm³';
@@ -2635,17 +2589,101 @@
                         }
                     },
                     scales: {
-                        x: { 
-                            title: { display: true, text: 'Valor' },
-                            min: 0
-                        },
                         y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: '% Llenado' },
+                            beginAtZero: true,
+                            max: 100
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: 'Capacidad (hm³)' },
+                            grid: { drawOnChartArea: false },
                             beginAtZero: true
                         }
                     }
                 },
                 plugins: [ChartDataLabels]
             });
+        }
+
+        // NUEVO: Gráfico de estaciones (%Llenado por estación)
+        function updatePresasStationChart() {
+            const ctx = document.getElementById('presasStationChart')?.getContext('2d');
+            if (!ctx) return;
+            if (AppState.presas.charts.station) AppState.presas.charts.station.destroy();
+
+            const stationData = getPresasStationData();
+            if (stationData.labels.length === 0) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#64748b';
+                ctx.textAlign = 'center';
+                ctx.fillText('No hay datos de estaciones', ctx.canvas.width/2, ctx.canvas.height/2);
+                return;
+            }
+
+            // Limitar a 20 estaciones para no saturar
+            const maxStations = 20;
+            const labels = stationData.labels.slice(0, maxStations);
+            const values = stationData.values.slice(0, maxStations);
+
+            AppState.presas.charts.station = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '% Llenado promedio',
+                            data: values,
+                            backgroundColor: values.map(v => getPresasColorForValue(v)),
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', // barras horizontales para mejor lectura
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            display: AppState.presas.globalChart.showLabels,
+                            color: '#0f172a',
+                            anchor: 'end',
+                            align: 'right',
+                            formatter: (value) => value.toFixed(1) + '%'
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '% Llenado' },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        // Actualización de charts de presas
+        async function updatePresasCharts(dashboard) {
+            if (!dashboard) {
+                dashboard = await loadPresasDashboardData();
+                if (!dashboard) return;
+            }
+            updatePresasGroupedChart();
+            updatePresasStationChart();
         }
 
         function initPresasBarGroup() {
@@ -2667,10 +2705,14 @@
                 toggle.checked = AppState.presas.globalChart.showLabels;
                 toggle.addEventListener('change', function() {
                     AppState.presas.globalChart.showLabels = this.checked;
-                    if (AppState.presas.charts.main) AppState.presas.charts.main.options.plugins.datalabels.display = this.checked;
-                    if (AppState.presas.charts.bar) AppState.presas.charts.bar.options.plugins.datalabels.display = this.checked;
-                    AppState.presas.charts.main?.update();
-                    AppState.presas.charts.bar?.update();
+                    if (AppState.presas.charts.grouped) {
+                        AppState.presas.charts.grouped.options.plugins.datalabels.display = this.checked;
+                        AppState.presas.charts.grouped.update();
+                    }
+                    if (AppState.presas.charts.station) {
+                        AppState.presas.charts.station.options.plugins.datalabels.display = this.checked;
+                        AppState.presas.charts.station.update();
+                    }
                 });
             }
         }
@@ -2811,8 +2853,10 @@
             document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparative', 'Comparativa de indicadores'));
             
             // Pantalla completa (presas)
-            document.getElementById('expandPresasMainChart')?.addEventListener('click', () => showFullscreenChart('main', 'Tendencia % Llenado vs Capacidad', true));
-            document.getElementById('expandPresasBarChart')?.addEventListener('click', () => showFullscreenChart('bar', 'Comparación por ' + AppState.presas.globalChart.barGroupBy, true));
+            document.getElementById('expandPresasGroupedChart')?.addEventListener('click', () => showFullscreenChart('grouped', 'Capacidad vs % Llenado', true));
+            document.getElementById('downloadPresasGroupedChart')?.addEventListener('click', () => downloadChart('grouped', true));
+            document.getElementById('expandPresasStationChart')?.addEventListener('click', () => showFullscreenChart('station', '% Llenado por Estación', true));
+            document.getElementById('downloadPresasStationChart')?.addEventListener('click', () => downloadChart('station', true));
             
             document.getElementById('closeModal')?.addEventListener('click', closeModal);
             window.addEventListener('click', (e) => {
@@ -2874,8 +2918,6 @@
             document.getElementById('presasApplyFilters')?.addEventListener('click', applyPresasFilters);
             document.getElementById('presasResetFilters')?.addEventListener('click', resetPresasFilters);
             document.getElementById('presasRefreshData')?.addEventListener('click', refreshPresasData);
-            document.getElementById('downloadPresasMainChart')?.addEventListener('click', () => downloadChart('main', true));
-            document.getElementById('downloadPresasBarChart')?.addEventListener('click', () => downloadChart('bar', true));
             document.getElementById('presasDownloadData')?.addEventListener('click', downloadPresasDataAsCSV);
             document.getElementById('presasExportExcel')?.addEventListener('click', exportPresasToExcel);
             document.getElementById('presasPrevPage')?.addEventListener('click', presasPreviousPage);

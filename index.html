@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>Sistema de Calidad de Cosecha · CCA + Monitor de Presas</title>
+    <title>Sistema de Calidad de Cosecha · CCA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -623,6 +623,11 @@
         .kpi-card.llenado-bajo { border-left-color: #f44336; background-color: #ffebee; }
         .kpi-card.llenado-medio { border-left-color: #ff9800; background-color: #fff3e0; }
         .kpi-card.llenado-alto { border-left-color: #4caf50; background-color: #e8f5e9; }
+
+        /* Nuevo estilo para gráfico de tendencia de presas */
+        .trend-chart-card {
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
@@ -632,8 +637,8 @@
                 <div class="logo">
                     <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-img">
                     <div class="logo-text">
-                        <h1>Sistema de Calidad de Cosecha · CCA + Presas</h1>
-                        <p>Análisis integrado</p>
+                        <h1>Sistema de Calidad de Cosecha · CCA</h1>
+                        <p>Sistema Operativo Azúcar</p>
                     </div>
                 </div>
                 <div class="user-info" id="userInfo">
@@ -874,7 +879,7 @@
                 </section>
             </div>
 
-            <!-- REPORTES CALIDAD (con nuevo diseño PDF) -->
+            <!-- REPORTES CALIDAD (sin cambios) -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -928,15 +933,15 @@
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
                     <div class="weather-subtabs">
-                        <button class="weather-subtab active" data-subtab="map-sub">Mapa</button>
-                        <button class="weather-subtab" data-subtab="report-sub">Reporte 5 días</button>
+                        <button class="weather-subtab active" data-subtab="map-sub">Mapa climatológico</button>
+                        <button class="weather-subtab" data-subtab="report-sub">Pronóstico 5 días</button>
                         <button class="weather-subtab" data-subtab="forecast7-sub">Pronóstico 7 días</button>
                         <button class="weather-subtab" data-subtab="powerbi-sub">Dashboard Power BI</button>
                     </div>
 
                     <div id="map-sub" class="weather-subcontent active">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
-                            <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
+                            <i class="fas fa-cloud-sun"></i> Mapa de condiciones meteorológicas
                         </h2>
                         <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 700px;"></iframe>
                         <div class="weather-attribution">
@@ -963,10 +968,10 @@
 
                     <div id="forecast7-sub" class="weather-subcontent">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
-                            <i class="fas fa-calendar-week"></i> Pronóstico extendido 7 días
+                            <i class="fas fa-calendar-week"></i> Reporte de predicción climática a 5 días
                         </h2>
                         <div style="display: flex; justify-content: center;">
-                            <iframe src="https://www.meteoblue.com/en/weather/widget/daily/?geoloc=detect&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&days=7&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=1&winddirection=1&uv=1&humidity=1&precipitation=1&precipitationprobability=1&spot=1&pressure=1&layout=dark&user_key=4646e18c1240a1c4&embed_key=e18ffece7e4322d2&sig=643f2e3142bdcbfe0197edfb7b92428c4aff8075888c072926f69a71288ede88" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; max-width: 378px; height: 447px;"></iframe>
+                            <iframe src="https://www.meteoblue.com/es/tiempo/widget/three/?geoloc=detect&nocurrent=0&noforecast=0&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&days=7&layout=image&user_key=4646e18c1240a1c4&embed_key=58ec11cfb722607e&sig=3fd4d8f6116ea20b2fc90ed74d2674599498e221a9948a87a906d5f5a77a6c47" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 805px;height: 590px;border: 0;overflow: hidden;"></iframe><div><!-- DO NOT REMOVE THIS LINK --><a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a></div>
                         </div>
                         <div class="weather-attribution">
                             <a href="https://www.meteoblue.com/en/weather/week/index" target="_blank" rel="noopener">meteoblue</a>
@@ -1121,7 +1126,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.4</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.3</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -2197,7 +2202,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES (CALIDAD) - REDISEÑADO
+        // EXPORTACIÓN Y REPORTES (CALIDAD)
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -2259,72 +2264,16 @@
         async function generatePDFReport(reportData) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
-            // Título principal en negrita y centrado
-            doc.setFontSize(22);
-            doc.setFont('helvetica', 'bold');
-            const titleWidth = doc.getStringUnitWidth('Sistema Operativo Azúcar') * 22 / doc.internal.scaleFactor;
-            const pageWidth = doc.internal.pageSize.getWidth();
-            doc.text('Sistema Operativo Azúcar', (pageWidth - titleWidth) / 2, 30);
-            
-            // Subtítulo
-            doc.setFontSize(16);
-            doc.setFont('helvetica', 'normal');
-            const subtitleWidth = doc.getStringUnitWidth('Reporte de calidad de cosecha') * 16 / doc.internal.scaleFactor;
-            doc.text('Reporte de calidad de cosecha', (pageWidth - subtitleWidth) / 2, 45);
-            
-            // Fecha
+            doc.setFontSize(18);
+            doc.text(reportData.title || 'Reporte de Calidad', 20, 20);
             doc.setFontSize(11);
-            doc.text(`Fecha: ${reportData.date || new Date().toLocaleDateString()}`, 20, 60);
-            doc.text(`Generado por: ${AppState.user?.name || 'Usuario'}`, 20, 68);
-            
-            // Línea separadora
-            doc.setLineWidth(0.5);
-            doc.line(20, 75, 190, 75);
-            
-            // KPIs principales
+            doc.text(`Fecha: ${reportData.date || new Date().toLocaleDateString()}`, 20, 35);
+            doc.text(`Generado por: ${AppState.user?.name || 'Usuario'}`, 20, 42);
             if (reportData.metrics) {
-                doc.setFontSize(14);
-                doc.setFont('helvetica', 'bold');
-                doc.text('Resumen de indicadores', 20, 90);
-                
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'normal');
-                let y = 105;
-                
-                // % Impurezas totales
-                const impurezas = reportData.metrics.impurezas_totales || 0;
-                doc.text(`% Impurezas totales: ${impurezas.toFixed(2)}%`, 20, y);
-                y += 8;
-                
-                // Cumplimiento (basado en umbral)
-                const umbral = CONFIG.thresholds.impurezas_totales.red; // 7.5%
-                if (impurezas <= umbral) {
-                    doc.setTextColor(0, 128, 0); // verde
-                    doc.text('✅ Cumple con el límite permitido', 20, y);
-                } else {
-                    doc.setTextColor(255, 0, 0); // rojo
-                    doc.text('❌ No cumple con el límite permitido', 20, y);
-                }
-                doc.setTextColor(0, 0, 0); // restaurar negro
-                y += 15;
-                
-                // Otros KPIs relevantes
-                const otrosKPI = [
-                    { label: 'Peso total muestra (kg)', key: 'peso_total_muestra' },
-                    { label: 'Peso muestra limpia (%)', key: 'peso_limpia' },
-                    { label: 'Mamones (%)', key: 'mamones' },
-                    { label: 'Lalas (%)', key: 'lalas' }
-                ];
-                
-                otrosKPI.forEach(kpi => {
-                    const val = reportData.metrics[kpi.key] || 0;
-                    doc.text(`${kpi.label}: ${val.toFixed(2)}`, 20, y);
-                    y += 8;
-                });
+                doc.text(`Muestras Totales: ${reportData.metrics.muestrasTotales || 0}`, 20, 55);
+                doc.text(`Impurezas: ${reportData.metrics.impurezas_totales?.toFixed(2) || 0}%`, 20, 62);
+                doc.text(`Peso total: ${reportData.metrics.peso_total_muestra?.toFixed(2) || 0} kg`, 20, 69);
             }
-            
-            // Guardar PDF
             doc.save(`reporte_${new Date().getTime()}.pdf`);
         }
 
@@ -2369,7 +2318,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA PRESAS (REDISEÑADAS Y CORREGIDAS)
+        // FUNCIONES PARA PRESAS (REDISEÑADAS)
         // =========================================================================
         function getPresasFiltersHash() {
             const f = AppState.presas.filters;
@@ -2562,7 +2511,6 @@
             const estacionMap = new Map(); // estacion -> { sumLlenado, count }
 
             data.forEach(row => {
-                // Asegurarse de que la columna se llama 'Estacion' (sin acento)
                 const estacion = row['Estacion'] || 'Sin estación';
                 let llenado = parseFloat(row['% Llenado']);
                 if (isNaN(llenado)) return;
@@ -2594,10 +2542,7 @@
         // Gráfico de tendencia temporal
         function updatePresasTrendChart(dashboard) {
             const ctx = document.getElementById('presasTrendChart')?.getContext('2d');
-            if (!ctx) {
-                console.error('Canvas presasTrendChart no encontrado');
-                return;
-            }
+            if (!ctx) return;
             if (AppState.presas.charts.trend) AppState.presas.charts.trend.destroy();
 
             const timeSeries = dashboard?.timeSeries;
@@ -2658,10 +2603,7 @@
         // Gráfico agrupado (Capacidad vs %Llenado)
         function updatePresasGroupedChart(dashboard) {
             const ctx = document.getElementById('presasGroupedChart')?.getContext('2d');
-            if (!ctx) {
-                console.error('Canvas presasGroupedChart no encontrado');
-                return;
-            }
+            if (!ctx) return;
             if (AppState.presas.charts.grouped) AppState.presas.charts.grouped.destroy();
 
             const groupAnalysis = dashboard?.groupAnalysis;
@@ -2754,10 +2696,7 @@
         // Gráfico de estaciones
         function updatePresasStationChart() {
             const ctx = document.getElementById('presasStationChart')?.getContext('2d');
-            if (!ctx) {
-                console.error('Canvas presasStationChart no encontrado');
-                return;
-            }
+            if (!ctx) return;
             if (AppState.presas.charts.station) AppState.presas.charts.station.destroy();
 
             const stationData = getPresasStationData();
@@ -3029,7 +2968,7 @@
                             await refreshPresasData();
                         } else {
                             loadPresasDataTable();
-                            await updatePresasCharts();
+                            updatePresasCharts();
                         }
                     }
                 });

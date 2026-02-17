@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== ESTILOS (sin cambios, igual que antes) ===== */
+        /* ===== ESTILOS (sin cambios en la parte de calidad) ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -623,6 +623,11 @@
         .kpi-card.llenado-bajo { border-left-color: #f44336; background-color: #ffebee; }
         .kpi-card.llenado-medio { border-left-color: #ff9800; background-color: #fff3e0; }
         .kpi-card.llenado-alto { border-left-color: #4caf50; background-color: #e8f5e9; }
+
+        /* Nuevo estilo para gráfico de tendencia de presas */
+        .trend-chart-card {
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
@@ -737,7 +742,7 @@
                 </div>
             </div>
 
-            <!-- DASHBOARD CALIDAD -->
+            <!-- DASHBOARD CALIDAD (sin cambios) -->
             <div id="dashboard-tab" class="tab-content active">
                 <!-- KPIs -->
                 <section class="kpi-section">
@@ -837,7 +842,7 @@
                 </section>
             </div>
 
-            <!-- ANÁLISIS CALIDAD -->
+            <!-- ANÁLISIS CALIDAD (sin cambios) -->
             <div id="analytics-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-chart-pie"></i> Métricas detalladas</h2>
@@ -849,7 +854,7 @@
                 </section>
             </div>
 
-            <!-- DATOS CALIDAD -->
+            <!-- DATOS CALIDAD (sin cambios) -->
             <div id="data-tab" class="tab-content">
                 <section class="data-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -874,7 +879,7 @@
                 </section>
             </div>
 
-            <!-- REPORTES CALIDAD -->
+            <!-- REPORTES CALIDAD (sin cambios) -->
             <div id="reports-tab" class="tab-content">
                 <section class="data-section">
                     <h2 style="display: flex; gap: 10px; color: var(--primary);"><i class="fas fa-file-pdf"></i> Generar reportes</h2>
@@ -924,7 +929,7 @@
                 </section>
             </div>
 
-            <!-- MONITOR DEL CLIMA -->
+            <!-- MONITOR DEL CLIMA (sin cambios) -->
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
                     <div class="weather-subtabs">
@@ -982,7 +987,7 @@
                 </div>
             </div>
 
-            <!-- MONITOR DE PRESAS (MEJORADO) -->
+            <!-- ==================== MONITOR DE PRESAS REDISEÑADO ==================== -->
             <div id="presas-tab" class="tab-content">
                 <!-- KPIs de presas -->
                 <section class="kpi-section">
@@ -1026,8 +1031,23 @@
                     </div>
                 </div>
 
-                <!-- GRÁFICOS DE PRESAS: dos gráficos en columna -->
-                <div class="charts-row" style="grid-template-columns: 1fr;"> <!-- una sola columna -->
+                <!-- TRES GRÁFICOS: tendencia, agrupado y por estación -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Gráfico 1: Tendencia temporal del % Llenado (ocupa 2 columnas) -->
+                    <div class="chart-card" style="grid-column: span 2;">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Evolución del % Llenado</h3>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandPresasTrendChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadPresasTrendChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="presasTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico 2: Capacidad vs % Llenado por grupo -->
                     <div class="chart-card">
                         <div class="chart-header">
                             <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Capacidad vs % Llenado por <span id="presasGroupedTitle">Estado</span></h3>
@@ -1040,17 +1060,19 @@
                             <canvas id="presasGroupedChart"></canvas>
                         </div>
                     </div>
-                </div>
-                <div class="chart-card" style="margin-top: 20px;">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> % Llenado por Estación</h3>
-                        <div class="chart-actions">
-                            <button class="btn-expand" id="expandPresasStationChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
-                            <button class="btn btn-secondary btn-small" id="downloadPresasStationChart"><i class="fas fa-download"></i> PNG</button>
+
+                    <!-- Gráfico 3: % Llenado por Estación -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> % Llenado por Estación</h3>
+                            <div class="chart-actions">
+                                <button class="btn-expand" id="expandPresasStationChart" title="Pantalla completa"><i class="fas fa-expand"></i></button>
+                                <button class="btn btn-secondary btn-small" id="downloadPresasStationChart"><i class="fas fa-download"></i> PNG</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="presasStationChart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="presasStationChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -1104,7 +1126,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.2</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.3</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1269,6 +1291,7 @@
                 currentPage: 1,
                 pageSize: 50,
                 charts: {
+                    trend: null,
                     grouped: null,
                     station: null
                 },
@@ -2295,7 +2318,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA PRESAS (MEJORADAS CON NUEVAS COLUMNAS)
+        // FUNCIONES PARA PRESAS (REDISEÑADAS)
         // =========================================================================
         function getPresasFiltersHash() {
             const f = AppState.presas.filters;
@@ -2480,7 +2503,7 @@
             }).join('');
         }
 
-        // NUEVA FUNCIÓN: Obtener datos por estación
+        // Función para obtener datos por estación
         function getPresasStationData() {
             const data = AppState.presas.data;
             if (!data || data.length === 0) return { labels: [], values: [] };
@@ -2507,7 +2530,7 @@
                 values.push(count > 0 ? sum / count : 0);
             }
 
-            // Ordenar alfabéticamente por nombre de estación
+            // Ordenar alfabéticamente
             const combined = labels.map((l, i) => ({ label: l, value: values[i] }));
             combined.sort((a, b) => a.label.localeCompare(b.label));
             return {
@@ -2516,24 +2539,85 @@
             };
         }
 
-        // NUEVO: Gráfico agrupado (Capacidad vs %Llenado)
-        function updatePresasGroupedChart() {
-            const ctx = document.getElementById('presasGroupedChart')?.getContext('2d');
+        // Gráfico de tendencia temporal
+        function updatePresasTrendChart(dashboard) {
+            const ctx = document.getElementById('presasTrendChart')?.getContext('2d');
             if (!ctx) return;
-            if (AppState.presas.charts.grouped) AppState.presas.charts.grouped.destroy();
+            if (AppState.presas.charts.trend) AppState.presas.charts.trend.destroy();
 
-            const dashboard = AppState.presas.cache.dashboard;
-            if (!dashboard || !dashboard.groupAnalysis || !dashboard.groupAnalysis.analysis || dashboard.groupAnalysis.analysis.length === 0) {
+            const timeSeries = dashboard?.timeSeries;
+            if (!timeSeries || !timeSeries.labels || timeSeries.labels.length === 0) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.font = '14px Arial';
                 ctx.fillStyle = '#64748b';
                 ctx.textAlign = 'center';
-                ctx.fillText('No hay datos para mostrar', ctx.canvas.width/2, ctx.canvas.height/2);
+                ctx.fillText('No hay datos históricos', ctx.canvas.width/2, ctx.canvas.height/2);
                 return;
             }
 
-            const analysis = dashboard.groupAnalysis.analysis;
-            const agrupacion = AppState.presas.globalChart.barGroupBy; // 'Estado', 'Municipio', 'Region_cuenca'
+            AppState.presas.charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timeSeries.labels,
+                    datasets: [{
+                        label: '% Llenado',
+                        data: timeSeries.data,
+                        borderColor: CONFIG.colors.primary,
+                        backgroundColor: CONFIG.colors.primary + '20',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: timeSeries.data.map(v => getPresasColorForValue(v)),
+                        pointBorderColor: '#fff',
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            display: AppState.presas.globalChart.showLabels,
+                            color: '#1e293b',
+                            font: { size: 10 },
+                            formatter: (value) => value?.toFixed(1) + '%'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `% Llenado: ${ctx.raw.toFixed(2)}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: '% Llenado' }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        // Gráfico agrupado (Capacidad vs %Llenado)
+        function updatePresasGroupedChart(dashboard) {
+            const ctx = document.getElementById('presasGroupedChart')?.getContext('2d');
+            if (!ctx) return;
+            if (AppState.presas.charts.grouped) AppState.presas.charts.grouped.destroy();
+
+            const groupAnalysis = dashboard?.groupAnalysis;
+            if (!groupAnalysis || !groupAnalysis.analysis || groupAnalysis.analysis.length === 0) {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#64748b';
+                ctx.textAlign = 'center';
+                ctx.fillText('No hay datos para agrupar', ctx.canvas.width/2, ctx.canvas.height/2);
+                return;
+            }
+
+            const analysis = groupAnalysis.analysis;
+            const agrupacion = AppState.presas.globalChart.barGroupBy;
             document.getElementById('presasGroupedTitle').textContent = 
                 agrupacion === 'Region_cuenca' ? 'Región' : agrupacion;
 
@@ -2549,7 +2633,7 @@
                         {
                             label: '% Llenado promedio',
                             data: llenadoData,
-                            backgroundColor: CONFIG.colors.primary + 'CC',
+                            backgroundColor: llenadoData.map(v => getPresasColorForValue(v)),
                             borderRadius: 6,
                             yAxisID: 'y'
                         },
@@ -2609,7 +2693,7 @@
             });
         }
 
-        // NUEVO: Gráfico de estaciones (%Llenado por estación)
+        // Gráfico de estaciones
         function updatePresasStationChart() {
             const ctx = document.getElementById('presasStationChart')?.getContext('2d');
             if (!ctx) return;
@@ -2625,7 +2709,6 @@
                 return;
             }
 
-            // Limitar a 20 estaciones para no saturar
             const maxStations = 20;
             const labels = stationData.labels.slice(0, maxStations);
             const values = stationData.values.slice(0, maxStations);
@@ -2644,7 +2727,7 @@
                     ]
                 },
                 options: {
-                    indexAxis: 'y', // barras horizontales para mejor lectura
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
@@ -2674,13 +2757,13 @@
             });
         }
 
-        // Actualización de charts de presas
         async function updatePresasCharts(dashboard) {
             if (!dashboard) {
                 dashboard = await loadPresasDashboardData();
                 if (!dashboard) return;
             }
-            updatePresasGroupedChart();
+            updatePresasTrendChart(dashboard);
+            updatePresasGroupedChart(dashboard);
             updatePresasStationChart();
         }
 
@@ -2703,6 +2786,10 @@
                 toggle.checked = AppState.presas.globalChart.showLabels;
                 toggle.addEventListener('change', function() {
                     AppState.presas.globalChart.showLabels = this.checked;
+                    if (AppState.presas.charts.trend) {
+                        AppState.presas.charts.trend.options.plugins.datalabels.display = this.checked;
+                        AppState.presas.charts.trend.update();
+                    }
                     if (AppState.presas.charts.grouped) {
                         AppState.presas.charts.grouped.options.plugins.datalabels.display = this.checked;
                         AppState.presas.charts.grouped.update();
@@ -2851,6 +2938,8 @@
             document.getElementById('expandComparativeChart')?.addEventListener('click', () => showFullscreenChart('comparative', 'Comparativa de indicadores'));
             
             // Pantalla completa (presas)
+            document.getElementById('expandPresasTrendChart')?.addEventListener('click', () => showFullscreenChart('trend', 'Evolución del % Llenado', true));
+            document.getElementById('downloadPresasTrendChart')?.addEventListener('click', () => downloadChart('trend', true));
             document.getElementById('expandPresasGroupedChart')?.addEventListener('click', () => showFullscreenChart('grouped', 'Capacidad vs % Llenado', true));
             document.getElementById('downloadPresasGroupedChart')?.addEventListener('click', () => downloadChart('grouped', true));
             document.getElementById('expandPresasStationChart')?.addEventListener('click', () => showFullscreenChart('station', '% Llenado por Estación', true));

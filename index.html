@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* ===== VARIABLES Y ESTILOS BASE ===== */
+        /* ===== ESTILOS (sin cambios, igual que antes) ===== */
         :root {
             --primary-dark: #000000;
             --primary: #1b5e20;
@@ -1104,7 +1104,7 @@
             <div class="footer-content">
                 <div>
                     <img src="logo-soa.png" alt="Porres" style="height: 36px; margin-bottom: 10px;">
-                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.1</p>
+                    <p style="opacity: 0.9;">Sistema de Calidad de Cosecha + Presas · Versión 7.2</p>
                     <p style="font-size: 0.75rem; opacity: 0.7;">© 2026 Revolución Digital. Todos los derechos reservados (Roberto Hernández Gómez).</p>
                 </div>
                 <div class="footer-links">
@@ -1133,11 +1133,10 @@
                 neutral: '#94a3b8'
             },
             thresholds: {
-                // Parámetros máximos permitidos (rojo) y amarillo al 70%
                 peso_total_muestra:   { red: 500,  yellow: 400 },
-                peso_limpia:          { red: 70,   yellow: 80 },  // invertido en getColorForIndicator
-                apertura_paja:        { red: 30,   yellow: 21 },  // nuevo
-                altura_corte:         { red: 5,    yellow: 3.5 }, // nuevo
+                peso_limpia:          { red: 70,   yellow: 80 },
+                apertura_paja:        { red: 30,   yellow: 21 },
+                altura_corte:         { red: 5,    yellow: 3.5 },
                 mamones:              { red: 2,    yellow: 1.4 },
                 lalas:                { red: 0.3,  yellow: 0.21 },
                 tallos_secos:         { red: 0.8,  yellow: 0.56 },
@@ -1158,7 +1157,7 @@
         };
 
         // =========================================================================
-        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (CALIDAD) – actualizado
+        // NOMBRES AMIGABLES Y UNIDADES DE MEDIDA (CALIDAD)
         // =========================================================================
         const INDICATOR_NAMES = {
             peso_total_muestra:   'Peso total muestra (kg)',
@@ -1199,7 +1198,7 @@
         ];
 
         // =========================================================================
-        // CONFIGURACIÓN PARA PRESAS (sin cambios)
+        // CONFIGURACIÓN PARA PRESAS
         // =========================================================================
         const PRESAS_CONFIG = {
             columns: {
@@ -1223,7 +1222,7 @@
         };
 
         // =========================================================================
-        // ESTADO GLOBAL (ampliado para presas con caché)
+        // ESTADO GLOBAL
         // =========================================================================
         const AppState = {
             user: null,
@@ -1373,23 +1372,20 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE GRÁFICOS (CALIDAD) - actualizado getColorForIndicator
+        // FUNCIONES DE GRÁFICOS (CALIDAD)
         // =========================================================================
         function getColorForIndicator(indicator, value) {
             const th = CONFIG.thresholds[indicator];
             if (!th) return CONFIG.colors.primary;
-            // Para peso_limpia, mayor es mejor
             if (indicator === 'peso_limpia') {
                 if (value >= th.yellow) return CONFIG.colors.good;
                 if (value >= th.red) return CONFIG.colors.warning;
                 return CONFIG.colors.bad;
             }
-            // Para apertura_paja: mayor es mejor (>=30 bueno, <30 malo)
             if (indicator === 'apertura_paja') {
-                if (value >= th.red) return CONFIG.colors.good; // >=30 cm
-                return CONFIG.colors.bad; // <30 cm
+                if (value >= th.red) return CONFIG.colors.good;
+                return CONFIG.colors.bad;
             }
-            // Para el resto, menor es mejor
             if (value <= th.yellow) return CONFIG.colors.good;
             if (value <= th.red) return CONFIG.colors.warning;
             return CONFIG.colors.bad;
@@ -1687,7 +1683,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES DE PANTALLA COMPLETA (MODAL) - reutilizable
+        // FUNCIONES DE PANTALLA COMPLETA (MODAL)
         // =========================================================================
         function showFullscreenChart(chartType, title, isPresas = false) {
             const modal = document.getElementById('fullscreenModal');
@@ -1751,7 +1747,7 @@
             });
             url.searchParams.append('_t', Date.now());
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
             try {
                 const response = await fetch(url.toString(), {
                     method: 'GET',
@@ -1769,7 +1765,7 @@
         }
 
         // =========================================================================
-        // AUTENTICACIÓN Y SESIÓN (sin cambios)
+        // AUTENTICACIÓN Y SESIÓN
         // =========================================================================
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
@@ -1849,7 +1845,7 @@
         }
 
         // =========================================================================
-        // FILTROS Y DATOS (CALIDAD) - SIN CAMBIOS
+        // FILTROS Y DATOS (CALIDAD)
         // =========================================================================
         async function loadFilters() {
             try {
@@ -1987,7 +1983,7 @@
         }
 
         // =========================================================================
-        // RENDERIZACIÓN DE KPIs (CALIDAD) - actualizado para incluir nuevas métricas
+        // RENDERIZACIÓN DE KPIs (CALIDAD)
         // =========================================================================
         function renderKPIs() {
             const grid = document.getElementById('kpiGrid');
@@ -2041,7 +2037,7 @@
         }
 
         // =========================================================================
-        // MÉTRICAS DETALLADAS (CALIDAD) - actualizado
+        // MÉTRICAS DETALLADAS (CALIDAD)
         // =========================================================================
         async function loadDetailedMetrics() {
             const grid = document.getElementById('detailedMetricsGrid');
@@ -2120,7 +2116,7 @@
         }
 
         // =========================================================================
-        // TABLA DE DATOS (CALIDAD) - SIN CAMBIOS
+        // TABLA DE DATOS (CALIDAD)
         // =========================================================================
         async function loadDataTable() {
             const table = document.getElementById('dataTable');
@@ -2183,7 +2179,7 @@
         }
 
         // =========================================================================
-        // EXPORTACIÓN Y REPORTES (CALIDAD) - SIN CAMBIOS
+        // EXPORTACIÓN Y REPORTES (CALIDAD)
         // =========================================================================
         function downloadDataAsCSV() {
             if (!AppState.data.length) return alert('No hay datos');
@@ -2259,7 +2255,7 @@
         }
 
         // =========================================================================
-        // FUNCIONES PARA EL REPORTE DEL CLIMA (imprimir/descargar)
+        // FUNCIONES PARA EL REPORTE DEL CLIMA
         // =========================================================================
         function printReport() {
             const printContents = document.getElementById('reportContent').innerHTML;
@@ -2283,7 +2279,7 @@
         }
 
         // =========================================================================
-        // MANEJO DE SUBTABS EN CLIMA (ahora con 4)
+        // MANEJO DE SUBTABS EN CLIMA
         // =========================================================================
         function initWeatherSubtabs() {
             const subtabs = document.querySelectorAll('.weather-subtab');
@@ -2432,11 +2428,13 @@
                     AppState.presas.data = dashboard.data || [];
                     AppState.presas.currentPage = 1;
                     renderPresasKPIs();
-                    updatePresasCharts(dashboard);
+                    await updatePresasCharts(dashboard);
                     if (document.getElementById('presas-tab').classList.contains('active')) {
                         loadPresasDataTable();
                     }
                     showAlert('presasDataAlert', 'success', `${AppState.presas.data.length} registros cargados`);
+                } else {
+                    showAlert('presasDataAlert', 'error', 'No se pudieron cargar los datos');
                 }
             } catch (e) {
                 showAlert('presasDataAlert', 'error', 'Error actualizando datos');
@@ -2525,7 +2523,7 @@
             if (AppState.presas.charts.grouped) AppState.presas.charts.grouped.destroy();
 
             const dashboard = AppState.presas.cache.dashboard;
-            if (!dashboard || !dashboard.groupAnalysis || !dashboard.groupAnalysis.analysis) {
+            if (!dashboard || !dashboard.groupAnalysis || !dashboard.groupAnalysis.analysis || dashboard.groupAnalysis.analysis.length === 0) {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 ctx.font = '14px Arial';
                 ctx.fillStyle = '#64748b';

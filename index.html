@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>Sistema de Calidad de Cosecha · CCA + Monitor de Presas</title>
+    <title>Sistema de Calidad de Cosecha · CCA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -637,8 +637,8 @@
                 <div class="logo">
                     <img src="https://www.gporres.com.mx/assets/img/logo/footer-logo2.png" alt="Porres" class="logo-img">
                     <div class="logo-text">
-                        <h1>Sistema de Calidad de Cosecha · CCA + Presas</h1>
-                        <p>Análisis integrado</p>
+                        <h1>Sistema de Calidad de Cosecha · CCA</h1>
+                        <p>Sistema Operativo Azúcar</p>
                     </div>
                 </div>
                 <div class="user-info" id="userInfo">
@@ -933,15 +933,15 @@
             <div id="weather-tab" class="tab-content">
                 <div class="weather-container">
                     <div class="weather-subtabs">
-                        <button class="weather-subtab active" data-subtab="map-sub">Mapa</button>
-                        <button class="weather-subtab" data-subtab="report-sub">Reporte 5 días</button>
+                        <button class="weather-subtab active" data-subtab="map-sub">Mapa climatológico</button>
+                        <button class="weather-subtab" data-subtab="report-sub">Pronóstico 5 días</button>
                         <button class="weather-subtab" data-subtab="forecast7-sub">Pronóstico 7 días</button>
                         <button class="weather-subtab" data-subtab="powerbi-sub">Dashboard Power BI</button>
                     </div>
 
                     <div id="map-sub" class="weather-subcontent active">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
-                            <i class="fas fa-cloud-sun"></i> Condiciones meteorológicas actuales
+                            <i class="fas fa-cloud-sun"></i> Mapa de condiciones meteorológicas
                         </h2>
                         <iframe src="https://www.meteoblue.com/es/tiempo/mapas/widget/?windAnimation=1&gust=1&satellite=1&cloudsAndPrecipitation=1&temperature=1&sunshine=1&extremeForecastIndex=1&geoloc=detect&tempunit=C&lengthunit=metric&windunit=km%252Fh&zoom=5&autowidth=auto&user_key=4646e18c1240a1c4&embed_key=f4e8b2a8b82649e6&sig=fbcfc8d380531503a3ec4ed51222a77ea9ef6288ad02622b4b4f63e28298a96a" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; height: 700px;"></iframe>
                         <div class="weather-attribution">
@@ -968,10 +968,10 @@
 
                     <div id="forecast7-sub" class="weather-subcontent">
                         <h2 style="display: flex; gap: 10px; color: var(--primary); margin-bottom: 20px;">
-                            <i class="fas fa-calendar-week"></i> Pronóstico extendido 7 días
+                            <i class="fas fa-calendar-week"></i> Reporte de predicción climática a 5 días
                         </h2>
                         <div style="display: flex; justify-content: center;">
-                            <iframe src="https://www.meteoblue.com/en/weather/widget/daily/?geoloc=detect&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&precipunit=MILLIMETER&days=7&coloured=coloured&pictoicon=1&maxtemperature=1&mintemperature=1&windspeed=1&windgust=1&winddirection=1&uv=1&humidity=1&precipitation=1&precipitationprobability=1&spot=1&pressure=1&layout=dark&user_key=4646e18c1240a1c4&embed_key=e18ffece7e4322d2&sig=643f2e3142bdcbfe0197edfb7b92428c4aff8075888c072926f69a71288ede88" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 100%; max-width: 378px; height: 447px;"></iframe>
+                            <iframe src="https://www.meteoblue.com/es/tiempo/widget/three/?geoloc=detect&nocurrent=0&noforecast=0&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&days=7&layout=image&user_key=4646e18c1240a1c4&embed_key=58ec11cfb722607e&sig=3fd4d8f6116ea20b2fc90ed74d2674599498e221a9948a87a906d5f5a77a6c47" frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 805px;height: 590px;border: 0;overflow: hidden;"></iframe><div><!-- DO NOT REMOVE THIS LINK --><a href="https://www.meteoblue.com/es/tiempo/semana/index" target="_blank" rel="noopener">meteoblue</a></div>
                         </div>
                         <div class="weather-attribution">
                             <a href="https://www.meteoblue.com/en/weather/week/index" target="_blank" rel="noopener">meteoblue</a>
